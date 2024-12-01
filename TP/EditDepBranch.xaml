@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP.EditDepBranch"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             Title="EditDepBranch">
+    <VerticalStackLayout VerticalOptions="Center" FlowDirection="RightToLeft">
+        
+        <syncfusion:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
+                           HelperText="ادخل اسم القسم">
+            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
+        </syncfusion:SfTextInputLayout>
+        
+        <Button Text="Save" Clicked="OnSaveButtonClicked" />
+
+        <popup:SfPopup x:Name="SuccessPopup"
+                       WidthRequest="300"
+                       HeightRequest="150"
+                       IsOpen="False">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Label Text="تم إضافة القسم بنجاح"
+                           FontSize="18"
+                           HorizontalOptions="Center" />
+                <Button Text="حسنا" Clicked="ClosePopup" />
+            </VerticalStackLayout>
+        </popup:SfPopup>
+        
+
+    </VerticalStackLayout>
+</ContentPage>

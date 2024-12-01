@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             x:Class="TP.DepBranchManager"
+             Title="Department and Branch Management"
+             BackgroundColor="#E4E4E4">
+
+    <VerticalStackLayout FlowDirection="RightToLeft" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+
+        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
+            <buttons:SfButton Text="الاقسام" TextColor="#E4E4E4" Background="#2374AB" WidthRequest="120" HeightRequest="40"/>
+            <buttons:SfButton Text="الشعب" TextColor="#1A1A1A" Background="Transparent" WidthRequest="120" HeightRequest="40"/>
+        </FlexLayout>
+
+        <!-- DataGrid for DepTable -->
+        <syncfusion:SfDataGrid x:Name="DepartmentGrid"
+                                ItemsSource="{Binding Departments}"
+                                WidthRequest="20"
+                                SelectionMode="Single"
+                                SelectionChanged="DepartmentGrid_SelectionChanged">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn MappingName="DepId" HeaderText="رم" />
+                <syncfusion:DataGridTextColumn MappingName="DepName" HeaderText="اسم القسم" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+
+        <!-- DataGrid for BranchTable -->
+        <syncfusion:SfDataGrid x:Name="BranchGrid"
+                                ItemsSource="{Binding Branches}"
+                                WidthRequest="20" 
+                                IsVisible="False"
+                                SelectionChanged="BranchGrid_SelectionChanged">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn MappingName="BranchId" HeaderText="رم" />
+                <syncfusion:DataGridTextColumn MappingName="BranchName" HeaderText="اسم الشعبة" />
+                <syncfusion:DataGridTextColumn MappingName="DepName" HeaderText="اسم القسم" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+
+        <!-- Floating Action Button -->
+        <Button Text="+"
+                WidthRequest="60" 
+                HeightRequest="60" 
+                BackgroundColor="#2374AB" 
+                TextColor="White"
+                CornerRadius="30"
+                VerticalOptions="End"
+                HorizontalOptions="End"
+                Clicked="AddClicked" />
+    </VerticalStackLayout>
+</ContentPage>
