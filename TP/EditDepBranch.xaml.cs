@@ -6,17 +6,20 @@ public partial class EditDepBranch : ContentPage
 {
     private DepTable _department; // The department being edited (null for new)
     private readonly DatabaseHelper _databaseHelper;
-    public EditDepBranch(DepTable department)
+    public string _DepName;
+    public EditDepBranch(string depName)
 	{
 		InitializeComponent();
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath);
+        _DepName = depName;
         // Set up the page based on whether it's adding or editing
-        if (_department != null)
+        if (_DepName != null)
         {
             // Editing an existing department
             Title = "Edit Department";
-            NameEntry.Text = _department.DepName;
+            NameEntry.Text = depName;
+
         }
         else
         {
@@ -33,7 +36,7 @@ public partial class EditDepBranch : ContentPage
             await DisplayAlert("Error", "Please enter a valid department name.", "OK");
             return;
         }
-        if (_department == null)
+        if (_DepName == null)
         {
             // Add a new department
             var newDepartment = new DepTable { DepName = departmentName };
@@ -51,12 +54,12 @@ public partial class EditDepBranch : ContentPage
         await Navigation.PopAsync();
     }
 
-    private async void ClosePopup(object sender, EventArgs e)
+    /*private async void ClosePopup(object sender, EventArgs e)
     {
         // Close the popup
         SuccessPopup.IsOpen = false;
         // Navigate back to the previous page
         await Navigation.PopAsync();
     }
-
+*/
 }

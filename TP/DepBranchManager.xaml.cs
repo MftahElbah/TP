@@ -32,20 +32,29 @@ public partial class DepBranchManager : ContentPage
     // This method is called when the user selects a department in the DataGrid
     private async void DepartmentGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
-        // Check if the selection has changed
-        if (SelectionController != null && e.AddedItems.Count > 0)
+        // Check if there is a selected item in the grid
+        if (DepartmentGrid.SelectedRow != null)
         {
-            // Get the first added item (the selected department)
-            var selectedDepartment = e.AddedItems[0] as DepTable;
+            // Access the selected row data
+            var rowData = DepartmentGrid.SelectedRow;
 
-            if (selectedDepartment != null)
+            // Extract the DepName property using reflection or dynamic binding
+            var depName = rowData?.GetType().GetProperty("DepName")?.GetValue(rowData)?.ToString();
+
+            if (!string.IsNullOrEmpty(depName))
             {
-                // Navigate to the EditDepBranch page and pass the selected department for editing
-                await Navigation.PushAsync(new EditDepBranch(selectedDepartment));
+                // Navigate to the EditDepBranch page, passing DepName as a parameter
+                await Navigation.PushAsync(new EditDepBranch(depName));
             }
-        }
 
-        // Optionally clear the selection (to allow re-selection of the same item)
-        // If you want to clear the selection, you may need to handle it differently based on your UI logic
+            // Clear the selection
+            DepartmentGrid.SelectedRow = null;
+        }
     }
+    private async void BranchGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
+    {
+
+    }
+
+
 }

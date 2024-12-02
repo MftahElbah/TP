@@ -19,6 +19,8 @@
                                 ItemsSource="{Binding Departments}"
                                 WidthRequest="20"
                                 SelectionMode="Single"
+                                
+                               NavigationMode="Row"
                                 SelectionChanged="DepartmentGrid_SelectionChanged">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:DataGridTextColumn MappingName="DepId" HeaderText="رم" />

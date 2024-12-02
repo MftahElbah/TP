@@ -9,11 +9,12 @@
         
         <syncfusion:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
                            HelperText="ادخل اسم القسم">
-            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
+            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc" BindingContext="{Binding DepName}"/>
         </syncfusion:SfTextInputLayout>
         
-        <Button Text="Save" Clicked="OnSaveButtonClicked" />
+        <Button Text="حفظ" Clicked="OnSaveButtonClicked" />
 
+        <!--
         <popup:SfPopup x:Name="SuccessPopup"
                        WidthRequest="300"
                        HeightRequest="150"
@@ -25,7 +26,7 @@
                 <Button Text="حسنا" Clicked="ClosePopup" />
             </VerticalStackLayout>
         </popup:SfPopup>
-        
+        -->
 
     </VerticalStackLayout>
 </ContentPage>
