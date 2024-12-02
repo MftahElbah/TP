@@ -100,6 +100,27 @@ namespace TP
             }
         }
 
+        public async Task UpdateDepartmentAsync(int depId, string depName)
+        {
+            // Retrieve the existing department by ID
+            var department = await _database.Table<DepTable>().FirstOrDefaultAsync(d => d.DepId == depId);
+
+            if (department != null)
+            {
+                // Update the department name
+                department.DepName = depName;
+
+                // Save changes to the database
+                await _database.UpdateAsync(department);
+            }
+            else
+            {
+                // Handle case where the department with the given ID doesn't exist
+                throw new Exception($"Department with ID {depId} not found.");
+            }
+        }
+
+
         // Add methods for inserting, updating, and deleting records as needed
     }
 }

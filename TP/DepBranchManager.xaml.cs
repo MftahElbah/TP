@@ -26,7 +26,7 @@ public partial class DepBranchManager : ContentPage
     private async void AddClicked(object sender, EventArgs e)
     {
         // Navigate to the EditDepBranch page to add a new department
-        await Navigation.PushAsync(new EditDepBranch(null)); // Pass null for a new department
+        await Navigation.PushAsync(new EditDepBranch(null,null)); // Pass null for a new department
     }
 
     // This method is called when the user selects a department in the DataGrid
@@ -39,12 +39,13 @@ public partial class DepBranchManager : ContentPage
             var rowData = DepartmentGrid.SelectedRow;
 
             // Extract the DepName property using reflection or dynamic binding
+            var depId = rowData?.GetType().GetProperty("DepId")?.GetValue(rowData)?.ToString();
             var depName = rowData?.GetType().GetProperty("DepName")?.GetValue(rowData)?.ToString();
 
-            if (!string.IsNullOrEmpty(depName))
+            if (depId != null)
             {
                 // Navigate to the EditDepBranch page, passing DepName as a parameter
-                await Navigation.PushAsync(new EditDepBranch(depName));
+                await Navigation.PushAsync(new EditDepBranch(depId,depName));
             }
 
             // Clear the selection
