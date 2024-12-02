@@ -119,7 +119,20 @@ namespace TP
                 throw new Exception($"Department with ID {depId} not found.");
             }
         }
-
+        public async Task DeleteDepartmentAsync(int depId)
+        {
+            var department = await _database.Table<DepTable>().FirstOrDefaultAsync(d => d.DepId == depId);
+            if (department != null)
+            {
+                // Save changes to the database
+                await _database.DeleteAsync(department);
+            }
+            else
+            {
+                // Handle case where the department with the given ID doesn't exist
+                throw new Exception($"Department with ID {depId} not found.");
+            }
+        }
 
         // Add methods for inserting, updating, and deleting records as needed
     }

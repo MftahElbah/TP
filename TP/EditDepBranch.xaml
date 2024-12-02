@@ -2,31 +2,34 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.EditDepBranch"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              Title="EditDepBranch">
     <VerticalStackLayout VerticalOptions="Center" FlowDirection="RightToLeft">
-        
+        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
+            <buttons:SfButton Text="الاقسام" WidthRequest="120" HeightRequest="40" x:Name="DepViewShower" Clicked="DepViewShowerClicked"/>
+            <buttons:SfButton Text="الشعب" WidthRequest="120" HeightRequest="40" x:Name="BranchViewShower" Clicked="BranchViewShowerClicked"/>
+        </FlexLayout>
         <syncfusion:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
                            HelperText="ادخل اسم القسم">
             <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc" BindingContext="{Binding DepName}"/>
         </syncfusion:SfTextInputLayout>
-        
-        <Button Text="حفظ" Clicked="OnSaveButtonClicked" />
 
-        <!--
-        <popup:SfPopup x:Name="SuccessPopup"
-                       WidthRequest="300"
-                       HeightRequest="150"
-                       IsOpen="False">
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
-                <Label Text="تم إضافة القسم بنجاح"
-                           FontSize="18"
-                           HorizontalOptions="Center" />
-                <Button Text="حسنا" Clicked="ClosePopup" />
-            </VerticalStackLayout>
-        </popup:SfPopup>
-        -->
+        <editors:SfComboBox x:Name="DepartmentComboBox"
+                            WidthRequest="300"
+                            HeightRequest="50"
+                            BackgroundColor="#DCDCDC"
+                            Margin="10"
+                            DisplayMemberPath="DepName"
+                            TextMemberPath="DepName"
+                            ItemsSource="{Binding DepartmentNames}"
+                            SelectedItem="{Binding SelectedDepName}" />
+
+        <Button Text="حفظ" Clicked="OnSaveButtonClicked" />
+        <Button Text="حذف" Clicked="DeleteButtonClicked" />
 
     </VerticalStackLayout>
 </ContentPage>

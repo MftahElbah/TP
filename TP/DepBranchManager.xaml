@@ -10,30 +10,54 @@
     <VerticalStackLayout FlowDirection="RightToLeft" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
 
         <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
-            <buttons:SfButton Text="الاقسام" TextColor="#E4E4E4" Background="#2374AB" WidthRequest="120" HeightRequest="40"/>
-            <buttons:SfButton Text="الشعب" TextColor="#1A1A1A" Background="Transparent" WidthRequest="120" HeightRequest="40"/>
+            <buttons:SfButton Text="الاقسام" WidthRequest="120" HeightRequest="40" x:Name="DepDataGridShower" Clicked="DepDataGridShowerClicked"/>
+            <buttons:SfButton Text="الشعب" WidthRequest="120" HeightRequest="40" x:Name="BranchDataGridShower" Clicked="BranchDataGridShowerClicked"/>
         </FlexLayout>
 
         <!-- DataGrid for DepTable -->
         <syncfusion:SfDataGrid x:Name="DepartmentGrid"
-                                ItemsSource="{Binding Departments}"
-                                WidthRequest="20"
-                                SelectionMode="Single"
-                                
-                               NavigationMode="Row"
-                                SelectionChanged="DepartmentGrid_SelectionChanged">
+                        ItemsSource="{Binding Departments}"
+                        WidthRequest="20"
+                        SelectionMode="Single"
+                        NavigationMode="Row"
+                        SelectionChanged="DepartmentGrid_SelectionChanged">
+
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:DataGridTextColumn MappingName="DepId" HeaderText="رم" />
-                <syncfusion:DataGridTextColumn MappingName="DepName" HeaderText="اسم القسم" />
+                <!-- First Column with Custom Header -->
+                <syncfusion:DataGridTextColumn MappingName="DepId">
+                    <syncfusion:DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10" VerticalOptions="Center" BackgroundColor="#2374AB">
+                                <Label Text="رم" TextColor="#E4E4E4" FontAttributes="Bold" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTextColumn.HeaderTemplate>
+                </syncfusion:DataGridTextColumn>
+
+                <!-- Second Column with Custom Header -->
+                <syncfusion:DataGridTextColumn MappingName="DepName">
+                    <syncfusion:DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                                <Label Text="اسم القسم" BackgroundColor="#2374AB" TextColor="#E4E4E4" FontAttributes="Bold" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTextColumn.HeaderTemplate>
+                </syncfusion:DataGridTextColumn>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+
 
         <!-- DataGrid for BranchTable -->
         <syncfusion:SfDataGrid x:Name="BranchGrid"
                                 ItemsSource="{Binding Branches}"
                                 WidthRequest="20" 
-                                IsVisible="False"
+                                SelectionMode="Single"
+                                NavigationMode="Row"
                                 SelectionChanged="BranchGrid_SelectionChanged">
+
+            
+            
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:DataGridTextColumn MappingName="BranchId" HeaderText="رم" />
                 <syncfusion:DataGridTextColumn MappingName="BranchName" HeaderText="اسم الشعبة" />
