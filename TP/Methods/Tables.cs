@@ -21,4 +21,16 @@ namespace TP
         public string BranchName { get; set; }
         public string DepName { get; set; } // Changed from DepName to DepId for foreign key reference
     }
+
+    public class StdTable
+    {
+        [PrimaryKey, AutoIncrement]
+        public int StdId { get; set; }
+        public string StdName { get; set; }
+
+        public string StdDep { get; set; }
+        public string StdBranch { get; set; }
+        public int StdClass { get; set; }
+
+    }
 }

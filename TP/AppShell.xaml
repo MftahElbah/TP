@@ -7,8 +7,8 @@
     Shell.FlyoutBehavior="Flyout">
 
     
-<ShellContent Title = "إدارة الاقسام" ContentTemplate = "{DataTemplate local:DepBranchManager}" Route ="DepBranchManger" /> 
 <!--
+<ShellContent Title = "إدارة الاقسام" ContentTemplate = "{DataTemplate local:DepBranchManager}" Route ="DepBranchManger" /> 
 <ShellContent Title = "DataGrid" ContentTemplate = "{DataTemplate local:DataGridFeatures}" Route ="DataGridFeatures" /> 
 <ShellContent Title = "Circular Charts" ContentTemplate = "{DataTemplate local:CircularChartsFeatures}" Route ="CircularChartsFeatures" /> 
 <ShellContent Title = "ComboBox" ContentTemplate = "{DataTemplate local:ComboBoxFeatures}" Route ="ComboBoxFeatures" /> 

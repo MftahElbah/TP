@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Android.Net.Http.SslCertificate;
+
 
 
 namespace TP.Methods
@@ -15,16 +15,25 @@ namespace TP.Methods
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         public DatabaseHelper(string dbPath)
         {
-            _database = new SQLiteAsyncConnection(dbPath);
-            _database.CreateTableAsync<DepTable>().Wait();
-            _database.CreateTableAsync<BranchTable>().Wait();
             
-            SeedDatabase();
+            _database = new SQLiteAsyncConnection(dbPath);
 
+            
         }
 
-        
-        private async void SeedDatabase()
+        public async Task InitializeDatabaseAsync()
+        {
+            await _database.CreateTableAsync<DepTable>();
+            await _database.CreateTableAsync<BranchTable>();
+            await SeedDatabase();
+        }
+
+        public async Task InitializeAsync()
+        {
+            await SeedDatabase();
+        }
+
+        private async Task SeedDatabase()
 
         {
             var departments = await _database.Table<DepTable>().ToListAsync();
@@ -188,6 +197,28 @@ namespace TP.Methods
                 throw new Exception($"branch with ID {branchId} not found.");
             }
         }
+
+
+        public async Task AddStudentAsync(StdTable student)
+        {
+            await _database.InsertAsync(student);
+        }
+
+        public async Task UpdateStudentAsync(StdTable student)
+        {
+            await _database.UpdateAsync(student);
+        }
+
+        public async Task DeleteStudentAsync(int stdId)
+        {
+            var student = await _database.Table<StdTable>().FirstOrDefaultAsync(s => s.StdId == stdId);
+            if (student != null)
+            {
+                await _database.DeleteAsync(student);
+            }
+        }
+
+
 
         // Add methods for inserting, updating, and deleting records as needed
     }

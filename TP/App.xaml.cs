@@ -14,7 +14,16 @@ namespace TP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYwMzI0N0AzMjM3MmUzMDJlMzBYMEdaSXZDSTFZR3Vwd2NoRkloaWNQeWVEMlRxMDgyMTRsQzhQdnR4THI0PQ==");
             
             InitializeComponent();
-            MainPage = new NavigationPage(new Pages.Level1.DepBranchManager());
+            MainPage = new NavigationPage(new Pages.Level1.EditStd());
         }
+
+        protected override async void OnStart()
+        {
+            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+            var dbHelper = new DatabaseHelper(dbPath);
+            await dbHelper.InitializeDatabaseAsync();
+            // Proceed with other initialization
+        }
+
     }
 }

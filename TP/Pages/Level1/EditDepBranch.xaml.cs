@@ -86,6 +86,7 @@ public partial class EditDepBranch : ContentPage
                 }
                 else if (_TypeDataGrid == 2) {
                     var newBranch = new BranchTable { BranchName = NameEntry.Text , DepName = DepartmentComboBox.Text };
+                    await _databaseHelper._database.InsertAsync(newBranch);
                     await DisplayAlert("Success", "تمت اضافة الشعبة بنجاح", "OK");
                 }
             }

@@ -12,17 +12,33 @@ namespace TP.Methods
 
     public class DepBranchViewModel : INotifyPropertyChanged
     {
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+        
         private readonly DatabaseHelper _databaseHelper;
         private ObservableCollection<DepTable> _departments;
         private ObservableCollection<BranchTable> _branches;
 
         public DepBranchViewModel()
         {
-            // Initialize the database helper with the path to your SQLite database
             _databaseHelper = new DatabaseHelper(dbPath);
+         
+
+            InitializeAsync();
+
+            // Initialize the database helper with the path to your SQLite database
+            Task.Run(async () =>
+            {
+                await _databaseHelper.InitializeAsync();
+                await LoadData();
+            });
             RefreshCommand = new Command(async () => await RefreshData()); // Initialize RefreshCommand
-            LoadData();
+            
+        }
+
+        private async Task InitializeAsync()
+        {
+            await _databaseHelper.InitializeDatabaseAsync();
+            // Load data or perform additional tasks
         }
 
         public ObservableCollection<DepTable> Departments
