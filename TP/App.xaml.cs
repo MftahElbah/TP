@@ -14,7 +14,7 @@ namespace TP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYwMzI0N0AzMjM3MmUzMDJlMzBYMEdaSXZDSTFZR3Vwd2NoRkloaWNQeWVEMlRxMDgyMTRsQzhQdnR4THI0PQ==");
             
             InitializeComponent();
-            MainPage = new NavigationPage(new Pages.Level1.EditStd());
+            MainPage = new NavigationPage(new Pages.Level1.StdManger());
         }
 
         protected override async void OnStart()

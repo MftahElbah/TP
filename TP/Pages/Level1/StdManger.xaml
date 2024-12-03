@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Level1.StdManger"
              Title="StdManger">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <syncfusion:SfDataGrid x:Name="StdGrid"
+                        ItemsSource="{Binding Students}"
+                        WidthRequest="20" 
+                        SelectionMode="Single"
+                        NavigationMode="Row"
+                        SelectionChanged="StdGrid_SelectionChanged">
+
+
+
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn MappingName="StdId" HeaderText="رم" />
+                <syncfusion:DataGridTextColumn MappingName="StdName" HeaderText="اسم" />
+                <syncfusion:DataGridTextColumn MappingName="StdDep" HeaderText="القسم" />
+                <syncfusion:DataGridTextColumn MappingName="StdBranch" HeaderText="الشعبة" />
+                <syncfusion:DataGridTextColumn MappingName="StdClass" HeaderText="الفصل" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+
+        <Button Text="+"
+        WidthRequest="60" 
+        HeightRequest="60" 
+        BackgroundColor="#2374AB" 
+        TextColor="White"
+        CornerRadius="30"
+        VerticalOptions="End"
+        HorizontalOptions="End"
+        Clicked="AddClicked" />
     </VerticalStackLayout>
 </ContentPage>

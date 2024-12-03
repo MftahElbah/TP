@@ -25,6 +25,7 @@ namespace TP.Methods
         {
             await _database.CreateTableAsync<DepTable>();
             await _database.CreateTableAsync<BranchTable>();
+            await _database.CreateTableAsync<StdTable>();
             await SeedDatabase();
         }
 
@@ -100,6 +101,10 @@ namespace TP.Methods
         public Task<List<BranchTable>> GetBranchesAsync()
         {
             return _database.Table<BranchTable>().ToListAsync();
+        }
+        public Task<List<StdTable>> GetStudentsAsync()
+        {
+            return _database.Table<StdTable>().ToListAsync();
         }
 
         public async Task AddDepartmentAsync(string depName)

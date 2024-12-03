@@ -24,6 +24,7 @@ public partial class DepBranchManager : ContentPage
     {
         base.OnAppearing();
         await _viewModel.LoadData(); // Ensure data is loaded before the UI is updated
+
     }
 
     // This method is called when the user clicks the floating action button (+)

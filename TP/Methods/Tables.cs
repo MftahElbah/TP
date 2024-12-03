@@ -24,7 +24,7 @@ namespace TP
 
     public class StdTable
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
         public int StdId { get; set; }
         public string StdName { get; set; }
 

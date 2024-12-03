@@ -92,15 +92,6 @@ namespace TP.Methods
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        /*private DepTable _selectedDepartment;
-        public DepTable SelectedDepartment
-        {
-            get => _selectedDepartment;
-            set
-            {
-                _selectedDepartment = value;
-                OnPropertyChanged(nameof(SelectedDepartment));
-            }
-        }*/
+        
     }
 }

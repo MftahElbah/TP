@@ -7,15 +7,30 @@ namespace TP.Methods
 {
     public class EditStdViewModel : INotifyPropertyChanged
     {
+        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+
         private readonly DatabaseHelper _databaseHelper;
         private ObservableCollection<DepTable> _departments;
         private ObservableCollection<BranchTable> _branches;
         private ObservableCollection<int> _classes;
-
+        private ObservableCollection<StdTable> _students;
         public EditStdViewModel()
         {
-            _databaseHelper = new DatabaseHelper("YourDatabaseName.db");
+            _databaseHelper = new DatabaseHelper(dbPath);
             LoadData();
+            LoadStudentsAsync();
+        }
+
+        public async Task LoadStudentsAsync()
+        {
+            var studentList = await _databaseHelper.GetStudentsAsync();
+            Students = new ObservableCollection<StdTable>(studentList);
+        }
+
+        public ObservableCollection<StdTable> Students
+        {
+            get => _students;
+            set { _students = value; OnPropertyChanged(nameof(Students)); }
         }
 
         public ObservableCollection<DepTable> Departments
@@ -47,16 +62,17 @@ namespace TP.Methods
         {
             Departments = new ObservableCollection<DepTable>(await _databaseHelper.GetDepartmentsAsync());
             Branches = new ObservableCollection<BranchTable>(await _databaseHelper.GetBranchesAsync());
-            Classes = new ObservableCollection<int>(new[] { 1, 2, 3, 4 ,5 ,6 ,7 ,8}); // Example class levels
+            Students = new ObservableCollection<StdTable>(await _databaseHelper.GetStudentsAsync());
         }
 
-        public async Task SaveStudentAsync()
+        public async Task SaveStudentAsync(int GetType)
         {
-            if (CurrentStudent.StdId == 0)
+            if (GetType == 1)
             {
                 await _databaseHelper.AddStudentAsync(CurrentStudent);
+
             }
-            else
+            else if (GetType == 2) 
             {
                 await _databaseHelper.UpdateStudentAsync(CurrentStudent);
             }

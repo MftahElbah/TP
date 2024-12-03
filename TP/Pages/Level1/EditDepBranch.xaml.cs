@@ -11,8 +11,6 @@ public partial class EditDepBranch : ContentPage
     public string _Name1;
     public string _Name2;
     public int _TypeDataGrid;
-    //private DepBranchViewModel _viewModel;
-    public string SelectedDepName { get; set; }
 
 
     public EditDepBranch(string Id,string Name1,string Name2, int TypeDataGrid)
@@ -67,7 +65,8 @@ public partial class EditDepBranch : ContentPage
         // Validate the input
         if (string.IsNullOrWhiteSpace(NameEntry.Text))
         {
-            await DisplayAlert("Error", "Please enter a valid department name.", "OK");
+
+            await DisplayAlert("Error", "Please enter a all valids.", "OK");
             return;
         }
 
@@ -85,6 +84,11 @@ public partial class EditDepBranch : ContentPage
                     await DisplayAlert("Success", "تمت اضافة القسم بنجاح", "OK");
                 }
                 else if (_TypeDataGrid == 2) {
+                    if (string.IsNullOrWhiteSpace(DepartmentComboBox.Text))
+                    {
+                        await DisplayAlert("Error", "Please enter a all valids.", "OK");
+                        return;
+                    }
                     var newBranch = new BranchTable { BranchName = NameEntry.Text , DepName = DepartmentComboBox.Text };
                     await _databaseHelper._database.InsertAsync(newBranch);
                     await DisplayAlert("Success", "تمت اضافة الشعبة بنجاح", "OK");

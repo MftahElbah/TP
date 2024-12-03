@@ -25,28 +25,24 @@
                        HeightRequest="50"
                        BackgroundColor="#DCDCDC"
                        Margin="10"
-                       DisplayMemberPath="DepName"
-                       TextMemberPath="DepName"
-                       ItemsSource="{Binding Departments}"
+                       SelectionChanged="DepComboBoxSelectionChanged"
+                       
                        />
         <editors:SfComboBox x:Name="BranchComboBox"
                        WidthRequest="300"
                        HeightRequest="50"
                        BackgroundColor="#DCDCDC"
                        Margin="10"
-                       DisplayMemberPath="BranchName"
-                       TextMemberPath="BranchName"
-                       ItemsSource="{Binding Branches}"
                        />
         <editors:SfComboBox x:Name="ClassComboBox"
                        WidthRequest="300"
                        HeightRequest="50"
                        BackgroundColor="#DCDCDC"
                        Margin="10"
-                       DisplayMemberPath="DepName"
-                       TextMemberPath="DepName"
                        ItemsSource="{Binding Classes}"
-                       />
+                            />
+        
+                      
 
         <Button Text="حفظ" Clicked="OnSaveButtonClicked" />
         <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteButton" />

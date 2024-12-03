@@ -16,7 +16,7 @@
         </FlexLayout>
         <syncfusion:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
                            HelperText="ادخل اسم القسم">
-            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc" BindingContext="{Binding DepName}"/>
+            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
         </syncfusion:SfTextInputLayout>
 
         <editors:SfComboBox x:Name="DepartmentComboBox"
