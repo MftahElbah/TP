@@ -7,50 +7,58 @@ namespace TP.Methods
 {
     public class EditStdViewModel : INotifyPropertyChanged
     {
+        // Path to the SQLite database file.
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
 
-        private readonly DatabaseHelper _databaseHelper;
-        private ObservableCollection<DepTable> _departments;
-        private ObservableCollection<BranchTable> _branches;
-        private ObservableCollection<int> _classes;
-        private ObservableCollection<StdTable> _students;
+        private readonly DatabaseHelper _databaseHelper; // Database helper for performing database operations.
+        private ObservableCollection<DepTable> _departments; // Collection of departments.
+        private ObservableCollection<BranchTable> _branches; // Collection of branches.
+        private ObservableCollection<int> _classes; // Collection of class levels (e.g., 1st year, 2nd year).
+        private ObservableCollection<StdTable> _students; // Collection of students.
+
         public EditStdViewModel()
         {
-            _databaseHelper = new DatabaseHelper(dbPath);
-            LoadData();
-            LoadStudentsAsync();
+            _databaseHelper = new DatabaseHelper(dbPath); // Initialize the database helper.
+            LoadData(); // Loads departments, branches, and students data.
+            LoadStudentsAsync(); // Loads the list of students asynchronously.
         }
 
+        // Asynchronously loads the list of students from the database.
         public async Task LoadStudentsAsync()
         {
-            var studentList = await _databaseHelper.GetStudentsAsync();
-            Students = new ObservableCollection<StdTable>(studentList);
+            var studentList = await _databaseHelper.GetStudentsAsync(); // Fetch students from the database.
+            Students = new ObservableCollection<StdTable>(studentList); // Assign the result to the Students collection.
         }
 
+        // Observable collection for students.
         public ObservableCollection<StdTable> Students
         {
             get => _students;
             set { _students = value; OnPropertyChanged(nameof(Students)); }
         }
 
+        // Observable collection for departments.
         public ObservableCollection<DepTable> Departments
         {
             get => _departments;
             set { _departments = value; OnPropertyChanged(nameof(Departments)); }
         }
 
+        // Observable collection for branches.
         public ObservableCollection<BranchTable> Branches
         {
             get => _branches;
             set { _branches = value; OnPropertyChanged(nameof(Branches)); }
         }
 
+        // Observable collection for class levels.
         public ObservableCollection<int> Classes
         {
             get => _classes;
             set { _classes = value; OnPropertyChanged(nameof(Classes)); }
         }
 
+        // The currently selected student.
         private StdTable _currentStudent;
         public StdTable CurrentStudent
         {
@@ -58,6 +66,7 @@ namespace TP.Methods
             set { _currentStudent = value; OnPropertyChanged(nameof(CurrentStudent)); }
         }
 
+        // Loads departments, branches, and students from the database asynchronously.
         public async Task LoadData()
         {
             Departments = new ObservableCollection<DepTable>(await _databaseHelper.GetDepartmentsAsync());
@@ -65,19 +74,20 @@ namespace TP.Methods
             Students = new ObservableCollection<StdTable>(await _databaseHelper.GetStudentsAsync());
         }
 
+        // Saves the student data depending on the type (1 for adding, 2 for updating).
         public async Task SaveStudentAsync(int GetType)
         {
-            if (GetType == 1)
+            if (GetType == 1) // If GetType is 1, add the student.
             {
                 await _databaseHelper.AddStudentAsync(CurrentStudent);
-
             }
-            else if (GetType == 2) 
+            else if (GetType == 2) // If GetType is 2, update the student.
             {
                 await _databaseHelper.UpdateStudentAsync(CurrentStudent);
             }
         }
 
+        // Deletes the currently selected student from the database.
         public async Task DeleteStudentAsync()
         {
             if (CurrentStudent != null)
@@ -86,6 +96,7 @@ namespace TP.Methods
             }
         }
 
+        // PropertyChanged event for notifying changes in the properties.
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

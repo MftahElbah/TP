@@ -1,124 +1,121 @@
-using Syncfusion.Maui.Buttons;
-using Syncfusion.Maui.Data;
-using Syncfusion.Maui.ListView;
-using System.Xml.Linq;
-using TP.Methods;
+using Syncfusion.Maui.Buttons; // Provides button components for Syncfusion MAUI.
+using Syncfusion.Maui.Data; // Enables data-handling features, such as grids.
+using Syncfusion.Maui.ListView; // Provides functionality for list views.
+using System.Xml.Linq; // Used for XML operations (not explicitly used here).
+using TP.Methods; // Includes custom methods or utilities from the project.
 
 namespace TP.Pages.Level1;
 
-public partial class DepBranchManager : ContentPage
+public partial class DepBranchManager : ContentPage // A page that manages departments and branches.
 {
-    private DepBranchViewModel _viewModel;
-    public int CheckerNum = 1;
+    private DepBranchViewModel _viewModel; // The ViewModel for managing UI data and business logic.
+    public int CheckerNum = 1; // Tracks which grid is displayed: 1 for departments, 2 for branches.
 
     public DepBranchManager()
     {
-        InitializeComponent();
-        _viewModel = new DepBranchViewModel();
-        BindingContext = _viewModel;
-        ChickWhichTableShow(CheckerNum);
+        InitializeComponent(); // Initializes components defined in the XAML file.
+        _viewModel = new DepBranchViewModel(); // Instantiates the ViewModel for data binding.
+        BindingContext = _viewModel; // Sets the BindingContext to connect UI with the ViewModel.
+        ChickWhichTableShow(CheckerNum); // Determines which grid to show on page load.
     }
 
-    // This method is called when the page appears
+    // Event called when the page appears on the screen.
     protected override async void OnAppearing()
     {
-        base.OnAppearing();
-        await _viewModel.LoadData(); // Ensure data is loaded before the UI is updated
-
+        base.OnAppearing(); // Calls the base class implementation.
+        await _viewModel.LoadData(); // Asynchronously loads data into the ViewModel.
     }
 
-    // This method is called when the user clicks the floating action button (+)
-
+    // Event called when the "Add" button is clicked.
     private async void AddClicked(object sender, EventArgs e)
     {
-        // Navigate to the EditDepBranch page to add a new department
-        await Navigation.PushAsync(new EditDepBranch(null, null,null, CheckerNum)); // Pass null for a new department
+        // Navigates to the EditDepBranch page to add a new department or branch.
+        await Navigation.PushAsync(new EditDepBranch(null, null, null, CheckerNum));
     }
 
-    // This method is called when the user selects a department in the DataGrid
+    // Event called when a row in the Department grid is selected.
     private async void DepartmentGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
-        // Check if there is a selected item in the grid
-        if (DepartmentGrid.SelectedRow != null)
+        if (DepartmentGrid.SelectedRow != null) // Checks if a row is selected.
         {
-            // Access the selected row data
-            var rowData = DepartmentGrid.SelectedRow;
+            var rowData = DepartmentGrid.SelectedRow; // Gets the selected row's data.
 
-            // Extract the DepName property using reflection or dynamic binding
+            // Retrieves properties using reflection.
             var depId = rowData?.GetType().GetProperty("DepId")?.GetValue(rowData)?.ToString();
             var depName = rowData?.GetType().GetProperty("DepName")?.GetValue(rowData)?.ToString();
-            CheckerNum = 1;
-            if (depId != null)
+            CheckerNum = 1; // Indicates department view.
+
+            if (depId != null) // Checks if the ID is valid.
             {
-                // Navigate to the EditDepBranch page, passing DepName as a parameter
-                await Navigation.PushAsync(new EditDepBranch(depId, depName,null, CheckerNum));
+                // Navigates to the EditDepBranch page to edit the selected department.
+                await Navigation.PushAsync(new EditDepBranch(depId, depName, null, CheckerNum));
             }
 
-            // Clear the selection
-            DepartmentGrid.SelectedRow = null;
+            DepartmentGrid.SelectedRow = null; // Clears the grid's selection.
         }
     }
+
+    // Event called when a row in the Branch grid is selected.
     private async void BranchGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
-        if (BranchGrid.SelectedRow != null)
+        if (BranchGrid.SelectedRow != null) // Checks if a row is selected.
         {
-            // Access the selected row data
-            var rowData = BranchGrid.SelectedRow;
+            var rowData = BranchGrid.SelectedRow; // Gets the selected row's data.
 
-            // Extract the DepName property using reflection or dynamic binding
+            // Retrieves properties using reflection.
             var branchId = rowData?.GetType().GetProperty("BranchId")?.GetValue(rowData)?.ToString();
             var branchName = rowData?.GetType().GetProperty("BranchName")?.GetValue(rowData)?.ToString();
             var depName = rowData?.GetType().GetProperty("DepName")?.GetValue(rowData)?.ToString();
-            CheckerNum = 2;
+            CheckerNum = 2; // Indicates branch view.
 
-            if (branchId != null)
+            if (branchId != null) // Checks if the ID is valid.
             {
-                // Navigate to the EditDepBranch page, passing DepName as a parameter
+                // Navigates to the EditDepBranch page to edit the selected branch.
                 await Navigation.PushAsync(new EditDepBranch(branchId, branchName, depName, CheckerNum));
             }
 
-            // Clear the selection
-            DepartmentGrid.SelectedRow = null;
+            BranchGrid.SelectedRow = null; // Clears the grid's selection.
         }
     }
 
+    // Event called when the "Show Departments" button is clicked.
     private async void DepDataGridShowerClicked(object sender, EventArgs e)
     {
-        CheckerNum = 1;
-        ChickWhichTableShow(CheckerNum);
+        CheckerNum = 1; // Sets view to department grid.
+        ChickWhichTableShow(CheckerNum); // Updates the UI to show the department grid.
     }
+
+    // Event called when the "Show Branches" button is clicked.
     private async void BranchDataGridShowerClicked(object sender, EventArgs e)
     {
-        CheckerNum= 2;
-        ChickWhichTableShow(CheckerNum);
+        CheckerNum = 2; // Sets view to branch grid.
+        ChickWhichTableShow(CheckerNum); // Updates the UI to show the branch grid.
     }
 
+    // Updates UI to show either the department grid or branch grid.
     private void ChickWhichTableShow(int Ch)
     {
-        
-        if (Ch == 1)
+        if (Ch == 1) // If showing departments.
         {
-            DepDataGridShower.Background = Color.FromArgb("#2374AB");
-            DepDataGridShower.TextColor = Color.FromArgb("#DCDCDC");
+            DepDataGridShower.Background = Color.FromArgb("#2374AB"); // Highlights the department button.
+            DepDataGridShower.TextColor = Color.FromArgb("#DCDCDC"); // Sets department button text color.
 
+            BranchDataGridShower.Background = Colors.Transparent; // Clears branch button highlight.
+            BranchDataGridShower.TextColor = Color.FromArgb("#1A1A1A"); // Resets branch button text color.
 
-            BranchDataGridShower.Background = Colors.Transparent;
-            BranchDataGridShower.TextColor = Color.FromArgb("#1A1A1A");
-
-            DepartmentGrid.IsVisible = true;
-            BranchGrid.IsVisible = false;
+            DepartmentGrid.IsVisible = true; // Displays the department grid.
+            BranchGrid.IsVisible = false; // Hides the branch grid.
         }
-        else if (Ch == 2)
+        else if (Ch == 2) // If showing branches.
         {
-            BranchDataGridShower.Background = Color.FromArgb("#2374AB");
-            BranchDataGridShower.TextColor = Color.FromArgb("#DCDCDC");
+            BranchDataGridShower.Background = Color.FromArgb("#2374AB"); // Highlights the branch button.
+            BranchDataGridShower.TextColor = Color.FromArgb("#DCDCDC"); // Sets branch button text color.
 
+            DepDataGridShower.Background = Colors.Transparent; // Clears department button highlight.
+            DepDataGridShower.TextColor = Color.FromArgb("#1A1A1A"); // Resets department button text color.
 
-            DepDataGridShower.Background = Colors.Transparent;
-            DepDataGridShower.TextColor = Color.FromArgb("#1A1A1A");
-
-            DepartmentGrid.IsVisible = false;
-            BranchGrid.IsVisible = true;
+            DepartmentGrid.IsVisible = false; // Hides the department grid.
+            BranchGrid.IsVisible = true; // Displays the branch grid.
         }
     }
 }
