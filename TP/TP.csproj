@@ -82,10 +82,13 @@
          </ItemGroup>
 	
 	 <ItemGroup>
-	   <MauiXaml Update="DepBranchManager.xaml">
+	   <MauiXaml Update="Pages\Level1\DepBranchManager.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="EditDepBranch.xaml">
+	   <MauiXaml Update="Pages\Level1\EditDepBranch.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="testpage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	 </ItemGroup>

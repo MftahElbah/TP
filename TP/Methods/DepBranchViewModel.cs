@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace TP.ViewModels
+namespace TP.Methods
 {
 
     public class DepBranchViewModel : INotifyPropertyChanged
@@ -21,7 +21,6 @@ namespace TP.ViewModels
         {
             // Initialize the database helper with the path to your SQLite database
             _databaseHelper = new DatabaseHelper(dbPath);
-            AddCommand = new Command(async () => await AddNewItem());
             RefreshCommand = new Command(async () => await RefreshData()); // Initialize RefreshCommand
             LoadData();
         }
@@ -35,6 +34,8 @@ namespace TP.ViewModels
                 OnPropertyChanged(nameof(Departments));
             }
         }
+
+
 
         public ObservableCollection<BranchTable> Branches
         {
@@ -68,17 +69,22 @@ namespace TP.ViewModels
 
         }
 
-        private async Task AddNewItem()
-        {
-            // Logic to add a new department or branch
-            // You can show a dialog or navigate to another page for input
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        /*private DepTable _selectedDepartment;
+        public DepTable SelectedDepartment
+        {
+            get => _selectedDepartment;
+            set
+            {
+                _selectedDepartment = value;
+                OnPropertyChanged(nameof(SelectedDepartment));
+            }
+        }*/
     }
 }

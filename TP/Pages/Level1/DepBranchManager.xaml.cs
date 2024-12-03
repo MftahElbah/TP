@@ -2,9 +2,9 @@ using Syncfusion.Maui.Buttons;
 using Syncfusion.Maui.Data;
 using Syncfusion.Maui.ListView;
 using System.Xml.Linq;
-using TP.ViewModels;
+using TP.Methods;
 
-namespace TP;
+namespace TP.Pages.Level1;
 
 public partial class DepBranchManager : ContentPage
 {
@@ -31,7 +31,7 @@ public partial class DepBranchManager : ContentPage
     private async void AddClicked(object sender, EventArgs e)
     {
         // Navigate to the EditDepBranch page to add a new department
-        await Navigation.PushAsync(new EditDepBranch(null, null,null, 0)); // Pass null for a new department
+        await Navigation.PushAsync(new EditDepBranch(null, null,null, CheckerNum)); // Pass null for a new department
     }
 
     // This method is called when the user selects a department in the DataGrid
@@ -65,15 +65,15 @@ public partial class DepBranchManager : ContentPage
             var rowData = BranchGrid.SelectedRow;
 
             // Extract the DepName property using reflection or dynamic binding
-            var depId = rowData?.GetType().GetProperty("BranchId")?.GetValue(rowData)?.ToString();
+            var branchId = rowData?.GetType().GetProperty("BranchId")?.GetValue(rowData)?.ToString();
             var branchName = rowData?.GetType().GetProperty("BranchName")?.GetValue(rowData)?.ToString();
             var depName = rowData?.GetType().GetProperty("DepName")?.GetValue(rowData)?.ToString();
             CheckerNum = 2;
 
-            if (depId != null)
+            if (branchId != null)
             {
                 // Navigate to the EditDepBranch page, passing DepName as a parameter
-                await Navigation.PushAsync(new EditDepBranch(depId, depName, branchName, CheckerNum));
+                await Navigation.PushAsync(new EditDepBranch(branchId, branchName, depName, CheckerNum));
             }
 
             // Clear the selection

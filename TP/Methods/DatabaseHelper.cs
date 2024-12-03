@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Android.Net.Http.SslCertificate;
 
-namespace TP
+
+namespace TP.Methods
 {
     public class DatabaseHelper
     {
@@ -107,11 +109,19 @@ namespace TP
 
             if (department != null)
             {
+                string oldDepName = department.DepName; // Save the old department name
+
                 // Update the department name
                 department.DepName = depName;
-
-                // Save changes to the database
                 await _database.UpdateAsync(department);
+
+                // Update all branches referencing the old department name
+                var branchesToUpdate = await _database.Table<BranchTable>().Where(b => b.DepName == oldDepName).ToListAsync();
+                foreach (var branch in branchesToUpdate)
+                {
+                    branch.DepName = depName;
+                    await _database.UpdateAsync(branch);
+                }
             }
             else
             {
@@ -119,18 +129,63 @@ namespace TP
                 throw new Exception($"Department with ID {depId} not found.");
             }
         }
+        public async Task UpdateBranchAsync(int branchId, string branchName ,string depName)
+        {
+            // Retrieve the existing department by ID
+            var branch = await _database.Table<BranchTable>().FirstOrDefaultAsync(d => d.BranchId == branchId);
+
+            if (branch != null)
+            {
+                // Update the department name
+                branch.BranchName= branchName;
+                branch.DepName = depName;
+
+                // Save changes to the database
+                await _database.UpdateAsync(branch);
+            }
+            else
+            {
+                // Handle case where the department with the given ID doesn't exist
+                throw new Exception($"Department with ID {branchId} not found.");
+            }
+        }
+
+
+
         public async Task DeleteDepartmentAsync(int depId)
         {
             var department = await _database.Table<DepTable>().FirstOrDefaultAsync(d => d.DepId == depId);
             if (department != null)
             {
-                // Save changes to the database
+                string oldDepName = department.DepName;
+                var branchesToUpdate = await _database.Table<BranchTable>().Where(b => b.DepName == oldDepName).ToListAsync();
+                foreach (var branch in branchesToUpdate)
+                {
+                    await _database.DeleteAsync(branch);
+                }
+
                 await _database.DeleteAsync(department);
             }
             else
             {
                 // Handle case where the department with the given ID doesn't exist
                 throw new Exception($"Department with ID {depId} not found.");
+            }
+            
+        }
+
+        public async Task DeleteBranchAsync(int branchId)
+        {
+            var branch = await _database.Table<BranchTable>().FirstOrDefaultAsync(d => d.BranchId == branchId);
+            if (branch != null)
+            {
+                // Save changes to the database
+                await _database.DeleteAsync(branch);
+            }
+            else
+            {
+                // Handle case where the branch with the given ID doesn't exist
+                throw new Exception($"branch with ID {branchId} not found.");
             }
         }
 

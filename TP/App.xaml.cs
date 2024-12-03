@@ -1,5 +1,5 @@
 ﻿using SQLite;
-using TP.ViewModels;
+using TP.Methods;
 
 namespace TP
 {
@@ -14,7 +14,7 @@ namespace TP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYwMzI0N0AzMjM3MmUzMDJlMzBYMEdaSXZDSTFZR3Vwd2NoRkloaWNQeWVEMlRxMDgyMTRsQzhQdnR4THI0PQ==");
             
             InitializeComponent();
-            MainPage = new NavigationPage(new DepBranchManager());
+            MainPage = new NavigationPage(new Pages.Level1.DepBranchManager());
         }
     }
 }
