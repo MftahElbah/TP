@@ -113,6 +113,12 @@ namespace TP.Methods
                     branch.DepName = depName;
                     await _database.UpdateAsync(branch); // Updates the branches in the database.
                 }
+                var stdToUpdate = await _database.Table<StdTable>().Where(b => b.StdDep == oldDepName).ToListAsync();
+                foreach (var std in stdToUpdate)
+                {
+                    std.StdDep = depName;
+                    await _database.UpdateAsync(std); // Updates the branches in the database.
+                }
             }
             else
             {
@@ -126,6 +132,15 @@ namespace TP.Methods
             // Retrieves the branch with the specified ID.
             if (branch != null)
             {
+                string oldBranchName = branch.BranchName;
+                var stdToUpdate = await _database.Table<StdTable>().Where(b => b.StdBranch == oldBranchName).ToListAsync();
+                foreach (var std in stdToUpdate)
+                {
+                    std.StdBranch = branchName;
+                    std.StdDep = depName;
+                    await _database.UpdateAsync(std); // Updates the branches in the database.
+                }
+
                 branch.BranchName = branchName; // Updates the branch name.
                 branch.DepName = depName; // Updates the department name for the branch.
                 await _database.UpdateAsync(branch); // Saves the updated branch in the database.
@@ -149,6 +164,11 @@ namespace TP.Methods
                 {
                     await _database.DeleteAsync(branch); // Deletes the branches from the database.
                 }
+                var stdToDelete = await _database.Table<StdTable>().Where(b => b.StdDep == oldDepName).ToListAsync();
+                foreach (var std in stdToDelete)
+                {
+                    await _database.DeleteAsync(std); // Deletes the branches from the database.
+                }
 
                 await _database.DeleteAsync(department); // Deletes the department from the database.
             }
@@ -160,10 +180,16 @@ namespace TP.Methods
 
         public async Task DeleteBranchAsync(int branchId)
         {
+
             var branch = await _database.Table<BranchTable>().FirstOrDefaultAsync(b => b.BranchId == branchId);
             // Retrieves the branch with the specified ID.
             if (branch != null)
             {
+                var stdToDelete = await _database.Table<StdTable>().Where(b => b.StdBranch == branch.BranchName).ToListAsync();
+                foreach (var std in stdToDelete)
+                {
+                    await _database.DeleteAsync(std); // Deletes the branches from the database.
+                }
                 await _database.DeleteAsync(branch); // Deletes the branch from the database.
             }
             else

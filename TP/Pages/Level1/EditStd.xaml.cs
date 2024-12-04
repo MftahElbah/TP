@@ -13,16 +13,8 @@ public partial class EditStd : ContentPage
 
     public readonly SQLiteAsyncConnection _database;
 
+
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-
-    public string _StdId;
-    public string _StdName;
-    public string _Dep;
-    public string _Branch;
-    public string _Class;
-    public int _GetType;
-
-
 
     public EditStd(string id,string stdname , string dep , string branch , string classnum,int gt)
     {
@@ -35,15 +27,15 @@ public partial class EditStd : ContentPage
         //BindingContext = this;
         ClassComboBox.ItemsSource = Classes;
 
-
         if (!string.IsNullOrEmpty(id)) {
             IdEntry.Text = id;
             NameEntry.Text = stdname;
-            DepartmentComboBox.Text = dep;
-            BranchComboBox.Text = branch;
-            ClassComboBox.Text = classnum;
-            ChickWhichViewShow(gt);
+            DepartmentComboBox.SelectedItem = dep;
+            LoadBranchData(dep);
+            BranchComboBox.SelectedItem = branch;
+            ClassComboBox.SelectedItem = classnum;
         }
+            ChickWhichViewShow(gt);
     }
 
     private async Task LoadDepartmentsAsync()
@@ -61,26 +53,58 @@ public partial class EditStd : ContentPage
 
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.SaveStudentAsync(1);
+        if (IdEntry.IsEnabled) { 
+        var Std = new StdTable { StdId = int.Parse(IdEntry.Text),StdName = NameEntry.Text,StdDep=DepartmentComboBox.Text,StdBranch = BranchComboBox.Text , StdClass=int.Parse(ClassComboBox.Text)};
+        await _database.InsertAsync(Std);
         await DisplayAlert("Success", "تمت اضافة الطالب بنجاح", "OK");
+        }
+        else {
+            int stdid = int.Parse(IdEntry.Text);
+            var Std = await _database.Table<StdTable>().FirstOrDefaultAsync(d => d.StdId == stdid);
+            Std.StdName = NameEntry.Text;
+            Std.StdDep = DepartmentComboBox.Text;
+            Std.StdBranch = BranchComboBox.Text;
+            Std.StdClass=int.Parse(ClassComboBox.Text);
+
+            await _database.UpdateAsync(Std);
+        }
+        await Navigation.PopAsync();
     }
 
     private async void DeleteButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.DeleteStudentAsync();
+        int stdid = int.Parse(IdEntry.Text);
+        var Std = await _database.Table<StdTable>().FirstOrDefaultAsync(d => d.StdId == stdid);
+        if (Std != null)
+        {
+            await _database.DeleteAsync(Std);
+        await DisplayAlert("Success", "نيك", "OK");
+            await Navigation.PopAsync();
+        }
+        else
+        {
+        await DisplayAlert("Success", "موت", "OK");
+
+        }
+        
     }
 
     private async void DepComboBoxSelectionChanged(object sender, EventArgs e)
     {
+        LoadBranchData(DepartmentComboBox.Text);
+    }
+
+    private async void LoadBranchData(string depname)
+    {
         try
         {
-            if (!string.IsNullOrWhiteSpace(DepartmentComboBox.Text))
+            if (!string.IsNullOrWhiteSpace(depname))
             {
 
-                string DepNameToShearch = DepartmentComboBox.Text;
+                //string DepNameToShearch = depname;
                 // Fetch branches based on selected department
                 var branches = await _database.Table<BranchTable>()
-                                               .Where(b => b.DepName == DepNameToShearch)
+                                               .Where(b => b.DepName == depname)
                                                .ToListAsync();
 
                 // Populate BranchesName with branch names
@@ -98,18 +122,19 @@ public partial class EditStd : ContentPage
             await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
     }
-
     private void ChickWhichViewShow(int Ch)
     {
         //1 to insert , 2 to update
         if (Ch == 1)
         {
             IdEntry.IsEnabled = true;
+            DeleteButton.IsVisible = false;
 
         }
         else if (Ch == 2)
         {
             IdEntry.IsEnabled = false;
+            DeleteButton.IsVisible = true;
            
         }
     }

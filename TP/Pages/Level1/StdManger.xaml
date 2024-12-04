@@ -6,9 +6,9 @@
              x:Class="TP.Pages.Level1.StdManger"
              Title="StdManger">
     <VerticalStackLayout>
+      
         <syncfusion:SfDataGrid x:Name="StdGrid"
                         ItemsSource="{Binding Students}"
-                        WidthRequest="20" 
                         SelectionMode="Single"
                         NavigationMode="Row"
                         SelectionChanged="StdGrid_SelectionChanged">
@@ -17,6 +17,7 @@
 
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:DataGridTextColumn MappingName="StdId" HeaderText="رم" />
+        
                 <syncfusion:DataGridTextColumn MappingName="StdName" HeaderText="اسم" />
                 <syncfusion:DataGridTextColumn MappingName="StdDep" HeaderText="القسم" />
                 <syncfusion:DataGridTextColumn MappingName="StdBranch" HeaderText="الشعبة" />

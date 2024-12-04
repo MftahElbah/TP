@@ -17,7 +17,6 @@
         <!-- DataGrid for DepTable -->
         <syncfusion:SfDataGrid x:Name="DepartmentGrid"
                         ItemsSource="{Binding Departments}"
-                        WidthRequest="20"
                         SelectionMode="Single"
                         NavigationMode="Row"
                         SelectionChanged="DepartmentGrid_SelectionChanged">
@@ -51,7 +50,6 @@
         <!-- DataGrid for BranchTable -->
         <syncfusion:SfDataGrid x:Name="BranchGrid"
                                 ItemsSource="{Binding Branches}"
-                                WidthRequest="20" 
                                 SelectionMode="Single"
                                 NavigationMode="Row"
                                 SelectionChanged="BranchGrid_SelectionChanged">

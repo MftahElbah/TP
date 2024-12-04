@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Pages.Level1;
 
 namespace TP
 {
@@ -14,7 +15,9 @@ namespace TP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYwMzI0N0AzMjM3MmUzMDJlMzBYMEdaSXZDSTFZR3Vwd2NoRkloaWNQeWVEMlRxMDgyMTRsQzhQdnR4THI0PQ==");
             
             InitializeComponent();
-            MainPage = new NavigationPage(new Pages.Level1.StdManger());
+            //MainPage = new NavigationPage(new DepBranchManager());
+            MainPage = new NavigationPage(new StdManger());
+            //MainPage = new NavigationPage(new testpage());
         }
 
         protected override async void OnStart()

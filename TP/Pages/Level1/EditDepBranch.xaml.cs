@@ -43,7 +43,7 @@ public partial class EditDepBranch : ContentPage
             DeleteButton.IsVisible = true;
             if(_Name2 != null)
             {
-             DepartmentComboBox.Text = _Name2;
+             DepartmentComboBox.SelectedItem = _Name2;
             }
 
         }

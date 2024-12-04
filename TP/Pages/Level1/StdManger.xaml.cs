@@ -14,13 +14,13 @@ public partial class StdManger : ContentPage
 		InitializeComponent();
         _viewModel = new EditStdViewModel();
         BindingContext = _viewModel;
-    }
 
+    }
 
     protected override async void OnAppearing()
     {
-        base.OnAppearing();
-        await _viewModel.LoadStudentsAsync();
+        base.OnAppearing(); // Calls the base class implementation.
+        await _viewModel.LoadData(); // Asynchronously loads data into the ViewModel.
     }
 
     private async void StdGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
@@ -33,7 +33,7 @@ public partial class StdManger : ContentPage
             var rowData = StdGrid.SelectedRow;
 
             // Extract the DepName property using reflection or dynamic binding
-            var stdId = rowData?.GetType().GetProperty("StdhId")?.GetValue(rowData)?.ToString();
+            var stdId = rowData?.GetType().GetProperty("StdId")?.GetValue(rowData)?.ToString();
             var stdName = rowData?.GetType().GetProperty("StdName")?.GetValue(rowData)?.ToString();
             var stdBranch = rowData?.GetType().GetProperty("StdBranch")?.GetValue(rowData)?.ToString();
             var stdDep = rowData?.GetType().GetProperty("StdDep")?.GetValue(rowData)?.ToString();
@@ -43,7 +43,7 @@ public partial class StdManger : ContentPage
             if (stdId != null)
             {
                 // Navigate to the EditDepBranch page, passing DepName as a parameter
-                await Navigation.PushAsync(new EditStd(stdId, stdName, stdBranch, stdDep, stdClass, 2));
+                await Navigation.PushAsync(new EditStd(stdId, stdName, stdDep, stdBranch, stdClass, 2));
             }
 
             // Clear the selection

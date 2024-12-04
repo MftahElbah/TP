@@ -2,17 +2,56 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.testpage"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              Title="testpage">
     <VerticalStackLayout>
-        <editors:SfComboBox 
-            x:Name="DepartmentComboBox"
-            WidthRequest="300"
-            HeightRequest="50"
-            BackgroundColor="#DCDCDC"
-            Margin="10"
-            ItemsSource="{Binding Departments}"
-            DisplayMemberPath="DepName"
-            SelectedItem="{Binding SelectedDepartment, Mode=TwoWay}" />
+
+        <editors:SfComboBox x:Name="DepartmentComboBox"
+               WidthRequest="300"
+               HeightRequest="50"
+               BackgroundColor="#DCDCDC"
+               Margin="10"
+               
+               />
     </VerticalStackLayout>
+
 </ContentPage>
+
+
+
+<!--
+    
+    ##thats for grid how it works
+    
+    <?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP.testpage"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             Title="testpage">
+    <VerticalStackLayout>
+       
+        <syncfusion:SfDataGrid x:Name="StdGrid"
+                ItemsSource="{Binding Students}"
+                
+                SelectionMode="Single"
+                NavigationMode="Row"
+                >
+
+
+
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn MappingName="StdId" HeaderText="رم" />
+
+                <syncfusion:DataGridTextColumn MappingName="StdName" HeaderText="اسم" />
+                <syncfusion:DataGridTextColumn MappingName="StdDep" HeaderText="القسم" />
+                <syncfusion:DataGridTextColumn MappingName="StdBranch" HeaderText="الشعبة" />
+                <syncfusion:DataGridTextColumn MappingName="StdClass" HeaderText="الفصل" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+    </VerticalStackLayout>
+        
+</ContentPage>
+-->

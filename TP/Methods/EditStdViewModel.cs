@@ -19,15 +19,21 @@ namespace TP.Methods
         public EditStdViewModel()
         {
             _databaseHelper = new DatabaseHelper(dbPath); // Initialize the database helper.
-            LoadData(); // Loads departments, branches, and students data.
-            LoadStudentsAsync(); // Loads the list of students asynchronously.
+            //LoadData(); // Loads departments, branches, and students data.
+            Task.Run(async () =>
+            {
+                await InitializeAsync(); // Initializes the database (tables, etc.).
+                await LoadData(); // Loads data into the ViewModel properties.
+            });
         }
 
         // Asynchronously loads the list of students from the database.
-        public async Task LoadStudentsAsync()
+
+
+        private async Task InitializeAsync()
         {
-            var studentList = await _databaseHelper.GetStudentsAsync(); // Fetch students from the database.
-            Students = new ObservableCollection<StdTable>(studentList); // Assign the result to the Students collection.
+            await _databaseHelper.InitializeDatabaseAsync(); // Ensures the database schema is ready.
+            // Additional initialization tasks, if needed.
         }
 
         // Observable collection for students.
@@ -69,32 +75,11 @@ namespace TP.Methods
         // Loads departments, branches, and students from the database asynchronously.
         public async Task LoadData()
         {
+            Students = new ObservableCollection<StdTable>(await _databaseHelper.GetStudentsAsync());
             Departments = new ObservableCollection<DepTable>(await _databaseHelper.GetDepartmentsAsync());
             Branches = new ObservableCollection<BranchTable>(await _databaseHelper.GetBranchesAsync());
-            Students = new ObservableCollection<StdTable>(await _databaseHelper.GetStudentsAsync());
         }
 
-        // Saves the student data depending on the type (1 for adding, 2 for updating).
-        public async Task SaveStudentAsync(int GetType)
-        {
-            if (GetType == 1) // If GetType is 1, add the student.
-            {
-                await _databaseHelper.AddStudentAsync(CurrentStudent);
-            }
-            else if (GetType == 2) // If GetType is 2, update the student.
-            {
-                await _databaseHelper.UpdateStudentAsync(CurrentStudent);
-            }
-        }
-
-        // Deletes the currently selected student from the database.
-        public async Task DeleteStudentAsync()
-        {
-            if (CurrentStudent != null)
-            {
-                await _databaseHelper.DeleteStudentAsync(CurrentStudent.StdId);
-            }
-        }
 
         // PropertyChanged event for notifying changes in the properties.
         public event PropertyChangedEventHandler PropertyChanged;

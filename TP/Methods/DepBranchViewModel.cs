@@ -27,7 +27,7 @@ namespace TP.Methods
             // Asynchronously initialize the database and load data in a background task.
             Task.Run(async () =>
             {
-                await _databaseHelper.InitializeAsync(); // Initializes the database (tables, etc.).
+                await InitializeAsync(); // Initializes the database (tables, etc.).
                 await LoadData(); // Loads data into the ViewModel properties.
             });
 
