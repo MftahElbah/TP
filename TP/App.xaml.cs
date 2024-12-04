@@ -15,10 +15,10 @@ namespace TP
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYwMzI0N0AzMjM3MmUzMDJlMzBYMEdaSXZDSTFZR3Vwd2NoRkloaWNQeWVEMlRxMDgyMTRsQzhQdnR4THI0PQ==");
             
             InitializeComponent();
-            //MainPage = new NavigationPage(new AppShell());
+            MainPage = new NavigationPage(new AppShell());
             //MainPage = new NavigationPage(new DepBranchManager());
             //MainPage = new NavigationPage(new StdManger());
-            MainPage = new NavigationPage(new SubjectManger());
+            //MainPage = new NavigationPage(new SubjectManger());
             //MainPage = new NavigationPage(new testpage());
         }
 
