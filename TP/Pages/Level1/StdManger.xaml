@@ -4,6 +4,8 @@
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Level1.StdManger"
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft"
              Title="StdManger">
     <VerticalStackLayout>
       
@@ -11,7 +13,8 @@
                         ItemsSource="{Binding Students}"
                         SelectionMode="Single"
                         NavigationMode="Row"
-                        SelectionChanged="StdGrid_SelectionChanged">
+                        SelectionChanged="StdGrid_SelectionChanged"
+                        ColumnWidthMode="Fill">
 
 
 

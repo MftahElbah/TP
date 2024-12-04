@@ -3,12 +3,29 @@
     x:Class="TP.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:TP"
+    xmlns:local="clr-namespace:TP.Pages.Level1"
+    FlowDirection="LeftToRight"
     Shell.FlyoutBehavior="Flyout">
-
-    
 <!--
-<ShellContent Title = "إدارة الاقسام" ContentTemplate = "{DataTemplate local:DepBranchManager}" Route ="DepBranchManger" /> 
+    <FlyoutItem FlyoutDisplayOptions="AsSingleItem">
+        
+            <ShellContent Title = "إدارة الاقسام" ContentTemplate = "{DataTemplate local:DepBranchManager}" Route ="DepBranchManger" />
+            <ShellContent Title = "إدارة الطلبة" ContentTemplate = "{DataTemplate local:StdManger}" Route ="DepBranchManger" />
+            <ShellContent Title = "إدارة الدروس" ContentTemplate = "{DataTemplate local:SubjectManger}" Route ="DepBranchManger" />
+        
+    </FlyoutItem>
+    -->
+
+    <FlyoutItem Title="الاقسام والشعب">
+        <ShellContent ContentTemplate="{DataTemplate local:DepBranchManager}" />
+    </FlyoutItem>
+    <FlyoutItem Title="إدارة الطلاب">
+        <ShellContent ContentTemplate="{DataTemplate local:StdManger}" />
+    </FlyoutItem>
+    <FlyoutItem Title="إدارة المواد">
+        <ShellContent ContentTemplate="{DataTemplate local:SubjectManger}" />
+    </FlyoutItem>
+    <!--
 <ShellContent Title = "DataGrid" ContentTemplate = "{DataTemplate local:DataGridFeatures}" Route ="DataGridFeatures" /> 
 <ShellContent Title = "Circular Charts" ContentTemplate = "{DataTemplate local:CircularChartsFeatures}" Route ="CircularChartsFeatures" /> 
 <ShellContent Title = "ComboBox" ContentTemplate = "{DataTemplate local:ComboBoxFeatures}" Route ="ComboBoxFeatures" /> 

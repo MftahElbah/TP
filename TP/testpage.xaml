@@ -4,19 +4,42 @@
              x:Class="TP.testpage"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
-             Title="testpage">
+             Title="testpage"
+             FlowDirection="RightToLeft"
+             >
     <VerticalStackLayout>
 
-        <editors:SfComboBox x:Name="DepartmentComboBox"
-               WidthRequest="300"
-               HeightRequest="50"
-               BackgroundColor="#DCDCDC"
-               Margin="10"
-               
-               />
+ 
     </VerticalStackLayout>
-
 </ContentPage>
+<!--
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP.testpage"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             Title="testpage"
+             FlowDirection="RightToLeft"
+             >
+    <VerticalStackLayout>
+
+        <syncfusion:SfDataGrid x:Name="SubTableDataGrid"
+                               ItemsSource="{Binding SubTableView}"
+                               >
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn HeaderText="رم" MappingName="SupId" />
+                <syncfusion:DataGridTextColumn HeaderText="اسم" MappingName="SupName" />
+                <syncfusion:DataGridTextColumn HeaderText="قسم" MappingName="DepName" />
+                <syncfusion:DataGridTextColumn HeaderText="شعبة" MappingName="BranchName" />
+                <syncfusion:DataGridTextColumn HeaderText="الفصل" MappingName="SupClass" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <Button Text="+" Clicked="AddBtnClicked"/>
+        <Label x:Name="lbl"/>
+
+    </VerticalStackLayout>
+</ContentPage>
+    -->
 
 
 

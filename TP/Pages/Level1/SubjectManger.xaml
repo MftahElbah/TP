@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TP.Pages.Level1.SubjectManger"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft">
+    <VerticalStackLayout>
+
+        <syncfusion:SfDataGrid x:Name="SubTableDataGrid"
+                               ItemsSource="{Binding SubTableView}"
+                               SelectionMode="Single"
+                               NavigationMode="Row"
+                               SelectionChanged="SubTableSelectionChanged"
+                               ColumnWidthMode="Fill"
+                               >
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTextColumn HeaderText="رم" MappingName="SubId" />
+                <syncfusion:DataGridTextColumn HeaderText="اسم" MappingName="SubName" />
+                <syncfusion:DataGridTextColumn HeaderText="قسم" MappingName="DepName" />
+                <syncfusion:DataGridTextColumn HeaderText="شعبة" MappingName="BranchName" />
+                <syncfusion:DataGridTextColumn HeaderText="الفصل" MappingName="SubClass" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <Button Text="+"
+        WidthRequest="60" 
+        HeightRequest="60" 
+        BackgroundColor="#2374AB" 
+        TextColor="White"
+        CornerRadius="30"
+        VerticalOptions="End"
+        HorizontalOptions="End"
+        Clicked="AddClicked" />
+        <Label x:Name="lbl"/>
+
+    </VerticalStackLayout>
+</ContentPage>

@@ -33,4 +33,26 @@ namespace TP
         public int StdClass { get; set; }
 
     }
+
+    public class SubTable
+    {
+        [PrimaryKey, AutoIncrement]
+        public int SubId { get; set; }
+        public string SubName { get; set; }
+        public int SubDep { get; set; } //foreign key to DepTable
+        public int SubBranch { get; set; }//foreign key to BranchTable
+        public int SubClass { get; set; }
+
+    }
+    public class SubForStdTable
+    {
+        public int SubId { get; set; }
+        public int StdId { get; set; }
+        public float Deg { get; set; }
+        public float MiddelDeg{ get; set; }
+
+        //public float TotalDeg = Deg + MiddelDeg;
+
+    }
+
 }

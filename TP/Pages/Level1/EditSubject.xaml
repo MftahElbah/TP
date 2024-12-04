@@ -6,19 +6,15 @@
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
-             x:Class="TP.Pages.Level1.EditStd"
+             x:Class="TP.Pages.Level1.EditSubject"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft"
              Title="EditStd">
     <VerticalStackLayout>
-        <syncfusion:SfTextInputLayout Hint="رقم" ContainerType="Outlined" WidthRequest="300"
-                      HelperText="ادخل رقم الدراسي">
-            <Entry x:Name="IdEntry" BackgroundColor="#dcdcdc" BindingContext="{Binding StdId}"/>
-        </syncfusion:SfTextInputLayout>
         
         <syncfusion:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
-                      HelperText="ادخل اسم">
-            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc" BindingContext="{Binding StdName}"/>
+                      HelperText="ادخل اسم المادة">
+            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
         </syncfusion:SfTextInputLayout>
 
         <editors:SfComboBox x:Name="DepartmentComboBox"

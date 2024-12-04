@@ -82,13 +82,28 @@
          </ItemGroup>
 	
 	 <ItemGroup>
+	   <Compile Update="Pages\Level1\EditSubject.xaml.cs">
+	     <DependentUpon>EditSubject.xaml</DependentUpon>
+	   </Compile>
+	   <Compile Update="Pages\Level1\SubjectManger.xaml.cs">
+	     <DependentUpon>SubjectManger.xaml</DependentUpon>
+	   </Compile>
+	 </ItemGroup>
+	
+	 <ItemGroup>
 	   <MauiXaml Update="Pages\Level1\DepBranchManager.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Level1\EditDepBranch.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
+	   <MauiXaml Update="Pages\Level1\EditSubject.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
 	   <MauiXaml Update="Pages\Level1\EditStd.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Level1\SubjectManger.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Level1\StdManger.xaml">

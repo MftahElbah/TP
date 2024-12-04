@@ -8,8 +8,11 @@
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
-             Title="EditDepBranch">
-    <VerticalStackLayout VerticalOptions="Center" FlowDirection="RightToLeft">
+             Title="EditDepBranch"
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft"
+             >
+    <VerticalStackLayout VerticalOptions="Center">
         <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
             <buttons:SfButton Text="الاقسام" WidthRequest="120" HeightRequest="40" x:Name="DepViewShower" Clicked="DepViewShowerClicked"/>
             <buttons:SfButton Text="الشعب" WidthRequest="120" HeightRequest="40" x:Name="BranchViewShower" Clicked="BranchViewShowerClicked"/>

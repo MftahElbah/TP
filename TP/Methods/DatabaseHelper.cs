@@ -10,7 +10,6 @@ namespace TP.Methods
     public class DatabaseHelper
     {
         public readonly SQLiteAsyncConnection _database;
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         // Defines the path to the SQLite database in the local application data directory.
 
         public DatabaseHelper(string dbPath)
@@ -24,8 +23,36 @@ namespace TP.Methods
             await _database.CreateTableAsync<DepTable>(); // Creates the DepTable if it doesn't exist.
             await _database.CreateTableAsync<BranchTable>(); // Creates the BranchTable if it doesn't exist.
             await _database.CreateTableAsync<StdTable>(); // Creates the StdTable if it doesn't exist.
+            await _database.CreateTableAsync<SubTable>();
+
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
+
         }
+        public async Task<List<SubTableView>> GetSubTableViewAsync()
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                s.SubId, 
+                s.SubName, 
+                d.DepName AS DepName, 
+                b.BranchName AS BranchName, 
+                s.SubClass
+            FROM SubTable s
+            INNER JOIN DepTable d ON s.SubDep = d.DepId
+            INNER JOIN BranchTable b ON s.SubBranch = b.BranchId";
+
+                return await _database.QueryAsync<SubTableView>(query);
+            }
+            catch (SQLiteException ex)
+            {
+                Console.WriteLine($"SQLiteException: {ex.Message}");
+                return new List<SubTableView>(); // Return empty list on error.
+            }
+        }
+
+
 
         public async Task InitializeAsync()
         {
@@ -70,6 +97,7 @@ namespace TP.Methods
                 };
                 await _database.InsertAllAsync(initialBranches); // Inserts the initial branches into the database.
             }
+
         }
 
         public Task<List<DepTable>> GetDepartmentsAsync()
@@ -198,24 +226,5 @@ namespace TP.Methods
             }
         }
 
-        public async Task AddStudentAsync(StdTable student)
-        {
-            await _database.InsertAsync(student); // Adds a student to the database.
-        }
-
-        public async Task UpdateStudentAsync(StdTable student)
-        {
-            await _database.UpdateAsync(student); // Updates an existing student's data in the database.
-        }
-
-        public async Task DeleteStudentAsync(int stdId)
-        {
-            var student = await _database.Table<StdTable>().FirstOrDefaultAsync(s => s.StdId == stdId);
-            // Retrieves the student with the specified ID.
-            if (student != null)
-            {
-                await _database.DeleteAsync(student); // Deletes the student from the database.
-            }
-        }
     }
 }

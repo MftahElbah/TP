@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 
 namespace TP.Pages.Level1;
-public partial class EditStd : ContentPage
+public partial class EditSubject : ContentPage
 {
     public ObservableCollection<int> Classes { get; set; }
     public ObservableCollection<string> DepNames { get; set; }
@@ -13,13 +13,14 @@ public partial class EditStd : ContentPage
 
     public readonly SQLiteAsyncConnection _database;
 
+    public string ids;
 
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
 
-    public EditStd(string id,string stdname , string dep , string branch , string classnum,int gt)
+    public EditSubject(string id,string subname , string dep , string branch , string classnum,int gt)
     {
         InitializeComponent();
-
+        ids = id;
         _database = new SQLiteAsyncConnection(dbPath);
 
         LoadDepartmentsAsync();
@@ -28,8 +29,7 @@ public partial class EditStd : ContentPage
         ClassComboBox.ItemsSource = Classes;
 
         if (!string.IsNullOrEmpty(id)) {
-            IdEntry.Text = id;
-            NameEntry.Text = stdname;
+            NameEntry.Text = subname;
             DepartmentComboBox.SelectedItem = dep;
             LoadBranchData(dep);
             BranchComboBox.SelectedItem = branch;
@@ -53,37 +53,80 @@ public partial class EditStd : ContentPage
 
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
-        if (IdEntry.IsEnabled) { 
-        var Std = new StdTable { StdId = int.Parse(IdEntry.Text),StdName = NameEntry.Text,StdDep=DepartmentComboBox.Text,StdBranch = BranchComboBox.Text , StdClass=int.Parse(ClassComboBox.Text)};
-        await _database.InsertAsync(Std);
-        await DisplayAlert("Success", "تمت اضافة الطالب بنجاح", "OK");
-        }
-        else {
-            int stdid = int.Parse(IdEntry.Text);
-            var Std = await _database.Table<StdTable>().FirstOrDefaultAsync(d => d.StdId == stdid);
-            Std.StdName = NameEntry.Text;
-            Std.StdDep = DepartmentComboBox.Text;
-            Std.StdBranch = BranchComboBox.Text;
-            Std.StdClass=int.Parse(ClassComboBox.Text);
+        string depname = DepartmentComboBox.Text;
+        string branchname = BranchComboBox.Text;
 
-            await _database.UpdateAsync(Std);
+        if (string.IsNullOrWhiteSpace(NameEntry.Text) || string.IsNullOrWhiteSpace(depname) || string.IsNullOrWhiteSpace(branchname))
+        {
+            await DisplayAlert("Error", "All fields are required.", "OK");
+            return;
         }
-        await Navigation.PopAsync();
+
+        if (!int.TryParse(ClassComboBox.Text, out int selectedClass))
+        {
+            await DisplayAlert("Error", "Invalid class number.", "OK");
+            return;
+        }
+
+        try
+        {
+            var dep = await _database.Table<DepTable>().FirstOrDefaultAsync(d => d.DepName == depname);
+            var branch = await _database.Table<BranchTable>().FirstOrDefaultAsync(b => b.BranchName == branchname);
+
+            if (dep == null || branch == null)
+            {
+                await DisplayAlert("Error", "Invalid department or branch.", "OK");
+                return;
+            }
+
+            if (ids == null)
+            {
+                var Sub = new SubTable
+                {
+                    SubName = NameEntry.Text,
+                    SubDep = dep.DepId,
+                    SubBranch = branch.BranchId,
+                    SubClass = selectedClass
+                };
+                await _database.InsertAsync(Sub);
+                await DisplayAlert("Success", "Subject added successfully.", "OK");
+            }
+            else
+            {
+                int idnum = int.Parse(ids);
+                var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == idnum);
+                if (Sub != null)
+                {
+                    Sub.SubName = NameEntry.Text;
+                    Sub.SubDep = dep.DepId;
+                    Sub.SubBranch = branch.BranchId;
+                    Sub.SubClass = selectedClass;
+                    await _database.UpdateAsync(Sub);
+                }
+            }
+
+            await Navigation.PopAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+        }
     }
 
     private async void DeleteButtonClicked(object sender, EventArgs e)
     {
-        int stdid = int.Parse(IdEntry.Text);
-        var Std = await _database.Table<StdTable>().FirstOrDefaultAsync(d => d.StdId == stdid);
-        if (Std != null)
+        int subid = int.Parse(ids);
+        var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == subid);
+        if (Sub != null)
         {
-            await _database.DeleteAsync(Std);
-        await DisplayAlert("Success", "تم الحذف بنجاح", "OK");
+
+            await _database.DeleteAsync(Sub);
+            await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
             await Navigation.PopAsync();
         }
         else
         {
-        await DisplayAlert("Success", "خطاء", "OK");
+        await DisplayAlert("Success", "حدث خطاء", "OK");
 
         }
         
@@ -127,15 +170,12 @@ public partial class EditStd : ContentPage
         //1 to insert , 2 to update
         if (Ch == 1)
         {
-            IdEntry.IsEnabled = true;
             DeleteButton.IsVisible = false;
-
         }
         else if (Ch == 2)
         {
-            IdEntry.IsEnabled = false;
-            DeleteButton.IsVisible = true;
-           
+            DeleteButton.IsVisible = true;  
         }
     }
+
 }

@@ -5,9 +5,11 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Level1.DepBranchManager"
              Title="Department and Branch Management"
-             BackgroundColor="#E4E4E4">
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft"
+             >
 
-    <VerticalStackLayout FlowDirection="RightToLeft" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+    <VerticalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
 
         <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
             <buttons:SfButton Text="الاقسام" WidthRequest="120" HeightRequest="40" x:Name="DepDataGridShower" Clicked="DepDataGridShowerClicked"/>
@@ -19,6 +21,8 @@
                         ItemsSource="{Binding Departments}"
                         SelectionMode="Single"
                         NavigationMode="Row"
+                        ColumnWidthMode="Fill"
+                        
                         SelectionChanged="DepartmentGrid_SelectionChanged">
 
             <syncfusion:SfDataGrid.Columns>
@@ -52,6 +56,7 @@
                                 ItemsSource="{Binding Branches}"
                                 SelectionMode="Single"
                                 NavigationMode="Row"
+                                ColumnWidthMode="Fill"
                                 SelectionChanged="BranchGrid_SelectionChanged">
 
             
