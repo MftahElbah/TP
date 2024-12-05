@@ -17,6 +17,7 @@ public partial class DepBranchManager : ContentPage // A page that manages depar
         _viewModel = new DepBranchViewModel(); // Instantiates the ViewModel for data binding.
         BindingContext = _viewModel; // Sets the BindingContext to connect UI with the ViewModel.
         ChickWhichTableShow(CheckerNum); // Determines which grid to show on page load.
+
     }
 
     // Event called when the page appears on the screen.
