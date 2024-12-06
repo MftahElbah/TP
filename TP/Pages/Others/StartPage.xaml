@@ -5,7 +5,7 @@
              x:Class="TP.Pages.Others.StartPage"
              FlowDirection="RightToLeft">
     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
-        <Label Text="اهلا بك في برنامج الكلية القحبة" FontSize="Title"/>
+        <Label Text="اهلا بك في برنامج الكلية" FontSize="Title"/>
         <buttons:SfButton Text="تسجيل دخول" WidthRequest="120" HeightRequest="40" x:Name="OpenLoginPageBtn" Clicked="OpenLoginPageBtnClicked"/>
         <buttons:SfButton Text="تسجيل حساب جديد" WidthRequest="120" HeightRequest="40" x:Name="OpenSignupPageBtn" Clicked="OpenSignupPageBtnClicked"/>
     </VerticalStackLayout>
