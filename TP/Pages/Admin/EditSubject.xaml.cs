@@ -9,7 +9,7 @@ public partial class EditSubject : ContentPage
     public ObservableCollection<string> DepNames { get; set; }
     public ObservableCollection<string> BranchesName { get; set; }
     
-    public EditStdViewModel _viewModel = new EditStdViewModel ();
+    /*public EditStdViewModel _viewModel = new EditStdViewModel ();*/
 
     public readonly SQLiteAsyncConnection _database;
 
@@ -86,7 +86,9 @@ public partial class EditSubject : ContentPage
                     SubName = NameEntry.Text,
                     SubDep = dep.DepId,
                     SubBranch = branch.BranchId,
-                    SubClass = selectedClass
+                    SubClass = selectedClass,
+                    ShowDeg = false,
+                    UserId = UserSession.UserId,
                 };
                 await _database.InsertAsync(Sub);
                 await DisplayAlert("Success", "Subject added successfully.", "OK");

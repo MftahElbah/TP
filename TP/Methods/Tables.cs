@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace TP
 {
+    public class UsersAccountTable
+    {
+        [PrimaryKey]
+        public int UserId { get; set; }
+        public string Name { get; set; }
+        [Unique]
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public int UserType { get; set; } //1 = admin, 2 = Teacher, 3 = Student
+    }
     public class DepTable
     {
         [PrimaryKey, AutoIncrement]
@@ -22,17 +32,6 @@ namespace TP
         public string DepName { get; set; }
     }
 
-    public class StdTable
-    {
-        [PrimaryKey]
-        public int StdId { get; set; }
-        public string StdName { get; set; }
-
-        public string StdDep { get; set; }
-        public string StdBranch { get; set; }
-        public int StdClass { get; set; }
-
-    }
 
     public class SubTable
     {
@@ -43,7 +42,7 @@ namespace TP
         public int SubBranch { get; set; }//foreign key to BranchTable
         public int SubClass { get; set; }
         public bool ShowDeg {  get; set; }
-
+        public int UserId { get; set; } //Foreign key to user
     }
     public class SubForStdTable
     {
@@ -56,14 +55,6 @@ namespace TP
 
     }
 
-    public class UsersAccountTable
-    {
-        [PrimaryKey]
-        public int UserId { get; set; }
-        public string Name { get; set; }
-        [Unique]
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public int UserType { get; set; } //1 = admin, 2 = Teacher, 3 = Student
-    }
+
+
 }

@@ -1,4 +1,6 @@
 ﻿using SQLite;
+using TP.Methods;
+using TP.Pages.Teacher;
 
 namespace TP.Pages.Others;
 
@@ -19,12 +21,18 @@ public partial class LoginPage : ContentPage
             await DisplayAlert("خطا", "يجب ملئ جميع الحقول", "حسنا");
             return;
         }
-        string username = UsernameEntry.Text;
+        string username = UsernameEntry.Text.ToLower();
         string password = PasswordEntry.Text;
         var IfUserExist = await _database.Table<UsersAccountTable>().FirstOrDefaultAsync(d => d.Username == username && d.Password == password);
         if (IfUserExist == null)
         {
             await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");
+            return;
+        }
+        UserSession.UserId = IfUserExist.UserId;
+        if (IfUserExist.UserType == 2)
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new TeacherAppShell()));
             return;
         }
         await DisplayAlert("suc", "im dead", "حسنا");

@@ -67,7 +67,7 @@ public partial class SignupPage : ContentPage
             await DisplayAlert("خطاء", "يجب ملئ جميع الحقول", "حسنا");
             return;
         }
-        string us = UsernameEntry.Text;
+        string us = UsernameEntry.Text.ToLower();
         var username= await _database.Table<UsersAccountTable>().FirstOrDefaultAsync(d => d.Username== us);
         if (username != null) { 
             await DisplayAlert("خطاء", "اسم المستخدم المكتوب موجود بالفعل","حسنا");

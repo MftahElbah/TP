@@ -19,9 +19,11 @@
     <FlyoutItem Title="الاقسام والشعب">
         <ShellContent ContentTemplate="{DataTemplate local:DepBranchManager}" />
     </FlyoutItem>
+    <!--
     <FlyoutItem Title="إدارة الطلاب">
         <ShellContent ContentTemplate="{DataTemplate local:StdManger}" />
     </FlyoutItem>
+    -->
     <FlyoutItem Title="إدارة المواد">
         <ShellContent ContentTemplate="{DataTemplate local:SubjectManger}" />
     </FlyoutItem>

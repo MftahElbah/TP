@@ -101,13 +101,16 @@
 	   <MauiXaml Update="Pages\Admin\EditSubject.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Admin\EditStd.xaml">
+	   <MauiXaml Update="Pages\MainPage.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Old\EditStd.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Admin\SubjectManger.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Admin\StdManger.xaml">
+	   <MauiXaml Update="Pages\Old\StdManger.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Others\LoginPage.xaml">
@@ -119,6 +122,9 @@
 	   <MauiXaml Update="Pages\Others\StartPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
+	   <MauiXaml Update="Pages\Teacher\TeacherAppShell.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
 	   <MauiXaml Update="testpage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
@@ -126,7 +132,6 @@
 	
 	 <ItemGroup>
 	   <Folder Include="Pages\Student\" />
-	   <Folder Include="Pages\Teacher\" />
 	 </ItemGroup>
 	<!-- Build Properties must be defined within these property groups to ensure successful publishing
        to the Mac App Store. See: https://aka.ms/maui-publish-app-store#define-build-properties-in-your-project-file -->
