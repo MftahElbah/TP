@@ -16,8 +16,7 @@ public partial class DepBranchManager : ContentPage // A page that manages depar
         InitializeComponent(); // Initializes components defined in the XAML file.
         _viewModel = new DepBranchViewModel(); // Instantiates the ViewModel for data binding.
         BindingContext = _viewModel; // Sets the BindingContext to connect UI with the ViewModel.
-        ChickWhichTableShow(CheckerNum); // Determines which grid to show on page load.
-
+        ChickWhichTableShow(CheckerNum); // Determines which grid to show on page load
     }
 
     // Event called when the page appears on the screen.
@@ -37,8 +36,11 @@ public partial class DepBranchManager : ContentPage // A page that manages depar
     // Event called when a row in the Department grid is selected.
     private async void DepartmentGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
-        if (DepartmentGrid.SelectedRow != null) // Checks if a row is selected.
+        if (DepartmentGrid.SelectedRow == null) // Checks if a row is selected.
         {
+            return;
+        }
+
             var rowData = DepartmentGrid.SelectedRow; // Gets the selected row's data.
 
             // Retrieves properties using reflection.
@@ -53,14 +55,15 @@ public partial class DepBranchManager : ContentPage // A page that manages depar
             }
 
             DepartmentGrid.SelectedRow = null; // Clears the grid's selection.
-        }
     }
 
     // Event called when a row in the Branch grid is selected.
     private async void BranchGrid_SelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
-        if (BranchGrid.SelectedRow != null) // Checks if a row is selected.
+        if (BranchGrid.SelectedRow == null) // Checks if a row is selected.
         {
+            return;
+        }
             var rowData = BranchGrid.SelectedRow; // Gets the selected row's data.
 
             // Retrieves properties using reflection.
@@ -76,18 +79,17 @@ public partial class DepBranchManager : ContentPage // A page that manages depar
             }
 
             BranchGrid.SelectedRow = null; // Clears the grid's selection.
-        }
     }
 
     // Event called when the "Show Departments" button is clicked.
-    private async void DepDataGridShowerClicked(object sender, EventArgs e)
+    private void DepDataGridShowerClicked(object sender, EventArgs e)
     {
         CheckerNum = 1; // Sets view to department grid.
         ChickWhichTableShow(CheckerNum); // Updates the UI to show the department grid.
     }
 
     // Event called when the "Show Branches" button is clicked.
-    private async void BranchDataGridShowerClicked(object sender, EventArgs e)
+    private void BranchDataGridShowerClicked(object sender, EventArgs e)
     {
         CheckerNum = 2; // Sets view to branch grid.
         ChickWhichTableShow(CheckerNum); // Updates the UI to show the branch grid.

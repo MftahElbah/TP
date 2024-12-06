@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:stepProgressBar="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             x:Class="TP.Pages.Others.SignupPage"
+             Title="SignupPage"
+             FlowDirection="RightToLeft"
+             >
+    <VerticalStackLayout>
+        
+        <stepProgressBar:SfStepProgressBar 
+            x:Name="stepProgress"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"                                        
+                    Orientation="Horizontal"                                                                                       
+                    LabelSpacing="10"
+                    ProgressAnimationDuration="500"
+            />
+        
+        <entry:SfTextInputLayout Hint="رقم الدراسي" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل رقم الدراسي" x:Name="IdTxtInL">
+            <Entry x:Name="IdEntry" BackgroundColor="#dcdcdc" Keyboard="Numeric"/>
+        </entry:SfTextInputLayout>
+        
+
+        <entry:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل اسم الاول" x:Name="FirstNameTxtInL">
+            <Entry x:Name="FirstNameEntry" BackgroundColor="#dcdcdc"/>
+        </entry:SfTextInputLayout>
+        
+        <entry:SfTextInputLayout Hint="اسم" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل اسم الاخر" x:Name="LastNameTxtInL">
+            <Entry x:Name="LastNameEntry" BackgroundColor="#dcdcdc"/>
+        </entry:SfTextInputLayout>
+        
+        <entry:SfTextInputLayout Hint="اسم المستخدم" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل اسم المستخدم" x:Name="UsernameTxtInL">
+            <Entry x:Name="UsernameEntry" BackgroundColor="#dcdcdc" TextChanged="UNEChanged"/>
+        </entry:SfTextInputLayout>
+
+        <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل كلمة السر" x:Name="PasswordTxtInL">
+            <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc" IsPassword="True"/>
+        </entry:SfTextInputLayout>
+
+        <entry:SfTextInputLayout Hint="تأكيد كلمة السر" ContainerType="Outlined" WidthRequest="300"
+                   HelperText="ادخل تأكيد كلمة السر" x:Name="ConfirmPasswordTxtInL">
+            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="#dcdcdc" IsPassword="True"/>
+        </entry:SfTextInputLayout>
+        <buttons:SfButton Text="التالي" WidthRequest="120" HeightRequest="40" x:Name="NextSaveBtn" Clicked="NextSaveBtnClicked"/>
+        <buttons:SfButton Text="السابق" WidthRequest="120" HeightRequest="40" x:Name="PreCancelBtn" Clicked="PreCancelBtnClicked"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -13,8 +13,7 @@ public partial class StdManger : ContentPage
 	{
 		InitializeComponent();
         _viewModel = new EditStdViewModel();
-        BindingContext = _viewModel;
-
+        BindingContext = _viewModel;    
     }
 
     protected override async void OnAppearing()
@@ -27,8 +26,10 @@ public partial class StdManger : ContentPage
     {
 
 
-        if (StdGrid.SelectedRow != null)
+        if (StdGrid.SelectedRow == null)
         {
+            return;
+        }
             // Access the selected row data
             var rowData = StdGrid.SelectedRow;
 
@@ -48,7 +49,6 @@ public partial class StdManger : ContentPage
 
             // Clear the selection
             StdGrid.SelectedRow = null;
-        }
     }
 
 

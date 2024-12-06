@@ -42,12 +42,13 @@ namespace TP
         public int SubDep { get; set; } //foreign key to DepTable
         public int SubBranch { get; set; }//foreign key to BranchTable
         public int SubClass { get; set; }
+        public bool ShowDeg {  get; set; }
 
     }
     public class SubForStdTable
     {
-        public int SubId { get; set; }
-        public int StdId { get; set; }
+        public int SubId { get; set; } //foreignkey to Subject
+        public int StdId { get; set; } //foreignkey to UsertsAccount UserId type 3
         public float Deg { get; set; }
         public float MiddelDeg{ get; set; }
 
@@ -55,4 +56,14 @@ namespace TP
 
     }
 
+    public class UsersAccountTable
+    {
+        [PrimaryKey]
+        public int UserId { get; set; }
+        public string Name { get; set; }
+        [Unique]
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public int UserType { get; set; } //1 = admin, 2 = Teacher, 3 = Student
+    }
 }

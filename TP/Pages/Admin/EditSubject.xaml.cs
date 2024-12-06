@@ -27,14 +27,14 @@ public partial class EditSubject : ContentPage
         Classes = new ObservableCollection<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8 });
         //BindingContext = this;
         ClassComboBox.ItemsSource = Classes;
-
-        if (!string.IsNullOrEmpty(id)) {
+        if (string.IsNullOrEmpty(id)) {
+            return;
+        }
             NameEntry.Text = subname;
             DepartmentComboBox.SelectedItem = dep;
             LoadBranchData(dep);
             BranchComboBox.SelectedItem = branch;
             ClassComboBox.SelectedItem = classnum;
-        }
             ChickWhichViewShow(gt);
     }
 
@@ -117,33 +117,25 @@ public partial class EditSubject : ContentPage
     {
         int subid = int.Parse(ids);
         var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == subid);
-        if (Sub != null)
+        if (Sub == null)
         {
-
+            await DisplayAlert("Success", "حدث خطاء", "OK");
+            return;
+        }
             await _database.DeleteAsync(Sub);
             await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
             await Navigation.PopAsync();
-        }
-        else
-        {
-        await DisplayAlert("Success", "حدث خطاء", "OK");
-
-        }
-        
     }
 
-    private async void DepComboBoxSelectionChanged(object sender, EventArgs e)
+    private void DepComboBoxSelectionChanged(object sender, EventArgs e)
     {
         LoadBranchData(DepartmentComboBox.Text);
     }
 
     private async void LoadBranchData(string depname)
     {
-        try
-        {
-            if (!string.IsNullOrWhiteSpace(depname))
-            {
-
+        if (string.IsNullOrWhiteSpace(depname)){return;}
+        try{
                 //string DepNameToShearch = depname;
                 // Fetch branches based on selected department
                 var branches = await _database.Table<BranchTable>()
@@ -157,7 +149,6 @@ public partial class EditSubject : ContentPage
 
                 // Bind it to the ComboBox
                 BranchComboBox.ItemsSource = BranchesName;
-            }
         }
         catch (Exception ex)
         {

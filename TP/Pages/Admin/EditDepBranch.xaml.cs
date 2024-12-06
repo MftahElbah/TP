@@ -1,12 +1,13 @@
 ﻿using Syncfusion.Maui.Data;
 using System.Collections.ObjectModel;
+using System.Xml.Linq;
 using TP.Methods;
 namespace TP.Pages.Level1;
 
 public partial class EditDepBranch : ContentPage
 {
     
-    private readonly DatabaseHelper _databaseHelper;
+    public readonly DatabaseHelper _databaseHelper;
     public string _Id;
     public string _Name1;
     public string _Name2;
@@ -19,14 +20,8 @@ public partial class EditDepBranch : ContentPage
 
 
 		InitializeComponent();
-
-
-
-
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath);
-
-        
 
         _Id = Id;
         _Name1 = Name1;
@@ -34,30 +29,27 @@ public partial class EditDepBranch : ContentPage
         _TypeDataGrid = TypeDataGrid;
         ChickWhichViewShow(_TypeDataGrid);
         // Set up the page based on whether it's adding or editing
-        if (_Id != null)
-        {
-            // Editing an existing department
-            Title = "تعديل";
-            NameEntry.Text = Name1;
-            EnableButtons(false);
-            DeleteButton.IsVisible = true;
-            if(_Name2 != null)
-            {
-             DepartmentComboBox.SelectedItem = _Name2;
-            }
-
-        }
-        else
-        {
-            // Adding a new department
-            Title = "اضافة";
-            EnableButtons(true);
-            DeleteButton.IsVisible = false;
-        }
+        FillEntries(_Id);
 
 
     }
-
+    private void FillEntries(string id)
+    {
+        if (id == null){
+            Title = "اضافة";
+            EnableButtons(true);
+            DeleteButton.IsVisible = false;
+            return;
+        }
+        // Editing an existing department
+        Title = "تعديل";
+        NameEntry.Text = _Name1;
+        EnableButtons(false);
+        DeleteButton.IsVisible = true;
+        if (_Name2 != null){
+            DepartmentComboBox.SelectedItem = _Name2;
+        }
+    }
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
         string departmentName = NameEntry.Text;
@@ -65,7 +57,6 @@ public partial class EditDepBranch : ContentPage
         // Validate the input
         if (string.IsNullOrWhiteSpace(NameEntry.Text))
         {
-
             await DisplayAlert("Error", "Please enter a all valids.", "OK");
             return;
         }
@@ -144,17 +135,16 @@ public partial class EditDepBranch : ContentPage
 
     }
 
-    private async void DepViewShowerClicked(object sender, EventArgs e)
+    private void DepViewShowerClicked(object sender, EventArgs e)
     {
         _TypeDataGrid = 1;
         ChickWhichViewShow(_TypeDataGrid);
     }
-    private async void BranchViewShowerClicked(object sender, EventArgs e)
+    private void BranchViewShowerClicked(object sender, EventArgs e)
     {
         _TypeDataGrid = 2;
         ChickWhichViewShow(_TypeDataGrid);
     }
-
     private void EnableButtons(bool enable) 
     {
         if (!enable)

@@ -27,14 +27,15 @@ public partial class EditStd : ContentPage
         //BindingContext = this;
         ClassComboBox.ItemsSource = Classes;
 
-        if (!string.IsNullOrEmpty(id)) {
+        if (string.IsNullOrEmpty(id)) {
+            return;
+        }
             IdEntry.Text = id;
             NameEntry.Text = stdname;
             DepartmentComboBox.SelectedItem = dep;
             LoadBranchData(dep);
             BranchComboBox.SelectedItem = branch;
             ClassComboBox.SelectedItem = classnum;
-        }
             ChickWhichViewShow(gt);
     }
 
@@ -89,7 +90,7 @@ public partial class EditStd : ContentPage
         
     }
 
-    private async void DepComboBoxSelectionChanged(object sender, EventArgs e)
+    private void DepComboBoxSelectionChanged(object sender, EventArgs e)
     {
         LoadBranchData(DepartmentComboBox.Text);
     }

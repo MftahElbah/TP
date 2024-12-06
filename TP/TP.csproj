@@ -79,39 +79,54 @@
     <PackageReference Include="Syncfusion.Maui.Cards" Version="27.2.4" />
     <PackageReference Include="Syncfusion.Maui.Core" Version="27.2.4" />
     <PackageReference Include="Syncfusion.Maui.NavigationDrawer" Version="27.2.4" />
+    <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.2.4" />
          </ItemGroup>
 	
 	 <ItemGroup>
-	   <Compile Update="Pages\Level1\EditSubject.xaml.cs">
+	   <Compile Update="Pages\Admin\EditSubject.xaml.cs">
 	     <DependentUpon>EditSubject.xaml</DependentUpon>
 	   </Compile>
-	   <Compile Update="Pages\Level1\SubjectManger.xaml.cs">
+	   <Compile Update="Pages\Admin\SubjectManger.xaml.cs">
 	     <DependentUpon>SubjectManger.xaml</DependentUpon>
 	   </Compile>
 	 </ItemGroup>
 	
 	 <ItemGroup>
-	   <MauiXaml Update="Pages\Level1\DepBranchManager.xaml">
+	   <MauiXaml Update="Pages\Admin\DepBranchManager.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Level1\EditDepBranch.xaml">
+	   <MauiXaml Update="Pages\Admin\EditDepBranch.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Level1\EditSubject.xaml">
+	   <MauiXaml Update="Pages\Admin\EditSubject.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Level1\EditStd.xaml">
+	   <MauiXaml Update="Pages\Admin\EditStd.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Level1\SubjectManger.xaml">
+	   <MauiXaml Update="Pages\Admin\SubjectManger.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Level1\StdManger.xaml">
+	   <MauiXaml Update="Pages\Admin\StdManger.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Others\LoginPage.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Others\SignupPage.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Others\StartPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="testpage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
+	 </ItemGroup>
+	
+	 <ItemGroup>
+	   <Folder Include="Pages\Student\" />
+	   <Folder Include="Pages\Teacher\" />
 	 </ItemGroup>
 	<!-- Build Properties must be defined within these property groups to ensure successful publishing
        to the Mac App Store. See: https://aka.ms/maui-publish-app-store#define-build-properties-in-your-project-file -->

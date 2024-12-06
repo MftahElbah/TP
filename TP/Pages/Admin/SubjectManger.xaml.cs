@@ -53,8 +53,10 @@ public partial class SubjectManger : ContentPage
     {
 
 
-        if (SubTableDataGrid.SelectedRow != null)
+        if (SubTableDataGrid.SelectedRow == null)
         {
+            return;
+        }
             // Access the selected row data
             var rowData = SubTableDataGrid.SelectedRow;
 
@@ -74,7 +76,6 @@ public partial class SubjectManger : ContentPage
 
             // Clear the selection
             SubTableDataGrid.SelectedRow = null;
-        }
     }
 
     private async void AddClicked(object sender, EventArgs e)

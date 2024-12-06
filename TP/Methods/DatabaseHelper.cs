@@ -24,6 +24,7 @@ namespace TP.Methods
             await _database.CreateTableAsync<BranchTable>(); // Creates the BranchTable if it doesn't exist.
             await _database.CreateTableAsync<StdTable>(); // Creates the StdTable if it doesn't exist.
             await _database.CreateTableAsync<SubTable>();
+            await _database.CreateTableAsync<UsersAccountTable>();
 
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
@@ -97,6 +98,14 @@ namespace TP.Methods
                 };
                 await _database.InsertAllAsync(initialBranches); // Inserts the initial branches into the database.
             }
+            var teacher = await _database.Table<UsersAccountTable>().ToListAsync();
+            if(teacher.Count == 0){
+                var initialTeacher = new List<UsersAccountTable>
+                {
+                    new UsersAccountTable {UserId=1234,Name= "Test",Username = "Test" , Password="123" , UserType=2 }
+                };
+                await _database.InsertAllAsync(initialTeacher); // Inserts the initial Teacher Account into the database.
+                }
 
         }
 
