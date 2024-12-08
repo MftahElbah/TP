@@ -47,6 +47,7 @@
             </DataTemplate>
         </listview:SfListView.ItemTemplate>
     </listview:SfListView>
+        <Label x:Name="testlbl" Text="test"/>
     </VerticalStackLayout>
     <!--
 

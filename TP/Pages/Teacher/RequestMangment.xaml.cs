@@ -38,30 +38,38 @@ public partial class RequestMangment : ContentPage
         {
             return;
         }
-        var swipedItem = e.DataItem as RequestJoinSubject;
-        if (swipedItem != null) { return; }
+        else
+        {
+
+            var swipedItem = e.DataItem as RequestJoinSubject;
+            if (swipedItem != null) { return; }
 
 
-        if (e.Direction == SwipeDirection.Right) {
-            var std = new SubForStdTable
-            {
-                SubId = SubIds,
-                StdId = swipedItem.UserId,
-                Deg = 0,
-                MiddelDeg = 0,
+            if (e.Direction == SwipeDirection.Right) {
+                /*var std = new SubForStdTable
+                {
+                    SubId = SubIds,
+                    StdId = swipedItem.UserId,
+                    Deg = 0,
+                    MiddelDeg = 0,
 
-            };
-            await _database.InsertAsync(std);
-        }
-        if (e.Direction == SwipeDirection.Left) {
-            var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
-            if (req == null)
-            {
-                await DisplayAlert("Success", "حدث خطاء", "OK");
-                return;
+                };
+                await _database.InsertAsync(std);*/
+                //testlbl.Text = swipedItem.UserId.ToString();
+                testlbl.Text = "nigga";
             }
-            await _database.DeleteAsync(req);
-        }
+            if (e.Direction == SwipeDirection.Left) {
+                /*var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
+                if (req == null)
+                {
+                    await DisplayAlert("Success", "حدث خطاء", "OK");
+                    return;
+                }
+                await _database.DeleteAsync(req);*/
+                //testlbl.Text = swipedItem.Name;
+                testlbl.Text = "man";
+            }
 
+        }
     }
 }
