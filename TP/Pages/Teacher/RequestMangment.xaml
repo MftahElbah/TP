@@ -49,7 +49,14 @@
             </DataTemplate>
         </listview:SfListView.ItemTemplate>
     </listview:SfListView>
-        <Label x:Name="testlbl" Text="test"/>
+        <Frame x:Name="popupmessage"
+               CornerRadius="20"
+               Margin="16"
+               Padding="0"
+               HeightRequest="40"
+               VerticalOptions="End"
+               IsVisible="False"
+               />
     </VerticalStackLayout>
     <!--
 

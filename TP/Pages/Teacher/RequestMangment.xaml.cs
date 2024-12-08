@@ -58,10 +58,11 @@ public partial class RequestMangment : ContentPage
             };
             await _database.InsertAsync(std);
             testlbl.Text = swipedItem.UserId.ToString();
+            popupmessage.Text = "تم القبول";
         }
         e.Offset = listview.Width;
-        
             await Task.Delay(3000);
+        
         var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
         if (req == null)
         {
