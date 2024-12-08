@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using Syncfusion.Maui.Data;
 using System;
 using System.Collections.ObjectModel;
 
@@ -34,13 +35,18 @@ public partial class RequestMangment : ContentPage
     }
     private async void LVSwipEnd(object sender, Syncfusion.Maui.ListView.SwipeEndedEventArgs e)
     {
-        if (e.Offset < 250)
+        if (e.Offset < 400)
         {
+            testlbl.Text = "testu";
             return;
         }
+        
         var swipedItem = e.DataItem as RequestJoinSubject;
-        if (swipedItem != null) { return; }
-
+        
+        if (swipedItem == null) 
+            return; 
+        
+        listview.SwipeOffset = listview.Width;
 
         if (e.Direction == SwipeDirection.Right) {
             var std = new SubForStdTable
@@ -49,19 +55,22 @@ public partial class RequestMangment : ContentPage
                 StdId = swipedItem.UserId,
                 Deg = 0,
                 MiddelDeg = 0,
-
             };
             await _database.InsertAsync(std);
+            testlbl.Text = swipedItem.UserId.ToString();
         }
-        if (e.Direction == SwipeDirection.Left) {
-            var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
-            if (req == null)
-            {
-                await DisplayAlert("Success", "حدث خطاء", "OK");
-                return;
-            }
-            await _database.DeleteAsync(req);
+        e.Offset = listview.Width;
+        
+            await Task.Delay(3000);
+        var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
+        if (req == null)
+        {
+            await DisplayAlert("Success", "حدث خطاء", "OK");
+            return;
         }
-
+        await _database.DeleteAsync(req);
+        testlbl.Text = swipedItem.Name;
+        
+        RequestsColl.Remove(swipedItem);
     }
 }

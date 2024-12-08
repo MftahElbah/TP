@@ -10,10 +10,11 @@
                              ItemSize="100"
                              AllowSwiping="True"
                              SwipeEnded="LVSwipEnd"
-                             SwipeOffset="500">
+                             SelectionMode="Single"
+                             SwipeOffset="1000">
             <listview:SfListView.StartSwipeTemplate>
                 <DataTemplate>
-                    <Grid BackgroundColor="#D3B05F">
+                    <Grid BackgroundColor="#D3B05F" >
                         <Label Text="قبول" TextColor="#1A1A1A" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
                     </Grid>
                 </DataTemplate>
@@ -28,6 +29,7 @@
         <listview:SfListView.ItemTemplate>
             <DataTemplate>
                 <Frame BackgroundColor="Gray" 
+                       x:Name="FrameWeight"
                        CornerRadius="10" 
                        Margin="10" 
                        VerticalOptions="FillAndExpand" 
@@ -47,6 +49,7 @@
             </DataTemplate>
         </listview:SfListView.ItemTemplate>
     </listview:SfListView>
+        <Label x:Name="testlbl" Text="test"/>
     </VerticalStackLayout>
     <!--
 

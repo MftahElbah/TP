@@ -34,18 +34,17 @@ public partial class RequestSubjectPage : ContentPage
         foreach (var subject in subjects)
         {
             SubIdForSearch = subject.SubId;
-            UserIdForSearch = subject.UserId;
+            UserIdForSearch = UserSession.UserId;
 
             var SubInReq = await _database.Table<RequestJoinSubject>().Where(s => s.SubId == SubIdForSearch && s.UserId == UserIdForSearch).ToListAsync();
-            if (SubInReq.Count == 0) {
+            var StdInTable = await _database.Table<SubForStdTable>().Where(s => s.SubId == SubIdForSearch && s.StdId == UserIdForSearch).ToListAsync();
+            if (SubInReq.Count == 0 && StdInTable.Count == 0) {
                 Subjects.Add(subject);
             }
         }
     }
     private async void OnSendRequestClicked(object sender, EventArgs e)
     {
-
-        
         var button = sender as SfButton;
         var subject = button.BindingContext as SubTable;
         if(button.Text == "تم الأرسال")
