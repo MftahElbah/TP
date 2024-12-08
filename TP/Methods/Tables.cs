@@ -43,6 +43,7 @@ namespace TP
         public int SubClass { get; set; }
         public bool ShowDeg {  get; set; }
         public int UserId { get; set; } //Foreign key to user
+        public string SubTeacher { get; set; }
     }
     public class SubForStdTable
     {
@@ -54,7 +55,18 @@ namespace TP
         //public float TotalDeg = Deg + MiddelDeg;
 
     }
+    public class RequestJoinSubject
+    {
+        [PrimaryKey,AutoIncrement]
+        public int ReqId { get; set; }
+        public int UserId { get; set; }
+        public string Name { get; set; }
+        public int SubId { get; set; }
+        public DateTime RequestDate { get; set; } 
+    }
 
 
-
+    /*لما الطالب يبحث على المواد يطلعن على شكل قائمة من المواد زي الي عند الاستاذ
+ايكون جنب كل مادة بطمة طلب لما يضغط عليه ياخذ رقم الطالب والمادة وينحط في قائمة الطلبات
+رقم المادة تنحط مع الاسم بس مخفي*/
 }

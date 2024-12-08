@@ -7,9 +7,11 @@
         
     <CollectionView ItemsSource="{Binding Subjects}" 
                     VerticalOptions="FillAndExpand"
-                    HorizontalOptions="FillAndExpand">
+                    HorizontalOptions="FillAndExpand"
+                    SelectionChanged="OnItemSelected"
+                    SelectionMode="Single">
         <CollectionView.ItemTemplate>
-            <DataTemplate>
+            <DataTemplate>  
                 <Frame BackgroundColor="Yellow" 
                        CornerRadius="10" 
                        Margin="10" 
@@ -25,6 +27,7 @@
         </CollectionView.ItemTemplate>
     </CollectionView>
     <Button Text="+"
+            x:Name="AddBtn"
         WidthRequest="60" 
         HeightRequest="60" 
         BackgroundColor="#2374AB" 

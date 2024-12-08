@@ -9,5 +9,7 @@ namespace TP.Methods
     public static class UserSession
     {
         public static int UserId { get; set; }
+        public static string Name { get; set; }
+        public static int UserType { get; set; }
     }
 }

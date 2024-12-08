@@ -25,6 +25,8 @@ namespace TP.Methods
             /*await _database.CreateTableAsync<StdTable>(); // Creates the StdTable if it doesn't exist.*/
             await _database.CreateTableAsync<SubTable>();
             await _database.CreateTableAsync<UsersAccountTable>();
+            await _database.CreateTableAsync<RequestJoinSubject>();
+            await _database.CreateTableAsync<SubForStdTable>();
 
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 

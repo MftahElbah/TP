@@ -81,6 +81,7 @@ public partial class EditSubject : ContentPage
 
             if (ids == null)
             {
+
                 var Sub = new SubTable
                 {
                     SubName = NameEntry.Text,
@@ -89,6 +90,7 @@ public partial class EditSubject : ContentPage
                     SubClass = selectedClass,
                     ShowDeg = false,
                     UserId = UserSession.UserId,
+                    SubTeacher = UserSession.Name,
                 };
                 await _database.InsertAsync(Sub);
                 await DisplayAlert("Success", "Subject added successfully.", "OK");

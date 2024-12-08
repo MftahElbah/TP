@@ -93,6 +93,7 @@ public partial class SignupPage : ContentPage
         };
         await _database.InsertAsync(newuser);
         await DisplayAlert("نجحت", "تم التسجيل بنجاح", "حسنا");
+        await Navigation.PopAsync();
 
     }
     private void PreCancelBtnClicked(object sender, EventArgs e){

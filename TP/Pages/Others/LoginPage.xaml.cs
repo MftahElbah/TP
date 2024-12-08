@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Pages.Student;
 using TP.Pages.Teacher;
 
 namespace TP.Pages.Others;
@@ -30,7 +31,14 @@ public partial class LoginPage : ContentPage
             return;
         }
         UserSession.UserId = IfUserExist.UserId;
-        if (IfUserExist.UserType == 2)
+        UserSession.Name = IfUserExist.Name;
+        UserSession.UserType = IfUserExist.UserType;
+        if (UserSession.UserType == 3)
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new StudentShell()));
+            return;
+        }
+        if (UserSession.UserType == 2)
         {
             await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new TeacherAppShell()));
             return;
