@@ -16,12 +16,11 @@ public partial class MainPage : ContentPage
 
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
-        if(UserSession.UserType == 2){
         Subjects = new ObservableCollection<SubTable>();
+        if(UserSession.UserType == 2){
         AddBtn.IsVisible = true;
-        BindingContext = this;
-            return;
         }
+       
         BindingContext = this;
     }
     protected override async void OnAppearing()
@@ -31,15 +30,27 @@ public partial class MainPage : ContentPage
     }
     private async Task LoadSubjects()
     {
+            Subjects.Clear();
         if (UserSession.UserType == 2)
         {
             var subjects = await _database.Table<SubTable>().Where(s => s.UserId == UserSession.UserId).ToListAsync();
-            Subjects.Clear();
             foreach (var subject in subjects)
             {
                 Subjects.Add(subject);
             }
-            return;
+        }
+        if (UserSession.UserType == 3)
+        {
+            var stdinsub = await _database.Table<SubForStdTable>().Where(s => s.StdId == UserSession.UserId).ToListAsync();
+            var subjects = await _database.Table<SubTable>().ToListAsync();
+            foreach (var Stdinsub in stdinsub)
+            {
+                foreach (var subject in subjects)
+                {
+                    if(Stdinsub.SubId == subject.SubId)
+                    Subjects.Add(subject);
+                }
+            }
         }
     }
     private async void AddClicked(object sender, EventArgs e)
@@ -53,9 +64,11 @@ public partial class MainPage : ContentPage
 
         if (selectedItem != null)
         {
+            if(UserSession.UserType == 2) { 
             // Navigate to the detail page, passing the selected item's ID
             await Navigation.PushAsync(new RequestMangment(selectedItem.SubId));
-
+            }
+            else { }
             // Clear the selection (optional)
             var collectionView = sender as CollectionView;
             if (collectionView != null)

@@ -33,6 +33,7 @@
         BackgroundColor="#2374AB" 
         TextColor="White"
         CornerRadius="30"
+            IsVisible="False"
         VerticalOptions="End"
         HorizontalOptions="End"
         Clicked="AddClicked" />

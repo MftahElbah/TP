@@ -37,7 +37,6 @@ public partial class RequestMangment : ContentPage
     {
         if (e.Offset < 400)
         {
-            testlbl.Text = "testu";
             return;
         }
         
@@ -47,6 +46,8 @@ public partial class RequestMangment : ContentPage
             return; 
         
         listview.SwipeOffset = listview.Width;
+        PopupMessageFrame.IsVisible = false;
+        PopupMessageLbl.Text = "تم الرفض";
 
         if (e.Direction == SwipeDirection.Right) {
             var std = new SubForStdTable
@@ -57,12 +58,12 @@ public partial class RequestMangment : ContentPage
                 MiddelDeg = 0,
             };
             await _database.InsertAsync(std);
-            testlbl.Text = swipedItem.UserId.ToString();
-            popupmessage.Text = "تم القبول";
+            PopupMessageLbl.Text = "تم القبول";
         }
         e.Offset = listview.Width;
-            await Task.Delay(3000);
-        
+        PopupMessageFrame.IsVisible = true;
+            await Task.Delay(1000);
+
         var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
         if (req == null)
         {
@@ -70,8 +71,11 @@ public partial class RequestMangment : ContentPage
             return;
         }
         await _database.DeleteAsync(req);
-        testlbl.Text = swipedItem.Name;
+        
         
         RequestsColl.Remove(swipedItem);
+
+            await Task.Delay(1000);
+        PopupMessageFrame.IsVisible = false;
     }
 }
