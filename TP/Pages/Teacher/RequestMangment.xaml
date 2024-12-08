@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             x:Class="TP.Pages.Teacher.RequestMangment"
+             Title="RequestMangment">
+    <VerticalStackLayout>
+        <listview:SfListView x:Name="listview"
+                             ItemsSource="{Binding RequestsColl}"
+                             ItemSize="100"
+                             AllowSwiping="True"
+                             SwipeEnded="LVSwipEnd"
+                             SelectionMode="Single"
+                             SwipeOffset="1000">
+            <listview:SfListView.StartSwipeTemplate>
+                <DataTemplate>
+                    <Grid BackgroundColor="#D3B05F" >
+                        <Label Text="قبول" TextColor="#1A1A1A" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
+                    </Grid>
+                </DataTemplate>
+            </listview:SfListView.StartSwipeTemplate>
+            <listview:SfListView.EndSwipeTemplate>
+                <DataTemplate>
+                    <Grid BackgroundColor="#1A1A1A">
+                        <Label Text="رفض" TextColor="#E4E4E4" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
+                    </Grid>
+                </DataTemplate>
+            </listview:SfListView.EndSwipeTemplate>
+        <listview:SfListView.ItemTemplate>
+            <DataTemplate>
+                <Frame BackgroundColor="Gray" 
+                       x:Name="FrameWeight"
+                       CornerRadius="10" 
+                       Margin="10" 
+                       VerticalOptions="FillAndExpand" 
+                       HorizontalOptions="FillAndExpand">
+                    <StackLayout>
+                        <Label Text="{Binding Name}" 
+                               HorizontalOptions="Start" 
+                               VerticalOptions="Center" 
+                               FontAttributes="Bold" 
+                               FontSize="16" />
+                        <Label Text="{Binding RequestDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               FontSize="14" />
+                    </StackLayout>
+                </Frame>
+            </DataTemplate>
+        </listview:SfListView.ItemTemplate>
+    </listview:SfListView>
+        <Frame x:Name="popupmessage"
+               CornerRadius="20"
+               Margin="16"
+               Padding="0"
+               HeightRequest="40"
+               VerticalOptions="End"
+               IsVisible="False"
+               />
+    </VerticalStackLayout>
+    <!--
+
+        <CollectionView ItemsSource="{Binding RequestsColl}" 
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
+                SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="Yellow" 
+                   CornerRadius="10" 
+                   Margin="10" 
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center">
+                        <StackLayout>
+                            <Label Text="{Binding Name}" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" 
+                       FontAttributes="Bold" 
+                       FontSize="16" />
+                            <Label Text="{Binding RequestDate, StringFormat='Requested on: {0:yyyy-MM-dd}'}"
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" 
+                       FontSize="14" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+
+    -->
+
+</ContentPage>
