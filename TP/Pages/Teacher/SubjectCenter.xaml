@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              x:Class="TP.Pages.Teacher.SubjectCenter"
-             Title="SubjectCenter">
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
+                       ItemsSource="{Binding DegreeTableView}"
+                       SelectionMode="Single"
+                       NavigationMode="Row"
+                       SelectionChanged="DegreeTableSelectionChanged"
+                       ColumnWidthMode="Fill"
+                       >
+            <datagrid:SfDataGrid.Columns>
+                <datagrid:DataGridTextColumn HeaderText="اسم" MappingName="StdName" />
+                <datagrid:DataGridTextColumn HeaderText="اعمال" MappingName="Degree" />
+                <datagrid:DataGridTextColumn HeaderText="الجزئي" MappingName="MidDegree" />
+                <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="Total" />
+            </datagrid:SfDataGrid.Columns>
+        </datagrid:SfDataGrid>
+        <!--
+        <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
+                       ItemsSource="{Binding suby}"
+                       SelectionMode="Single"
+                       NavigationMode="Row"
+                       SelectionChanged="DegreeTableSelectionChanged"
+                       ColumnWidthMode="Fill"
+                       >
+            <datagrid:SfDataGrid.Columns>
+                <datagrid:DataGridTextColumn HeaderText="اسم" MappingName="SubId" />
+                <datagrid:DataGridTextColumn HeaderText="اعمال" MappingName="StdId" />
+                <datagrid:DataGridTextColumn HeaderText="الجزئي" MappingName="Deg" />
+                <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="MiddelDeg" />
+            </datagrid:SfDataGrid.Columns>
+        </datagrid:SfDataGrid>
+        -->
     </VerticalStackLayout>
 </ContentPage>

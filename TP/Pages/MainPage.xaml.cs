@@ -64,9 +64,10 @@ public partial class MainPage : ContentPage
 
         if (selectedItem != null)
         {
-            if(UserSession.UserType == 2) { 
-            // Navigate to the detail page, passing the selected item's ID
-            await Navigation.PushAsync(new RequestMangment(selectedItem.SubId));
+            if(UserSession.UserType == 2) {
+                // Navigate to the detail page, passing the selected item's ID
+                await Navigation.PushAsync(new SubjectCenter(selectedItem.SubName));
+                /*await Navigation.PushAsync(new RequestMangment(selectedItem.SubId));*/
             }
             else { }
             // Clear the selection (optional)

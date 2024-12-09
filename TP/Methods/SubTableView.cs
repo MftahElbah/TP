@@ -14,4 +14,5 @@ namespace TP.Methods
         public string BranchName { get; set; } // Name from BranchTable
         public int SubClass { get; set; }
     }
+
 }

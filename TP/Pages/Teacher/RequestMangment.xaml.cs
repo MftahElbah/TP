@@ -16,6 +16,7 @@ public partial class RequestMangment : ContentPage
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
         SubIds = subid;
+        
         RequestsColl = new ObservableCollection<RequestJoinSubject>();
         BindingContext = this;
     }
@@ -41,9 +42,8 @@ public partial class RequestMangment : ContentPage
         }
         
         var swipedItem = e.DataItem as RequestJoinSubject;
-        
-        if (swipedItem == null) 
-            return; 
+        uid.Text = swipedItem.UserId.ToString();
+        sid.Text = SubIds.ToString();
         
         listview.SwipeOffset = listview.Width;
         PopupMessageFrame.IsVisible = false;
@@ -65,11 +65,6 @@ public partial class RequestMangment : ContentPage
             await Task.Delay(1000);
 
         var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
-        if (req == null)
-        {
-            await DisplayAlert("Success", "حدث خطاء", "OK");
-            return;
-        }
         await _database.DeleteAsync(req);
         
         

@@ -31,6 +31,28 @@ namespace TP.Methods
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
         }
+        public async Task<List<DegreeTableView>> GetDegreeTableViewAsync(string subName)
+        {
+            try
+            {
+                string query = @"
+            SELECT 
+                u.StdName AS StdName,
+                sf.Deg AS Degree, 
+                sf.MiddelDeg AS MidDegree
+            FROM SubForStdTable sf
+            INNER JOIN UsersTable u ON sf.StdId = u.UserId
+            WHERE s.SubName = ?"; // Parameterized to filter by SubName
+
+                return await _database.QueryAsync<DegreeTableView>(query, subName);
+            }
+            catch (SQLiteException ex)
+            {
+                Console.WriteLine($"SQLiteException: {ex.Message}");
+                return new List<DegreeTableView>(); // Return empty list on error.
+            }
+        }
+
         public async Task<List<SubTableView>> GetSubTableViewAsync()
         {
             try
@@ -54,8 +76,6 @@ namespace TP.Methods
                 return new List<SubTableView>(); // Return empty list on error.
             }
         }
-
-
 
         public async Task InitializeAsync()
         {
@@ -100,14 +120,16 @@ namespace TP.Methods
                 };
                 await _database.InsertAllAsync(initialBranches); // Inserts the initial branches into the database.
             }
+            
             var teacher = await _database.Table<UsersAccountTable>().ToListAsync();
             if(teacher.Count == 0){
                 var initialTeacher = new List<UsersAccountTable>
                 {
-                    new UsersAccountTable {UserId=1234,Name= "Test",Username = "test" , Password="123" , UserType=2 }
+                    new UsersAccountTable {UserId=111,Name= "test",Username = "t" , Password="1" , UserType=2 },
+                    new UsersAccountTable {UserId=123,Name= "stest",Username = "s" , Password="1" , UserType=3 }
                 };
                 await _database.InsertAllAsync(initialTeacher); // Inserts the initial Teacher Account into the database.
-                }
+            }
 
         }
 

@@ -52,8 +52,6 @@ namespace TP
         public float Deg { get; set; }
         public float MiddelDeg{ get; set; }
 
-        //public float TotalDeg = Deg + MiddelDeg;
-
     }
     public class RequestJoinSubject
     {

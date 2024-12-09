@@ -61,6 +61,8 @@
                >
             <Label x:Name="PopupMessageLbl" VerticalOptions="Center" HorizontalOptions="Center" TextColor="#E4E4E4"/>
         </Frame>
+        <Label x:Name="uid"/>
+        <Label x:Name="sid"/>
     </VerticalStackLayout>
     <!--
 
