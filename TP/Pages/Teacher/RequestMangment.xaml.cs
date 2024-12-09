@@ -50,10 +50,10 @@ public partial class RequestMangment : ContentPage
         PopupMessageLbl.Text = "تم الرفض";
 
         if (e.Direction == SwipeDirection.Right) {
-            var std = new SubForStdTable
+            var std = new DegreeTable
             {
                 SubId = SubIds,
-                StdId = swipedItem.UserId,
+                StdName = swipedItem.Name,
                 Deg = 0,
                 MiddelDeg = 0,
             };

@@ -28,16 +28,16 @@ public partial class RequestSubjectPage : ContentPage
     private async Task LoadAvailableSubjects()
     {
         var subjects = await _database.Table<SubTable>().ToListAsync();
-        int SubIdForSearch;
-        int UserIdForSearch;
+        /*int SubIdForSearch;
+        string UserNameForSearch;*/
         Subjects.Clear();
         foreach (var subject in subjects)
         {
-            SubIdForSearch = subject.SubId;
-            UserIdForSearch = UserSession.UserId;
+            /*SubIdForSearch = subject.SubId;
+            UserIdForSearch = UserSession.Name;*/
 
-            var SubInReq = await _database.Table<RequestJoinSubject>().Where(s => s.SubId == SubIdForSearch && s.UserId == UserIdForSearch).ToListAsync();
-            var StdInTable = await _database.Table<SubForStdTable>().Where(s => s.SubId == SubIdForSearch && s.StdId == UserIdForSearch).ToListAsync();
+            var SubInReq = await _database.Table<RequestJoinSubject>().Where(s => s.SubId == subject.SubId && s.UserId == UserSession.UserId).ToListAsync();
+            var StdInTable = await _database.Table<DegreeTable>().Where(s => s.SubId == subject.SubId && s.StdName == UserSession.Name).ToListAsync();
             if (SubInReq.Count == 0 && StdInTable.Count == 0) {
                 Subjects.Add(subject);
             }

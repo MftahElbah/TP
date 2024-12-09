@@ -26,31 +26,10 @@ namespace TP.Methods
             await _database.CreateTableAsync<SubTable>();
             await _database.CreateTableAsync<UsersAccountTable>();
             await _database.CreateTableAsync<RequestJoinSubject>();
-            await _database.CreateTableAsync<SubForStdTable>();
+            await _database.CreateTableAsync<DegreeTable>();
 
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
-        }
-        public async Task<List<DegreeTableView>> GetDegreeTableViewAsync(string subName)
-        {
-            try
-            {
-                string query = @"
-            SELECT 
-                u.StdName AS StdName,
-                sf.Deg AS Degree, 
-                sf.MiddelDeg AS MidDegree
-            FROM SubForStdTable sf
-            INNER JOIN UsersTable u ON sf.StdId = u.UserId
-            WHERE s.SubName = ?"; // Parameterized to filter by SubName
-
-                return await _database.QueryAsync<DegreeTableView>(query, subName);
-            }
-            catch (SQLiteException ex)
-            {
-                Console.WriteLine($"SQLiteException: {ex.Message}");
-                return new List<DegreeTableView>(); // Return empty list on error.
-            }
         }
 
         public async Task<List<SubTableView>> GetSubTableViewAsync()

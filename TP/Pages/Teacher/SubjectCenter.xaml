@@ -7,16 +7,17 @@
              FlowDirection="RightToLeft">
     <VerticalStackLayout>
         <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
-                       ItemsSource="{Binding DegreeTableView}"
+                       ItemsSource="{Binding DegreeTableSetter}"
                        SelectionMode="Single"
                        NavigationMode="Row"
                        SelectionChanged="DegreeTableSelectionChanged"
                        ColumnWidthMode="Fill"
+                       AutoGenerateColumnsMode="None"
                        >
             <datagrid:SfDataGrid.Columns>
                 <datagrid:DataGridTextColumn HeaderText="اسم" MappingName="StdName" />
-                <datagrid:DataGridTextColumn HeaderText="اعمال" MappingName="Degree" />
-                <datagrid:DataGridTextColumn HeaderText="الجزئي" MappingName="MidDegree" />
+                <datagrid:DataGridTextColumn HeaderText="اعمال" MappingName="Deg" />
+                <datagrid:DataGridTextColumn HeaderText="الجزئي" MappingName="MiddelDeg" />
                 <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="Total" />
             </datagrid:SfDataGrid.Columns>
         </datagrid:SfDataGrid>

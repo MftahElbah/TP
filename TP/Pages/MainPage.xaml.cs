@@ -41,7 +41,7 @@ public partial class MainPage : ContentPage
         }
         if (UserSession.UserType == 3)
         {
-            var stdinsub = await _database.Table<SubForStdTable>().Where(s => s.StdId == UserSession.UserId).ToListAsync();
+            var stdinsub = await _database.Table<DegreeTable>().Where(s => s.StdName == UserSession.Name).ToListAsync();
             var subjects = await _database.Table<SubTable>().ToListAsync();
             foreach (var Stdinsub in stdinsub)
             {
@@ -66,7 +66,7 @@ public partial class MainPage : ContentPage
         {
             if(UserSession.UserType == 2) {
                 // Navigate to the detail page, passing the selected item's ID
-                await Navigation.PushAsync(new SubjectCenter(selectedItem.SubName));
+                await Navigation.PushAsync(new SubjectCenter(selectedItem.SubId));
                 /*await Navigation.PushAsync(new RequestMangment(selectedItem.SubId));*/
             }
             else { }

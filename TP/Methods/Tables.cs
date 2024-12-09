@@ -45,12 +45,15 @@ namespace TP
         public int UserId { get; set; } //Foreign key to user
         public string SubTeacher { get; set; }
     }
-    public class SubForStdTable
+    public class DegreeTable
     {
         public int SubId { get; set; } //foreignkey to Subject
-        public int StdId { get; set; } //foreignkey to UsertsAccount UserId type 3
+        public string StdName { get; set; } //foreignkey to UsertsAccount UserId type 3
         public float Deg { get; set; }
-        public float MiddelDeg{ get; set; }
+        public float MiddelDeg { get; set; }
+        public float Total{
+            get { return Deg + MiddelDeg; }
+        }
 
     }
     public class RequestJoinSubject

@@ -8,26 +8,26 @@ public partial class SubjectCenter : ContentPage
 {
     private DatabaseHelper _databaseHelper;
     /*private ObservableCollection<SubForStdTable> suby;*/
-    private ObservableCollection<DegreeTableView> DegreeTableViewGetter;
-    public ObservableCollection<DegreeTableView> DegreeTableView
+    private ObservableCollection<DegreeTable> DegreeTableGetter;
+    public ObservableCollection<DegreeTable> DegreeTableSetter
     {
-        get => DegreeTableViewGetter;
+        get => DegreeTableGetter;
         set
         {
-            DegreeTableViewGetter = value;
+            DegreeTableGetter = value;
             OnPropertyChanged(); // Notify that SubTableView property has changed.
         }
     }
-    public string SubNames;
+    public int SubId;
     public readonly SQLiteAsyncConnection _database;
-    public SubjectCenter(string subname)
+    public SubjectCenter(int subid)
 	{
 		InitializeComponent();
-        SubNames = subname;
+        SubId = subid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
         _database = new SQLiteAsyncConnection(dbPath);
-        DegreeTableViewGetter = new ObservableCollection<DegreeTableView>();
+        DegreeTableGetter = new ObservableCollection<DegreeTable>();
         /*suby = new ObservableCollection<SubForStdTable>();*/
         BindingContext = this;
     }
@@ -39,21 +39,11 @@ public partial class SubjectCenter : ContentPage
 
     private async Task LoadData()
     {
-        var degreeTableViews = await _databaseHelper.GetDegreeTableViewAsync(SubNames);
-        if (degreeTableViews != null)
+        var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SubId).ToListAsync();
+        if (degreeTableData != null)
         {
-            DegreeTableView = new ObservableCollection<DegreeTableView>(degreeTableViews);
+            DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
         }
-
-        /*var t = await _database.Table<SubForStdTable>().ToListAsync();
-        foreach (var ts in t)
-        {
-
-
-            suby.Add(ts);
-            
-        }*/
-
     }
 
     /*private async Task LoadData()
@@ -86,8 +76,8 @@ public partial class SubjectCenter : ContentPage
         var DataRow = DegreeTableDataGrid.SelectedRow;
 
         var stdName = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
-        var degree = DataRow?.GetType().GetProperty("Degree")?.GetValue(DataRow)?.ToString();
-        var midDegree = DataRow?.GetType().GetProperty("MidDegree")?.GetValue(DataRow)?.ToString();
+        var degree = DataRow?.GetType().GetProperty("Deg")?.GetValue(DataRow)?.ToString();
+        var midDegree = DataRow?.GetType().GetProperty("MidDeg")?.GetValue(DataRow)?.ToString();
         var total = DataRow?.GetType().GetProperty("Total")?.GetValue(DataRow)?.ToString();
         if (stdName != null)
         {
