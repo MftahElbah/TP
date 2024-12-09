@@ -66,7 +66,15 @@ namespace TP
         public DateTime RequestDate { get; set; } 
     }
 
+    public class SubjectBooks
+    {
+        public int BookId { get; set; }
+        public string BookName { get; set; }
+        public int SubId { get; set; }
 
+        public int BookFile { get; set; }
+
+    }
     /*لما الطالب يبحث على المواد يطلعن على شكل قائمة من المواد زي الي عند الاستاذ
 ايكون جنب كل مادة بطمة طلب لما يضغط عليه ياخذ رقم الطالب والمادة وينحط في قائمة الطلبات
 رقم المادة تنحط مع الاسم بس مخفي*/
