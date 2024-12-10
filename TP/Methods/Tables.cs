@@ -75,7 +75,15 @@ namespace TP
         public Byte[] BookFile { get; set; }
         public DateTime UploadDate { get; set; }
     }
-    /*لما الطالب يبحث على المواد يطلعن على شكل قائمة من المواد زي الي عند الاستاذ
-ايكون جنب كل مادة بطمة طلب لما يضغط عليه ياخذ رقم الطالب والمادة وينحط في قائمة الطلبات
-رقم المادة تنحط مع الاسم بس مخفي*/
+    public class SubjectPosts
+    {
+        [PrimaryKey, AutoIncrement]
+        public int PostId { get; set; }
+        public int SubId { get; set; }
+        public string PostTitle { get; set; }
+        public string PostDes { get; set; }
+        public int PostType { get; set; }
+        public DateTime PostDate { get; set; }
+    }
+    
 }
