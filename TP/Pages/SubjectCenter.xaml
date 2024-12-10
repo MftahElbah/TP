@@ -2,11 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.SubjectCenter"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft">
     <VerticalStackLayout>
-        <Button Text="اختار ملف" Clicked="OnUploadPdfClicked" IsVisible="True"/>
+
+        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
+            <buttons:SfButton Text="المنشورات" WidthRequest="150" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked"/>
+            <buttons:SfButton Text="الدرجات" WidthRequest="150" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked"/>
+            <buttons:SfButton Text="الكتب" WidthRequest="120" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
+        </FlexLayout>
+        
         <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
                        ItemsSource="{Binding DegreeTableSetter}"
                        SelectionMode="Single"
@@ -23,6 +31,7 @@
                 <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="Total" />
             </datagrid:SfDataGrid.Columns>
         </datagrid:SfDataGrid>
+        
         <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
             <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
                 <StackLayout>
@@ -35,13 +44,56 @@
                 </StackLayout>
             </Frame>
         </ContentView>
-        <ListView x:Name="PdfListView" ItemTapped="OnBookTapped" ItemsSource="{Binding Books}" IsVisible="True">
+
+        
+            <Button x:Name="AddBookBtn"  Text="اختار ملف" Clicked="OnUploadPdfClicked" IsVisible="False"/>
+            <ListView x:Name="PdfListView" ItemTapped="OnBookTapped" ItemsSource="{Binding Books}" IsVisible="False">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding BookName}" Detail="{Binding UploadDate}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
+
+        <listview:SfListView x:Name="Postslistview"
+                         ItemsSource="{Binding Posts}"
+                         ItemSize="100"
+                         SelectionMode="Single"
+                         >
+            <listview:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#D9D9D9" 
+                   x:Name="FrameWeight"
+                   CornerRadius="10" 
+                   Margin="10" 
+                   VerticalOptions="FillAndExpand" 
+                   HorizontalOptions="FillAndExpand">
+                        <StackLayout>
+                            <Label Text="{Binding PostTitle}" 
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="Start" 
+                                   FontAttributes="Bold" 
+                                   FontSize="16" 
+                                   TextColor="#1A1A1A"/>
+                            <Label Text="{Binding PostDes}" 
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="Center"
+                                   FontSize="16" 
+                                   TextColor="#1A1A1A"/>
+                            <Label Text="{Binding PostDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="End" 
+                                   FontSize="14" 
+                                   FontAttributes="Italic"
+                                   TextColor="#1A1A1A"/>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </listview:SfListView.ItemTemplate>
+        </listview:SfListView>
+
+
         <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000" HeightRequest="300">
             <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">
                 <StackLayout>

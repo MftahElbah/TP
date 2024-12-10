@@ -8,6 +8,8 @@ namespace TP.Pages;
 public partial class SubjectCenter : ContentPage
 {
     private DatabaseHelper _databaseHelper;
+    public ObservableCollection<SubjectPosts> Posts { get; set; }
+
     public ObservableCollection<SubjectBooks> Books { get; set; }
     private ObservableCollection<DegreeTable> DegreeTableGetter;
     public ObservableCollection<DegreeTable> DegreeTableSetter
@@ -31,6 +33,7 @@ public partial class SubjectCenter : ContentPage
         _database = new SQLiteAsyncConnection(dbPath);
         Books = new ObservableCollection<SubjectBooks>();
         DegreeTableGetter = new ObservableCollection<DegreeTable>();
+        Posts = new ObservableCollection<SubjectPosts>();
         /*suby = new ObservableCollection<SubForStdTable>();*/
         BindingContext = this;
     }
@@ -51,6 +54,18 @@ public partial class SubjectCenter : ContentPage
         Books.Clear();
         foreach (var book in books) { 
             Books.Add(book);
+        } 
+    }
+    private async Task LoadPosts()
+    {
+        var posts = await _database.Table<SubjectPosts>()
+            .Where(b => b.SubId == SubId)
+            .OrderByDescending(b => b.PostDate)
+            .ToListAsync();
+
+        Posts.Clear();
+        foreach (var post in posts) {
+            Posts.Add(post);
         } 
     }
     private async Task LoadData()
@@ -157,5 +172,68 @@ public partial class SubjectCenter : ContentPage
     {
         // Hide popup
         PopupEditDegreeWindow.IsVisible = false;
+    }
+
+    private void PostsShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(1);
+    }
+    private void DegreesShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(2);
+    }
+    private void BooksShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(3);
+    }
+
+    public void PageShowStatus(int Status)
+    {
+        //to show posts
+        if(Status == 1) {
+            PostsShower.TextColor = Color.FromArgb("#DCDCDC");
+            PostsShower.Background = Color.FromArgb("#2374AB");
+            Postslistview.IsVisible = true;
+
+            DegreesShower.TextColor= Color.FromArgb("#1A1A1A");
+            DegreesShower.Background = Colors.Transparent;
+            DegreeTableDataGrid.IsVisible = false;
+
+            BooksShower.TextColor= Color.FromArgb("#1A1A1A");
+            BooksShower.Background = Colors.Transparent;
+            PdfListView.IsVisible = false;
+            AddBookBtn.IsVisible = false;
+        }
+        //to show Degrees Table
+        if(Status == 2) {
+            PostsShower.TextColor = Color.FromArgb("#1A1A1A");
+            PostsShower.Background = Colors.Transparent;
+            Postslistview.IsVisible = false;
+
+            DegreesShower.TextColor = Color.FromArgb("#DCDCDC");
+            DegreesShower.Background = Color.FromArgb("#2374AB");
+            DegreeTableDataGrid.IsVisible = true;
+
+            BooksShower.TextColor = Color.FromArgb("#1A1A1A");
+            BooksShower.Background = Colors.Transparent;
+            PdfListView.IsVisible = false;
+            AddBookBtn.IsVisible = false;
+        }
+        //to show To show books
+        if(Status == 3)
+        {
+            PostsShower.TextColor = Color.FromArgb("#1A1A1A");
+            PostsShower.Background = Colors.Transparent;
+            Postslistview.IsVisible = false;
+
+            DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
+            DegreesShower.Background = Colors.Transparent;
+            DegreeTableDataGrid.IsVisible = true;
+
+            BooksShower.TextColor = Color.FromArgb("#DCDCDC");
+            BooksShower.Background = Color.FromArgb("#2374AB");
+            PdfListView.IsVisible = false;
+            AddBookBtn.IsVisible = false;
+        }
     }
 }
