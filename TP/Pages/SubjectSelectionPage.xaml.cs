@@ -6,11 +6,11 @@ using TP.Pages.Teacher;
 
 namespace TP.Pages;
 
-public partial class MainPage : ContentPage
+public partial class SubjectSelectionPage : ContentPage
 {
     private readonly SQLiteAsyncConnection _database;
     public ObservableCollection<SubTable> Subjects { get; set; }
-    public MainPage()
+    public SubjectSelectionPage()
 	{
 		InitializeComponent();
 

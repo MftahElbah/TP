@@ -22,11 +22,11 @@ namespace TP.Methods
         {
             await _database.CreateTableAsync<DepTable>(); // Creates the DepTable if it doesn't exist.
             await _database.CreateTableAsync<BranchTable>(); // Creates the BranchTable if it doesn't exist.
-            /*await _database.CreateTableAsync<StdTable>(); // Creates the StdTable if it doesn't exist.*/
             await _database.CreateTableAsync<SubTable>();
             await _database.CreateTableAsync<UsersAccountTable>();
             await _database.CreateTableAsync<RequestJoinSubject>();
             await _database.CreateTableAsync<DegreeTable>();
+            await _database.CreateTableAsync<SubjectBooks>();
 
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 

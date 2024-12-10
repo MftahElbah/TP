@@ -22,7 +22,7 @@ public partial class RequestSubjectPage : ContentPage
         base.OnAppearing();
 
         // Fetch all subjects from the SubTable
-        LoadAvailableSubjects();
+        await LoadAvailableSubjects();
     }
 
     private async Task LoadAvailableSubjects()

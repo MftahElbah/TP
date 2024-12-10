@@ -68,12 +68,12 @@ namespace TP
 
     public class SubjectBooks
     {
+        [PrimaryKey, AutoIncrement]
         public int BookId { get; set; }
         public string BookName { get; set; }
         public int SubId { get; set; }
-
-        public int BookFile { get; set; }
-
+        public Byte[] BookFile { get; set; }
+        public DateTime UploadDate { get; set; }
     }
     /*لما الطالب يبحث على المواد يطلعن على شكل قائمة من المواد زي الي عند الاستاذ
 ايكون جنب كل مادة بطمة طلب لما يضغط عليه ياخذ رقم الطالب والمادة وينحط في قائمة الطلبات

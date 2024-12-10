@@ -23,7 +23,7 @@ public partial class EditSubject : ContentPage
         ids = id;
         _database = new SQLiteAsyncConnection(dbPath);
 
-        LoadDepartmentsAsync();
+        
         Classes = new ObservableCollection<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8 });
         //BindingContext = this;
         ClassComboBox.ItemsSource = Classes;
@@ -37,7 +37,12 @@ public partial class EditSubject : ContentPage
             ClassComboBox.SelectedItem = classnum;
             ChickWhichViewShow(gt);
     }
-
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadDepartmentsAsync();
+        
+    }
     private async Task LoadDepartmentsAsync()
     {
         // Fetch departments from the database

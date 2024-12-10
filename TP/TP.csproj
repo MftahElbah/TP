@@ -89,6 +89,9 @@
 	   <Compile Update="Pages\Admin\SubjectManger.xaml.cs">
 	     <DependentUpon>SubjectManger.xaml</DependentUpon>
 	   </Compile>
+	   <Compile Update="Pages\SubjectSelectionPage.xaml.cs">
+	     <DependentUpon>SubjectSelectionPage.xaml</DependentUpon>
+	   </Compile>
 	   <Compile Update="Pages\Student\RequestSubjectPage.xaml.cs">
 	     <DependentUpon>RequestSubjectPage.xaml</DependentUpon>
 	   </Compile>
@@ -104,7 +107,7 @@
 	   <MauiXaml Update="Pages\Admin\EditSubject.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\MainPage.xaml">
+	   <MauiXaml Update="Pages\SubjectSelectionPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Old\EditStd.xaml">
@@ -134,7 +137,7 @@
 	   <MauiXaml Update="Pages\Teacher\RequestMangment.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Teacher\SubjectCenter.xaml">
+	   <MauiXaml Update="Pages\SubjectCenter.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Teacher\TeacherAppShell.xaml">

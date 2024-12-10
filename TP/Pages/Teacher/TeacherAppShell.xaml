@@ -5,6 +5,6 @@
              xmlns:local="clr-namespace:TP.Pages"
              Title="TeacherAppShell">
     <FlyoutItem Title="إدارة المواد">
-        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate local:SubjectSelectionPage}" />
     </FlyoutItem>
 </Shell>

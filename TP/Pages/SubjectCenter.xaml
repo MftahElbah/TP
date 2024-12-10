@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             x:Class="TP.Pages.SubjectCenter"
+             BackgroundColor="#E4E4E4"
+             FlowDirection="RightToLeft">
+    <VerticalStackLayout>
+        <Button Text="اختار ملف" Clicked="OnUploadPdfClicked" IsVisible="True"/>
+        <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
+                       ItemsSource="{Binding DegreeTableSetter}"
+                       SelectionMode="Single"
+                       NavigationMode="Row"
+                       SelectionChanged="DegreeTableSelectionChanged"
+                       ColumnWidthMode="Fill"
+                       AutoGenerateColumnsMode="None"
+                       IsVisible="False"
+                       >
+            <datagrid:SfDataGrid.Columns>
+                <datagrid:DataGridTextColumn HeaderText="اسم" MappingName="StdName" />
+                <datagrid:DataGridTextColumn HeaderText="اعمال" MappingName="Deg" />
+                <datagrid:DataGridTextColumn HeaderText="الجزئي" MappingName="MiddelDeg" />
+                <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="Total" />
+            </datagrid:SfDataGrid.Columns>
+        </datagrid:SfDataGrid>
+        <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
+            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
+                <StackLayout>
+                    <Label Text="تعديل" FontSize="20" HorizontalOptions="Center" />
+                    <Label Text="" x:Name="StdNameEntry" FontSize="20" HorizontalOptions="Center" />
+                    <Entry x:Name="DegreeEntry" Placeholder="Degree" Keyboard="Numeric" />
+                    <Entry x:Name="MidDegreeEntry" Placeholder="Mid Degree" Keyboard="Numeric" />
+                    <Button Text="حفظ" Clicked="SaveDegreeClicked" />
+                    <Button Text="الغاء" Clicked="CancelDegreeClicked" />
+                </StackLayout>
+            </Frame>
+        </ContentView>
+        <ListView x:Name="PdfListView" ItemTapped="OnBookTapped" ItemsSource="{Binding Books}" IsVisible="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding BookName}" Detail="{Binding UploadDate}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000" HeightRequest="300">
+            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">
+                <StackLayout>
+                    <Label Text="اضافة كتاب" FontSize="20" HorizontalOptions="Center" />
+                    <Entry Text="" x:Name="BookNameEntry" FontSize="20" HorizontalOptions="Center" />
+                    <Button Text="حفظ" Clicked="SaveBookClicked" />
+                    <Button Text="الغاء" Clicked="CancelBookClicked" />
+                </StackLayout>
+            </Frame>
+        </ContentView>
+        
+    </VerticalStackLayout>
+</ContentPage>
