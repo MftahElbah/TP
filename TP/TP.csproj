@@ -61,9 +61,6 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 	<!-- pdf -->
-        <ItemGroup>
-	   <MauiAsset Include="Project_Readme.html" />
-	</ItemGroup>
 	
 	 <ItemGroup>
                 <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />

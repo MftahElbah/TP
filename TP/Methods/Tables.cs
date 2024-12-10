@@ -47,6 +47,8 @@ namespace TP
     }
     public class DegreeTable
     {
+        [PrimaryKey, AutoIncrement]
+        public int DegId { get; set; } //foreignkey to Subject
         public int SubId { get; set; } //foreignkey to Subject
         public string StdName { get; set; } //foreignkey to UsertsAccount UserId type 3
         public float Deg { get; set; }
@@ -82,7 +84,6 @@ namespace TP
         public int SubId { get; set; }
         public string PostTitle { get; set; }
         public string PostDes { get; set; }
-        public int PostType { get; set; }
         public DateTime PostDate { get; set; }
     }
     

@@ -34,9 +34,10 @@ public partial class RequestMangment : ContentPage
             RequestsColl.Add(req);
         }
     }
+
     private async void LVSwipEnd(object sender, Syncfusion.Maui.ListView.SwipeEndedEventArgs e)
     {
-        if (e.Offset < 400)
+        if (e.Offset < 200)
         {
             return;
         }
@@ -46,10 +47,9 @@ public partial class RequestMangment : ContentPage
         sid.Text = SubIds.ToString();
         
         listview.SwipeOffset = listview.Width;
-        PopupMessageFrame.IsVisible = false;
-        PopupMessageLbl.Text = "تم الرفض";
 
-        if (e.Direction == SwipeDirection.Right) {
+        if (e.Direction == SwipeDirection.Right)
+        {
             var std = new DegreeTable
             {
                 SubId = SubIds,
@@ -58,19 +58,14 @@ public partial class RequestMangment : ContentPage
                 MiddelDeg = 0,
             };
             await _database.InsertAsync(std);
-            PopupMessageLbl.Text = "تم القبول";
         }
-        e.Offset = listview.Width;
-        PopupMessageFrame.IsVisible = true;
-            await Task.Delay(1000);
+        
+        await Task.Delay(2000);
 
         var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
         await _database.DeleteAsync(req);
-        
-        
         RequestsColl.Remove(swipedItem);
+      
 
-            await Task.Delay(1000);
-        PopupMessageFrame.IsVisible = false;
     }
 }

@@ -2,14 +2,13 @@
 using Syncfusion.Maui.ListView;
 using System.Collections.ObjectModel;
 using TP.Methods;
+using TP.Pages.Teacher;
 
 namespace TP.Pages;
 
 public partial class SubjectCenter : ContentPage
 {
     private DatabaseHelper _databaseHelper;
-    public ObservableCollection<SubjectPosts> Posts { get; set; }
-
     public ObservableCollection<SubjectBooks> Books { get; set; }
     private ObservableCollection<DegreeTable> DegreeTableGetter;
     public ObservableCollection<DegreeTable> DegreeTableSetter
@@ -21,6 +20,7 @@ public partial class SubjectCenter : ContentPage
             OnPropertyChanged(); // Notify that SubTableView property has changed.
         }
     }
+    public ObservableCollection<SubjectPosts> Posts { get; set; }
     public int SubId;
     public readonly SQLiteAsyncConnection _database;
     private FileResult result;
@@ -32,16 +32,18 @@ public partial class SubjectCenter : ContentPage
         _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
         _database = new SQLiteAsyncConnection(dbPath);
         Books = new ObservableCollection<SubjectBooks>();
-        DegreeTableGetter = new ObservableCollection<DegreeTable>();
         Posts = new ObservableCollection<SubjectPosts>();
+        DegreeTableGetter = new ObservableCollection<DegreeTable>();
         /*suby = new ObservableCollection<SubForStdTable>();*/
         BindingContext = this;
+        PageShowStatus(1);
     }
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await LoadData();
         await LoadBooks();
+        await LoadPosts();
     }
 
     private async Task LoadBooks()
@@ -58,12 +60,12 @@ public partial class SubjectCenter : ContentPage
     }
     private async Task LoadPosts()
     {
+        Posts.Clear();
         var posts = await _database.Table<SubjectPosts>()
             .Where(b => b.SubId == SubId)
             .OrderByDescending(b => b.PostDate)
             .ToListAsync();
 
-        Posts.Clear();
         foreach (var post in posts) {
             Posts.Add(post);
         } 
@@ -74,6 +76,27 @@ public partial class SubjectCenter : ContentPage
         if (degreeTableData != null)
         {
             DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
+        }
+    }
+
+    private async void OnMenuClicked(object sender, EventArgs e)
+    {
+        var action = await DisplayActionSheet("قائمة المادة", null, null, "اضف منشور", "أضف كتاب", "طلبات الانضمام", "الأعدادات");
+
+        switch (action)
+        {
+            case "اضف منشور":
+                await Navigation.PushAsync(new EditPostPage(SubId)); // Navigate to Add Post page
+                break;
+            case "أضف كتاب":
+                UploadBook(1); // Navigate to Add Book page
+                break;
+            case "طلبات الانضمام":
+                await Navigation.PushAsync(new RequestMangment(SubId)); // Navigate to Requests page
+                break;
+            case "الأعدادات":
+                /*await Navigation.PushAsync(new SettingsPage());*/ // Navigate to Settings page
+                break;
         }
     }
 
@@ -91,13 +114,6 @@ public partial class SubjectCenter : ContentPage
                 File = new ReadOnlyFile(tempPath)
             });
         }
-    }
-
-    private async void OnUploadPdfClicked(object sender, EventArgs e)
-    {
-
-        UploadBook(1);
-        
     }
     private async void SaveBookClicked(object sender, EventArgs e)
     {
@@ -161,9 +177,24 @@ public partial class SubjectCenter : ContentPage
         DegreeTableDataGrid.SelectedRow = null;
     }
 
-    private void SaveDegreeClicked(object sender, EventArgs e)
+    private async void SaveDegreeClicked(object sender, EventArgs e)
     {
-        // Save data logic here
+        float total = float.Parse(DegreeEntry.Text) + float.Parse(MidDegreeEntry.Text);
+        if (string.IsNullOrEmpty(DegreeEntry.Text) || string.IsNullOrEmpty(MidDegreeEntry.Text)) { 
+            return;
+        }
+        if(total > 40)
+        {
+            await DisplayAlert("خطا", "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40", "حسنا");
+            return;
+        }
+
+        var deg = await _database.Table<DegreeTable>().FirstOrDefaultAsync(d => d.StdName == StdNameEntry.Text);
+
+        deg.Deg = float.Parse(DegreeEntry.Text);
+        deg.MiddelDeg = float.Parse(MidDegreeEntry.Text);
+        
+        await _database.UpdateAsync(deg);
         PopupEditDegreeWindow.IsVisible = false;
     }
 
@@ -202,7 +233,6 @@ public partial class SubjectCenter : ContentPage
             BooksShower.TextColor= Color.FromArgb("#1A1A1A");
             BooksShower.Background = Colors.Transparent;
             PdfListView.IsVisible = false;
-            AddBookBtn.IsVisible = false;
         }
         //to show Degrees Table
         if(Status == 2) {
@@ -217,7 +247,6 @@ public partial class SubjectCenter : ContentPage
             BooksShower.TextColor = Color.FromArgb("#1A1A1A");
             BooksShower.Background = Colors.Transparent;
             PdfListView.IsVisible = false;
-            AddBookBtn.IsVisible = false;
         }
         //to show To show books
         if(Status == 3)
@@ -228,12 +257,11 @@ public partial class SubjectCenter : ContentPage
 
             DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
             DegreesShower.Background = Colors.Transparent;
-            DegreeTableDataGrid.IsVisible = true;
+            DegreeTableDataGrid.IsVisible = false;
 
             BooksShower.TextColor = Color.FromArgb("#DCDCDC");
             BooksShower.Background = Color.FromArgb("#2374AB");
-            PdfListView.IsVisible = false;
-            AddBookBtn.IsVisible = false;
+            PdfListView.IsVisible = true;
         }
     }
 }

@@ -7,12 +7,15 @@
              x:Class="TP.Pages.SubjectCenter"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Menu" Clicked="OnMenuClicked" />
+    </ContentPage.ToolbarItems>
     <VerticalStackLayout>
 
-        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="250" HeightRequest="50">
+        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="400" HeightRequest="50" HorizontalOptions="Center">
             <buttons:SfButton Text="المنشورات" WidthRequest="150" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked"/>
-            <buttons:SfButton Text="الدرجات" WidthRequest="150" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked"/>
-            <buttons:SfButton Text="الكتب" WidthRequest="120" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
+            <buttons:SfButton Text="الدرجات" WidthRequest="120" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked"/>
+            <buttons:SfButton Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
         </FlexLayout>
         
         <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
@@ -37,16 +40,14 @@
                 <StackLayout>
                     <Label Text="تعديل" FontSize="20" HorizontalOptions="Center" />
                     <Label Text="" x:Name="StdNameEntry" FontSize="20" HorizontalOptions="Center" />
-                    <Entry x:Name="DegreeEntry" Placeholder="Degree" Keyboard="Numeric" />
-                    <Entry x:Name="MidDegreeEntry" Placeholder="Mid Degree" Keyboard="Numeric" />
+                    <Entry x:Name="DegreeEntry" Placeholder="Degree" Keyboard="Numeric" WidthRequest="60" />
+                    <Entry x:Name="MidDegreeEntry" Placeholder="Mid Degree" Keyboard="Numeric" WidthRequest="60" />
                     <Button Text="حفظ" Clicked="SaveDegreeClicked" />
                     <Button Text="الغاء" Clicked="CancelDegreeClicked" />
                 </StackLayout>
             </Frame>
         </ContentView>
 
-        
-            <Button x:Name="AddBookBtn"  Text="اختار ملف" Clicked="OnUploadPdfClicked" IsVisible="False"/>
             <ListView x:Name="PdfListView" ItemTapped="OnBookTapped" ItemsSource="{Binding Books}" IsVisible="False">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -54,11 +55,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
 
         <listview:SfListView x:Name="Postslistview"
                          ItemsSource="{Binding Posts}"
-                         ItemSize="100"
+                         ItemSize="200"
                          SelectionMode="Single"
                          >
             <listview:SfListView.ItemTemplate>
@@ -92,7 +92,6 @@
                 </DataTemplate>
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
-
 
         <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000" HeightRequest="300">
             <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">

@@ -10,7 +10,6 @@
                              ItemSize="100"
                              AllowSwiping="True"
                              SwipeEnded="LVSwipEnd"
-                             SelectionMode="Single"
                              SwipeOffset="1000">
             <listview:SfListView.StartSwipeTemplate>
                 <DataTemplate>
@@ -26,74 +25,34 @@
                     </Grid>
                 </DataTemplate>
             </listview:SfListView.EndSwipeTemplate>
-        <listview:SfListView.ItemTemplate>
-            <DataTemplate>
-                <Frame BackgroundColor="Gray" 
-                       x:Name="FrameWeight"
-                       CornerRadius="10" 
-                       Margin="10" 
-                       VerticalOptions="FillAndExpand" 
-                       HorizontalOptions="FillAndExpand">
-                    <StackLayout>
-                        <Label Text="{Binding Name}" 
-                               HorizontalOptions="Start" 
-                               VerticalOptions="Center" 
-                               FontAttributes="Bold" 
-                               FontSize="16" />
-                        <Label Text="{Binding RequestDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
-                               HorizontalOptions="Center" 
-                               VerticalOptions="Center" 
-                               FontSize="14" />
-                    </StackLayout>
-                </Frame>
-            </DataTemplate>
-        </listview:SfListView.ItemTemplate>
-    </listview:SfListView>
-        <Frame x:Name="PopupMessageFrame"
-               BackgroundColor="#1A1A1A"
-               CornerRadius="20"
-               Margin="16"
-               Padding="0"
-               HeightRequest="40"
-               HorizontalOptions="Center"
-               VerticalOptions="End"
-               IsVisible="False"
-               >
-            <Label x:Name="PopupMessageLbl" VerticalOptions="Center" HorizontalOptions="Center" TextColor="#E4E4E4"/>
-        </Frame>
-        <Label x:Name="uid"/>
-        <Label x:Name="sid"/>
-    </VerticalStackLayout>
-    <!--
-
-        <CollectionView ItemsSource="{Binding RequestsColl}" 
-                VerticalOptions="FillAndExpand"
-                HorizontalOptions="FillAndExpand"
-                SelectionMode="Single">
-            <CollectionView.ItemTemplate>
+            <listview:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BackgroundColor="Yellow" 
-                   CornerRadius="10" 
-                   Margin="10" 
-                   VerticalOptions="Center" 
-                   HorizontalOptions="Center">
-                        <StackLayout>
-                            <Label Text="{Binding Name}" 
-                       HorizontalOptions="Center" 
-                       VerticalOptions="Center" 
-                       FontAttributes="Bold" 
-                       FontSize="16" />
-                            <Label Text="{Binding RequestDate, StringFormat='Requested on: {0:yyyy-MM-dd}'}"
-                       HorizontalOptions="Center" 
-                       VerticalOptions="Center" 
-                       FontSize="14" />
-                        </StackLayout>
-                    </Frame>
+                    <Grid BackgroundColor="Gray" 
+                          x:Name="FrameWeight" 
+                          Margin="10" 
+                          Padding="10" 
+                          VerticalOptions="FillAndExpand" 
+                          HorizontalOptions="FillAndExpand">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" 
+                        Text="{Binding Name}" 
+                        HorizontalOptions="Start" 
+                        VerticalOptions="Center" 
+                        FontAttributes="Bold" 
+                        FontSize="16" />
+                        <Label Grid.Row="1" 
+                        Text="{Binding RequestDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}" 
+                        HorizontalOptions="Center" 
+                        VerticalOptions="Center" 
+                        FontSize="14" />
+                    </Grid>
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        
-
-    -->
-
+            </listview:SfListView.ItemTemplate>
+        </listview:SfListView>
+        <Label x:Name="uid" Text="uid"/>
+        <Label x:Name="sid" Text="SID"/>
+    </VerticalStackLayout>
 </ContentPage>

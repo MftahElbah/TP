@@ -1,5 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Controls.Xaml;
 using Syncfusion.Maui.Core.Hosting;
+
 
 namespace TP
 {
@@ -20,7 +26,7 @@ namespace TP
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+            builder.ConfigureSyncfusionCore();
             return builder.Build();
         }
     }

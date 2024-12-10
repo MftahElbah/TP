@@ -11,9 +11,9 @@ public partial class EditSubject : ContentPage
     
     /*public EditStdViewModel _viewModel = new EditStdViewModel ();*/
 
-    public readonly SQLiteAsyncConnection _database;
-
     public string ids;
+
+    public readonly SQLiteAsyncConnection _database;
 
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
 

@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.Teacher.EditPostPage"
              Title="EditPostPage">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
+            Text="اضف منشور جديد"
+            VerticalOptions="Start" 
             HorizontalOptions="Center" />
+        <entry:SfTextInputLayout Hint="عنوان" ContainerType="Outlined" WidthRequest="300"
+           x:Name="TitleTxtInL">
+            <Entry x:Name="TitleEntry" BackgroundColor="#dcdcdc" TextChanged="TitleEntryChanged"/>
+        </entry:SfTextInputLayout>
+        <entry:SfTextInputLayout Hint="وصف" ContainerType="Outlined" WidthRequest="300"
+           x:Name="DesTxtInL">
+            <Editor x:Name="DesEditor" BackgroundColor="#dcdcdc" HeightRequest="200" TextChanged="DesEditorChanged"/>
+        </entry:SfTextInputLayout>
+        <buttons:SfButton x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked"/>
     </VerticalStackLayout>
 </ContentPage>

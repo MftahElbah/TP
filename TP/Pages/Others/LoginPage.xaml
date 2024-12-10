@@ -13,8 +13,8 @@
         </entry:SfTextInputLayout>
 
         <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300"
-                   HelperText="ادخل كلمة السر" x:Name="PasswordTxtInL">
-            <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc" IsPassword="True"/>
+                   HelperText="ادخل كلمة السر" EnablePasswordVisibilityToggle="True" x:Name="PasswordTxtInL">
+            <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
         </entry:SfTextInputLayout>
         <buttons:SfButton Text="دخول" WidthRequest="120" HeightRequest="40" x:Name="LoginBtn" Clicked="LoginBtnClicked"/>
         
