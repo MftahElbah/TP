@@ -134,6 +134,9 @@
 	   <MauiXaml Update="Pages\Student\StudentShell.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
+	   <MauiXaml Update="Pages\Teacher\EditPostPage.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
 	   <MauiXaml Update="Pages\Teacher\RequestMangment.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
