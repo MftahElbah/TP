@@ -154,10 +154,19 @@ public partial class SubjectCenter : ContentPage
             };
 
             await _database.InsertAsync(pdfFile);
+            var pdfPost = new SubjectPosts{
+                SubId = SubId,
+                PostTitle = "تم اضافة كتاب جديد",
+                PostDes = $"تم اضافة كتاب \"{BookNameEntry.Text}\" في قسم الكتب",
+                PostDate = DateTime.Now,
+            };
+            await _database.InsertAsync(pdfPost);
+            PopupEditBookNameWindow.IsVisible = false;
             await LoadBooks();
+            await LoadPosts();
         }
     }
-    private void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
+    private async void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
         if (DegreeTableDataGrid.SelectedRow == null)
         {
@@ -171,18 +180,19 @@ public partial class SubjectCenter : ContentPage
         var total = DataRow?.GetType().GetProperty("Total")?.GetValue(DataRow)?.ToString();*/
         StdNameEntry.Text = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
         DegreeEntry.Text = DataRow?.GetType().GetProperty("Deg")?.GetValue(DataRow)?.ToString();
-        MidDegreeEntry.Text = DataRow?.GetType().GetProperty("MidDeg")?.GetValue(DataRow)?.ToString();
+        MidDegreeEntry.Text = DataRow?.GetType().GetProperty("MiddelDeg")?.GetValue(DataRow)?.ToString();
 
         PopupEditDegreeWindow.IsVisible = true;
         DegreeTableDataGrid.SelectedRow = null;
+        await LoadData();
     }
 
     private async void SaveDegreeClicked(object sender, EventArgs e)
     {
-        float total = float.Parse(DegreeEntry.Text) + float.Parse(MidDegreeEntry.Text);
         if (string.IsNullOrEmpty(DegreeEntry.Text) || string.IsNullOrEmpty(MidDegreeEntry.Text)) { 
             return;
         }
+        float total = float.Parse(DegreeEntry.Text) + float.Parse(MidDegreeEntry.Text);
         if(total > 40)
         {
             await DisplayAlert("خطا", "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40", "حسنا");
