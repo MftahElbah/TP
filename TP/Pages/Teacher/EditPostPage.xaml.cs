@@ -4,7 +4,6 @@ namespace TP.Pages.Teacher;
 
 public partial class EditPostPage : ContentPage
 {
-	public int SubId;
     public readonly SQLiteAsyncConnection _database;
 
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
