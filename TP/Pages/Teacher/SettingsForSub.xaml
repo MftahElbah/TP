@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
+             xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             x:Class="TP.Pages.Teacher.SettingsForSub"
+             >
+    <StackLayout>
+        <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Outlined" WidthRequest="300">
+            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
+        </entry:SfTextInputLayout>
+        <editors:SfComboBox x:Name="DepartmentComboBox"
+               WidthRequest="300"
+               HeightRequest="50"
+               BackgroundColor="#DCDCDC"
+               Margin="10"
+               SelectionChanged="DepComboBoxSelectionChanged"
+               />
+        <editors:SfComboBox x:Name="BranchComboBox"
+               WidthRequest="300"
+               HeightRequest="50"
+               BackgroundColor="#DCDCDC"
+               Margin="10"
+               />
+        <editors:SfComboBox x:Name="ClassComboBox"
+               WidthRequest="300"
+               HeightRequest="50"
+               BackgroundColor="#DCDCDC"
+               Margin="10"
+               ItemsSource="{Binding Classes}"
+                    />
+        <buttons:SfSwitch x:Name="ShowDegSwitch"/>
+        <Button Text="حفظ" Clicked="OnSaveButtonClicked" x:Name="SaveBtn"/>
+        <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteBtn"/>
+
+        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30">
+            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20">
+                <StackLayout>
+                    <Label Text="هل انت متأكد من الحذف ؟" HorizontalOptions="Center" FontSize="Medium"/>
+                    <entry:SfTextInputLayout Hint="أدخل كلمة السر للتأكيد" ContainerType="Outlined" WidthRequest="300" EnablePasswordVisibilityToggle="True">
+                        <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
+                    </entry:SfTextInputLayout>
+                    <Button Text="موافقة" Clicked="AgreeButtonClicked" HorizontalOptions="End" />
+                    <Button Text="إلغاء" Clicked="CancelButtonClicked" HorizontalOptions="Start" />
+                </StackLayout>
+            </Frame>
+        </ContentView>
+
+    </StackLayout>
+</ContentPage>

@@ -86,11 +86,20 @@
 	   <Compile Update="Pages\Admin\SubjectManger.xaml.cs">
 	     <DependentUpon>SubjectManger.xaml</DependentUpon>
 	   </Compile>
+	   <Compile Update="Pages\Student\SubjectCenterStd.xaml.cs">
+	     <DependentUpon>SubjectCenterStd.xaml</DependentUpon>
+	   </Compile>
+	   <Compile Update="Pages\Teacher\SubjectCenterTeacher.xaml.cs">
+	     <DependentUpon>SubjectCenterTeacher.xaml</DependentUpon>
+	   </Compile>
 	   <Compile Update="Pages\SubjectSelectionPage.xaml.cs">
 	     <DependentUpon>SubjectSelectionPage.xaml</DependentUpon>
 	   </Compile>
 	   <Compile Update="Pages\Student\RequestSubjectPage.xaml.cs">
 	     <DependentUpon>RequestSubjectPage.xaml</DependentUpon>
+	   </Compile>
+	   <Compile Update="Pages\Teacher\SettingsForSub.xaml.cs">
+	     <DependentUpon>SettingsForSub.xaml</DependentUpon>
 	   </Compile>
 	 </ItemGroup>
 	
@@ -102,6 +111,9 @@
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Admin\EditSubject.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Student\SubjectCenterStd.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\SubjectSelectionPage.xaml">
@@ -137,7 +149,10 @@
 	   <MauiXaml Update="Pages\Teacher\RequestMangment.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\SubjectCenter.xaml">
+	   <MauiXaml Update="Pages\Teacher\SubjectCenterTeacher.xaml">
+	     <Generator>MSBuild:Compile</Generator>
+	   </MauiXaml>
+	   <MauiXaml Update="Pages\Teacher\SettingsForSub.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Teacher\TeacherAppShell.xaml">
@@ -157,4 +172,6 @@
     <CodesignEntitlements>Platforms/MacCatalyst/Entitlements.Release.plist</CodesignEntitlements>
     <UseHardenedRuntime>true</UseHardenedRuntime>
   </PropertyGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadUnhandledDeviceExceptionTPHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 </Project>

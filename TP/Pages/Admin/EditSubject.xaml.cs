@@ -8,8 +8,6 @@ public partial class EditSubject : ContentPage
     public ObservableCollection<int> Classes { get; set; }
     public ObservableCollection<string> DepNames { get; set; }
     public ObservableCollection<string> BranchesName { get; set; }
-    
-    /*public EditStdViewModel _viewModel = new EditStdViewModel ();*/
 
     public string ids;
 

@@ -2,18 +2,37 @@
 using Syncfusion.Maui.Data;
 using System.Collections.ObjectModel;
 using TP.Methods;
+
 namespace TP;
 
 public partial class testpage : ContentPage
 {
-
+    string kk;
     public testpage()
     {
         InitializeComponent();
 
     }
+    private async void nc(object sender, EventArgs e)
+    { 
+        PasswordPopup.IsOpen = true;
+    }
+    private void OnPopupOpened(object sender, EventArgs e)
+    {
 
+        var popupContent = PasswordPopup.ContentTemplate.CreateContent() as StackLayout;
+        if (popupContent != null)
+        {
+            var passwordEntry = popupContent.FindByName<Entry>("PasswordEntry");
+            if (passwordEntry != null)
+            {
+                // Assign the value of kt.Text to the Entry
+                passwordEntry.Text = TEntry.Text;
+            }
+        }
 
+    }
+    
 
 }
 /*using SQLite;

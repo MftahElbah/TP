@@ -5,6 +5,10 @@
              xmlns:main="clr-namespace:TP.Pages"
              xmlns:local="clr-namespace:TP.Pages.Student"
              Title="StudentShell">
-    <ShellContent ContentTemplate="{DataTemplate local:RequestSubjectPage}" />
-    <ShellContent ContentTemplate="{DataTemplate main:SubjectSelectionPage}" />
+    <FlyoutItem Title="المواد">
+        <ShellContent ContentTemplate="{DataTemplate main:SubjectSelectionPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="انضمام لمادة جديدة">
+        <ShellContent ContentTemplate="{DataTemplate local:RequestSubjectPage}" />
+    </FlyoutItem>
 </Shell>

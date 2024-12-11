@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Pages.Level1;
 using TP.Pages.Teacher;
+using TP.Pages.Student;
 
 namespace TP.Pages;
 
@@ -66,10 +67,11 @@ public partial class SubjectSelectionPage : ContentPage
         {
             if(UserSession.UserType == 2) {
                 // Navigate to the detail page, passing the selected item's ID
-                await Navigation.PushAsync(new SubjectCenter(selectedItem.SubId));
-                /*await Navigation.PushAsync(new RequestMangment(selectedItem.SubId));*/
+                await Navigation.PushAsync(new SubjectCenterTeacher(selectedItem.SubId));
             }
-            else { }
+            else { 
+                await Navigation.PushAsync(new SubjectCenterStd(selectedItem.SubId, selectedItem.ShowDeg));
+            }
             // Clear the selection (optional)
             var collectionView = sender as CollectionView;
             if (collectionView != null)

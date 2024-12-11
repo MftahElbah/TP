@@ -3,13 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.testpage"
              xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              Title="testpage"
              FlowDirection="RightToLeft"
              >
     <VerticalStackLayout>
 
- 
+            <Button Clicked="nc"/>
+            <Label Text="MMM" x:Name="kt"/>
+            <Entry x:Name="TEntry" BackgroundColor="#dcdcdc" WidthRequest="200"/>
+        <popup:SfPopup x:Name="PasswordPopup"
+                       HeightRequest="200"
+                       WidthRequest="500"
+                       ShowFooter="True"
+                       FooterHeight="50"
+                       ShowCloseButton="True"
+                       Opened="OnPopupOpened"
+                       HeaderTitle="هل انت متأكد من الحذف ؟"
+                       >
+            <popup:SfPopup.ContentTemplate>
+                <DataTemplate>
+                    <StackLayout x:Name="stackLayout">
+                        <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc" WidthRequest="200"/>
+                    </StackLayout>
+                </DataTemplate>
+            </popup:SfPopup.ContentTemplate>
+            <popup:SfPopup.FooterTemplate>
+                <DataTemplate>
+                    <!-- Agree Button on the Right -->
+                    <Button Text="موافقة"  x:Name="AgreeBtn" HorizontalOptions="Center" />
+                </DataTemplate>
+            </popup:SfPopup.FooterTemplate>
+
+        </popup:SfPopup>
+
     </VerticalStackLayout>
 </ContentPage>
 <!--

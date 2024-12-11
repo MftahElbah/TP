@@ -4,7 +4,7 @@
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
-             x:Class="TP.Pages.SubjectCenter"
+             x:Class="TP.Pages.Teacher.SubjectCenterTeacher"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft">
     <ContentPage.ToolbarItems>
@@ -48,47 +48,85 @@
             </Frame>
         </ContentView>
 
-            <ListView x:Name="PdfListView" ItemTapped="OnBookTapped" ItemsSource="{Binding Books}" IsVisible="False">
-            <ListView.ItemTemplate>
+        <listview:SfListView x:Name="PdfListView"
+                     ItemsSource="{Binding Books}"
+                     ItemSize="100"
+                     IsVisible="False"
+                     ItemTapped="BookTapped"
+                     ItemLongPress="LongBookTapped"
+                     SelectionMode="None">
+            <listview:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding BookName}" Detail="{Binding UploadDate}" />
+                    <Grid BackgroundColor="#FFFFFF"
+                  Margin="10"
+                  Padding="10"
+                  RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Text="{Binding BookName}"
+                       Grid.Row="0"
+                       FontAttributes="Bold"
+                       FontSize="16"
+                       TextColor="#1A1A1A"/>
+
+                        <Label Text="{Binding UploadDate, StringFormat='Uploaded on: {0:yyyy-MM-dd}'}"
+                       Grid.Row="1"
+                       FontSize="12"
+                       TextColor="#1A1A1A"/>
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </listview:SfListView.ItemTemplate>
+        </listview:SfListView>
+
 
         <listview:SfListView x:Name="Postslistview"
                          ItemsSource="{Binding Posts}"
                          ItemSize="200"
                          SelectionMode="Single"
+                         SelectionChanged="SelectionPostChanged"
+                         IsScrollingEnabled="True"
+                         ScrollBarVisibility="Default"
                          >
             <listview:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BackgroundColor="#D9D9D9" 
-                   x:Name="FrameWeight"
-                   CornerRadius="10" 
-                   Margin="10" 
-                   VerticalOptions="FillAndExpand" 
-                   HorizontalOptions="FillAndExpand">
-                        <StackLayout>
-                            <Label Text="{Binding PostTitle}" 
-                                   HorizontalOptions="Start" 
-                                   VerticalOptions="Start" 
-                                   FontAttributes="Bold" 
-                                   FontSize="16" 
-                                   TextColor="#1A1A1A"/>
-                            <Label Text="{Binding PostDes}" 
-                                   HorizontalOptions="Start" 
-                                   VerticalOptions="Center"
-                                   FontSize="16" 
-                                   TextColor="#1A1A1A"/>
-                            <Label Text="{Binding PostDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
-                                   HorizontalOptions="Start" 
-                                   VerticalOptions="End" 
-                                   FontSize="14" 
-                                   FontAttributes="Italic"
-                                   TextColor="#1A1A1A"/>
-                        </StackLayout>
-                    </Frame>
+                    <Grid BackgroundColor="#D9D9D9"
+                          Margin="10"
+                          Padding="10"
+                          ColumnSpacing="5"
+                          RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="{Binding PostTitle}" 
+                            Grid.Row="0"
+                            HorizontalOptions="Start" 
+                            VerticalOptions="Start" 
+                            FontAttributes="Bold" 
+                            FontSize="16" 
+                            TextColor="#1A1A1A"/>
+                        <Label Text="{Binding PostDes}" 
+                            Grid.Row="1"
+                            HorizontalOptions="Start" 
+                            VerticalOptions="Center"
+                            FontSize="16" 
+                            TextColor="#1A1A1A"/>
+                        <Label Text="{Binding PostDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
+                            Grid.Row="2"
+                            HorizontalOptions="Start" 
+                            VerticalOptions="End" 
+                            FontSize="14" 
+                            FontAttributes="Italic"
+                            TextColor="#1A1A1A"/>
+                    </Grid>
                 </DataTemplate>
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>

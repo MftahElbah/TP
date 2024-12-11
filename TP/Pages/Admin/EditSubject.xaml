@@ -23,7 +23,6 @@
                        BackgroundColor="#DCDCDC"
                        Margin="10"
                        SelectionChanged="DepComboBoxSelectionChanged"
-                       
                        />
         <editors:SfComboBox x:Name="BranchComboBox"
                        WidthRequest="300"

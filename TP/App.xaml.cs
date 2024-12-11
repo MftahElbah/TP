@@ -2,6 +2,7 @@
 using TP.Methods;
 using TP.Pages.Level1;
 using TP.Pages.Others;
+using TP.Pages.Teacher;
 
 namespace TP
 {
@@ -20,8 +21,9 @@ namespace TP
             //MainPage = new NavigationPage(new DepBranchManager());
             //MainPage = new NavigationPage(new StdManger());
             //MainPage = new NavigationPage(new SubjectManger());
-            MainPage = new NavigationPage(new StartPage());
             //MainPage = new NavigationPage(new testpage());
+            //MainPage = new NavigationPage(new SettingsForSub());
+            MainPage = new NavigationPage(new StartPage());
         }
         protected override async void OnStart()
         {
