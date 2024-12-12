@@ -10,6 +10,8 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Menu" Clicked="OnMenuClicked" />
     </ContentPage.ToolbarItems>
+    <Grid>
+        
     <VerticalStackLayout>
 
         <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="400" HeightRequest="50" HorizontalOptions="Center">
@@ -35,18 +37,6 @@
             </datagrid:SfDataGrid.Columns>
         </datagrid:SfDataGrid>
         
-        <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
-            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
-                <StackLayout>
-                    <Label Text="تعديل" FontSize="20" HorizontalOptions="Center" />
-                    <Label Text="" x:Name="StdNameEntry" FontSize="20" HorizontalOptions="Center" />
-                    <Entry x:Name="DegreeEntry" Placeholder="Degree" Keyboard="Numeric" WidthRequest="60" />
-                    <Entry x:Name="MidDegreeEntry" Placeholder="Mid Degree" Keyboard="Numeric" WidthRequest="60" />
-                    <Button Text="حفظ" Clicked="SaveDegreeClicked" />
-                    <Button Text="الغاء" Clicked="CancelDegreeClicked" />
-                </StackLayout>
-            </Frame>
-        </ContentView>
 
         <listview:SfListView x:Name="PdfListView"
                      ItemsSource="{Binding Books}"
@@ -131,16 +121,31 @@
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
 
-        <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000" HeightRequest="300">
-            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300">
+        
+    </VerticalStackLayout>
+        
+        <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
+            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center">
                 <StackLayout>
-                    <Label Text="اضافة كتاب" FontSize="20" HorizontalOptions="Center" />
-                    <Entry Text="" x:Name="BookNameEntry" FontSize="20" HorizontalOptions="Center" />
-                    <Button Text="حفظ" Clicked="SaveBookClicked" />
-                    <Button Text="الغاء" Clicked="CancelBookClicked" />
+                    <Label Text="تعديل" FontSize="20" HorizontalOptions="Center" />
+                    <Label Text="" x:Name="StdNameEntry" FontSize="20" HorizontalOptions="Center" />
+                    <Entry x:Name="DegreeEntry" Placeholder="Degree" Keyboard="Numeric" WidthRequest="60" />
+                    <Entry x:Name="MidDegreeEntry" Placeholder="Mid Degree" Keyboard="Numeric" WidthRequest="60" />
+                    <Button Text="حفظ" Clicked="SaveDegreeClicked" />
+                    <Button Text="الغاء" Clicked="CancelDegreeClicked" />
                 </StackLayout>
             </Frame>
         </ContentView>
         
-    </VerticalStackLayout>
+        <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000">
+            <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300" HeightRequest="300">
+                <FlexLayout JustifyContent="SpaceAround" Direction="Column">
+                    <Label Text="اضافة كتاب" FontSize="20" HorizontalOptions="Center" />
+                    <Entry Text="" x:Name="BookNameEntry" FontSize="20"/>
+                    <Button Text="حفظ" Clicked="SaveBookClicked" />
+                    <Button Text="الغاء" Clicked="CancelBookClicked" />
+                </FlexLayout>
+            </Frame>
+        </ContentView>
+    </Grid>
 </ContentPage>

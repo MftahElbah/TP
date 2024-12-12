@@ -96,7 +96,7 @@ public partial class SettingsForSub : ContentPage
 
     private void DeleteButtonClicked(object sender, EventArgs e){
         PasswordPopup.IsVisible = true;
-        PasswordPopup.BackgroundColor = Color.FromRgba(0,0,0,0.5);
+        
     }
     private void CancelButtonClicked(object sender, EventArgs e)
     {

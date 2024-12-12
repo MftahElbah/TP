@@ -7,7 +7,10 @@
              xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Class="TP.Pages.Teacher.SettingsForSub"
+             FlowDirection="RightToLeft"
              >
+    <Grid>
+        
     <StackLayout>
         <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Outlined" WidthRequest="300">
             <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
@@ -36,18 +39,21 @@
         <Button Text="حفظ" Clicked="OnSaveButtonClicked" x:Name="SaveBtn"/>
         <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteBtn"/>
 
-        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30">
-            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20">
-                <StackLayout>
+    </StackLayout>
+        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30" BackgroundColor="#80000000">
+            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20" VerticalOptions="Center">
+                <StackLayout Spacing="20">
                     <Label Text="هل انت متأكد من الحذف ؟" HorizontalOptions="Center" FontSize="Medium"/>
                     <entry:SfTextInputLayout Hint="أدخل كلمة السر للتأكيد" ContainerType="Outlined" WidthRequest="300" EnablePasswordVisibilityToggle="True">
                         <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
                     </entry:SfTextInputLayout>
-                    <Button Text="موافقة" Clicked="AgreeButtonClicked" HorizontalOptions="End" />
-                    <Button Text="إلغاء" Clicked="CancelButtonClicked" HorizontalOptions="Start" />
+                    <FlexLayout AlignContent="Center" JustifyContent="SpaceAround">
+                        <Button Text="موافقة" Clicked="AgreeButtonClicked"  />
+                    <Button Text="إلغاء" Clicked="CancelButtonClicked"  />
+                    </FlexLayout>
                 </StackLayout>
             </Frame>
         </ContentView>
 
-    </StackLayout>
+    </Grid>
 </ContentPage>
