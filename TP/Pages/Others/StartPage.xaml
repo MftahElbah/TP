@@ -4,9 +4,11 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Others.StartPage"
              FlowDirection="RightToLeft">
-    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
-        <Label Text="اهلا بك في برنامج الكلية" FontSize="Title"/>
-        <buttons:SfButton Text="تسجيل دخول" WidthRequest="120" HeightRequest="40" x:Name="OpenLoginPageBtn" Clicked="OpenLoginPageBtnClicked"/>
-        <buttons:SfButton Text="تسجيل حساب جديد" WidthRequest="120" HeightRequest="40" x:Name="OpenSignupPageBtn" Clicked="OpenSignupPageBtnClicked"/>
-    </VerticalStackLayout>
+
+    <FlexLayout Direction="Column" JustifyContent="SpaceAround" AlignItems="Center" HeightRequest="150" >
+        <Label Text="اهلا بك في برنامج الكلية" FontSize="Title" VerticalOptions="Center" HorizontalOptions="Center"/>
+        <buttons:SfButton Text="تسجيل دخول" WidthRequest="100" HeightRequest="40" x:Name="OpenLoginPageBtn" Clicked="OpenLoginPageBtnClicked"/>
+        <buttons:SfButton Text="تسجيل حساب جديد" WidthRequest="130" HeightRequest="40" x:Name="OpenSignupPageBtn" Clicked="OpenSignupPageBtnClicked"/>
+    </FlexLayout>
+
 </ContentPage>

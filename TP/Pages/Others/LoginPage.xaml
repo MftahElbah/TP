@@ -4,20 +4,20 @@
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.Others.LoginPage"
-             FlowDirection="RightToLeft"
              >
-    <VerticalStackLayout>
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <Label Text="تسجيل دخول" FontSize="Title" VerticalOptions="Center" HorizontalOptions="Center"/>
         <entry:SfTextInputLayout Hint="اسم المستخدم" ContainerType="Outlined" WidthRequest="300"
                    HelperText="ادخل اسم المستخدم" x:Name="UsernameTxtInL">
             <Entry x:Name="UsernameEntry" BackgroundColor="#dcdcdc"/>
         </entry:SfTextInputLayout>
 
         <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300"
-                   HelperText="ادخل كلمة السر" EnablePasswordVisibilityToggle="True" x:Name="PasswordTxtInL">
-            <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
+                   HelperText="ادخل كلمة السر" EnablePasswordVisibilityToggle="True" x:Name="PasswordTxtInL" >
+            <Entry x:Name="PasswordEntry"/>
         </entry:SfTextInputLayout>
         <buttons:SfButton Text="دخول" WidthRequest="120" HeightRequest="40" x:Name="LoginBtn" Clicked="LoginBtnClicked"/>
-        
-        
+
+
     </VerticalStackLayout>
 </ContentPage>

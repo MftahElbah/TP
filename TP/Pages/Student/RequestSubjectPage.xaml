@@ -2,34 +2,80 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:refresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
+             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.Student.RequestSubjectPage"
-             FlowDirection="RightToLeft"
-             >
-    
-    <StackLayout Padding="10">
-        <ListView ItemsSource="{Binding Subjects}" HasUnevenRows="True">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Orientation="Horizontal" Padding="5">
-                            <!-- Subject Name -->
-                            <Label Text="{Binding SubName}" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="StartAndExpand" />
-                            <Label x:Name="TeacherNameLabel"
-                                   Text="{Binding SubTeacher}" 
-                                   VerticalOptions="Center" 
-                                   HorizontalOptions="StartAndExpand" />
-                            <!-- Button to send request -->
-                            <buttons:SfButton Text="طلب أنضمام"
-                                              x:Name="SendBtn"    
-                                              Clicked="OnSendRequestClicked" 
-                                              BindingContext="{Binding .}"           
-                                />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+             FlowDirection="RightToLeft">
+
+    <Grid>
+        <!-- SfPullToRefresh -->
+        <refresh:SfPullToRefresh x:Name="pulltorefresh" 
+                                 TransitionMode="SlideOnTop" 
+                                 ProgressBackground="#dedede" 
+                                 ProgressColor="#1a1a1a" 
+                                 Refreshing="OnPullToRefreshRefreshing">
+            <refresh:SfPullToRefresh.PullableContent>
+                <StackLayout Padding="10">
+                    <entry:SfTextInputLayout Hint="بحث" ContainerType="Outlined" WidthRequest="300" IsHintAlwaysFloated="true" 
+                                             FlowDirection="RightToLeft"
+                                             HelperText="بحث بأسم المادة أو اسم الاستاذ" 
+                                             OutlineCornerRadius="20" HeightRequest="100">
+                        <Entry x:Name="SearchEntry" BackgroundColor="#dcdcdc" FontFamily="Cairo" TextChanged="SearchEntryChanged" />
+                        <entry:SfTextInputLayout.HintLabelStyle>
+                            <entry:LabelStyle FontSize="16" FontFamily="Cairo"/>
+                        </entry:SfTextInputLayout.HintLabelStyle>
+                        <entry:SfTextInputLayout.HelperLabelStyle>
+                            <entry:LabelStyle FontSize="12" FontFamily="Cairo"/>
+                        </entry:SfTextInputLayout.HelperLabelStyle>
+                    </entry:SfTextInputLayout>
+                    <ListView ItemsSource="{Binding Subjects}" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="5">
+                                        <Label Text="{Binding SubName}" 
+                                               VerticalOptions="Center" 
+                                               HorizontalOptions="StartAndExpand" 
+                                               FontFamily="Cairo"
+                                               FontAttributes="Bold" />
+                                        <Label x:Name="TeacherNameLabel"
+                                               Text="{Binding SubTeacher}" 
+                                               VerticalOptions="Center" 
+                                               HorizontalOptions="StartAndExpand" 
+                                               FontFamily="Cairo"/>
+                                        <buttons:SfButton Text="طلب أنضمام"
+                                                          x:Name="SendBtn"    
+                                                          Clicked="OnSendRequestClicked" 
+                                                          BindingContext="{Binding .}" 
+                                                          FontFamily="Cairo" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </refresh:SfPullToRefresh.PullableContent>
+        </refresh:SfPullToRefresh>
+
+        <!-- Empty Message -->
+        <ContentView x:Name="EmptyMessage" IsVisible="False">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="غير متوفر" 
+                       FontSize="Title" 
+                       HorizontalTextAlignment="Center" 
+                       VerticalTextAlignment="Center"
+                       FontFamily="Cairo"
+                       FontAttributes="Bold" 
+                       x:Name="NoExistTitle" />
+                <Label Text='المادة او الاستاذ الذي تبحث عليه غير متوفر' 
+                       FontSize="Subtitle" 
+                       HorizontalTextAlignment="Center" 
+                       VerticalTextAlignment="Center" 
+                       FontFamily="Cairo"
+                       TextColor="Gray"
+                       x:Name="NoExistSubTitle" />
+            </VerticalStackLayout>
+        </ContentView>
+    </Grid>
+
 </ContentPage>

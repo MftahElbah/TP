@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace TP
 {
+    public class UserSessionTable
+    {
+        [PrimaryKey]
+        public int UserId { get; set; }
+        public string Password { get; set; }
+    }
     public class UsersAccountTable
     {
         [PrimaryKey]

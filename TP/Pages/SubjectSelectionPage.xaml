@@ -1,42 +1,85 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TP.Pages.SubjectSelectionPage"
-             >
-    <VerticalStackLayout>
+             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             x:Class="TP.Pages.SubjectSelectionPage">
+    <Grid>
+    <AbsoluteLayout>
+        <!-- Main content -->
+        <CollectionView ItemsSource="{Binding Subjects}" 
+                        AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                        AbsoluteLayout.LayoutFlags="All"
+                        SelectionChanged="OnItemSelected"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="Yellow" 
+                            Margin="10" 
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Center"
+                           WidthRequest="300"
+                            HeightRequest="50"
+                          >
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <Label Text="{Binding SubName}" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               FontAttributes="Bold" 
+                               FontSize="16" />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <VerticalStackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             x:Name="NoSubExist"
+                             IsVisible="False">
+            <Label Text="لا يوجد مواد" 
+                   FontSize="Title" 
+                   HorizontalTextAlignment="Center" 
+                   VerticalTextAlignment="Center" 
+                   FontAttributes="Bold" />
+            <Label Text='يمكنك اضافة مواد عن طريق علامة "+" ' 
+                   FontSize="Subtitle" 
+                   HorizontalTextAlignment="Center" 
+                   VerticalTextAlignment="Center" 
+                   TextColor="Gray"
+                   x:Name="NoSubExistSubTitle"/>
+        </VerticalStackLayout>
+        <!-- Floating Action Button -->
+        <Button Text="+" 
+                x:Name="AddBtn"
+                WidthRequest="60" 
+                HeightRequest="60" 
+                BackgroundColor="#2374AB" 
+                TextColor="White" 
+                FontSize="30"
+                CornerRadius="30"
+                IsVisible="True"
+                AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Margin="20"
+                Clicked="AddClicked" />
+    </AbsoluteLayout>
+    <ContentView x:Name="SaveSession" IsVisible="False" BackgroundColor="#80000000">
+        <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300" HeightRequest="200">
+            <FlexLayout JustifyContent="SpaceAround" Direction="Column" AlignContent="Center" AlignItems="Center">
+                    <Label Text="هل تريد الاحتفاظ بالجلسة ؟" HorizontalOptions="Center" FontSize="Title"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <buttons:SfButton Text="نعم" Clicked="SaveSessionClicked" WidthRequest="70" HeightRequest="40" Grid.Column="1" Margin="10"/>
+                        <buttons:SfButton Text="لا" Clicked="CancelClicked" WidthRequest="70" HeightRequest="40" Grid.Column="0" Margin="10"/>
+                    </Grid>
+            </FlexLayout>
+        </Frame>
+    </ContentView>
         
-    <CollectionView ItemsSource="{Binding Subjects}" 
-                    VerticalOptions="FillAndExpand"
-                    HorizontalOptions="FillAndExpand"
-                    SelectionChanged="OnItemSelected"
-                    SelectionMode="Single">
-        <CollectionView.ItemTemplate>
-            <DataTemplate>  
-                <Frame BackgroundColor="Yellow" 
-                       CornerRadius="10" 
-                       Margin="10" 
-                       VerticalOptions="Center" 
-                       HorizontalOptions="Center">
-                    <Label Text="{Binding SubName}" 
-                           HorizontalOptions="Center" 
-                           VerticalOptions="Center" 
-                           FontAttributes="Bold" 
-                           FontSize="16" />
-                </Frame>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
-    <Button Text="+"
-            x:Name="AddBtn"
-        WidthRequest="60" 
-        HeightRequest="60" 
-        BackgroundColor="#2374AB" 
-        TextColor="White"
-        CornerRadius="30"
-            IsVisible="False"
-        VerticalOptions="End"
-        HorizontalOptions="End"
-        Clicked="AddClicked" />
-    
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

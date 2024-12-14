@@ -8,7 +8,7 @@
              Title="SignupPage"
              FlowDirection="RightToLeft"
              >
-    <VerticalStackLayout>
+    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
         
         <stepProgressBar:SfStepProgressBar 
             x:Name="stepProgress"
@@ -40,16 +40,16 @@
             <Entry x:Name="UsernameEntry" BackgroundColor="#dcdcdc" TextChanged="UNEChanged"/>
         </entry:SfTextInputLayout>
 
-        <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300"
+        <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300" EnablePasswordVisibilityToggle="True"
                    HelperText="ادخل كلمة السر" x:Name="PasswordTxtInL">
             <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc" IsPassword="True"/>
         </entry:SfTextInputLayout>
 
-        <entry:SfTextInputLayout Hint="تأكيد كلمة السر" ContainerType="Outlined" WidthRequest="300"
+        <entry:SfTextInputLayout Hint="تأكيد كلمة السر" ContainerType="Outlined" WidthRequest="300" EnablePasswordVisibilityToggle="True"
                    HelperText="ادخل تأكيد كلمة السر" x:Name="ConfirmPasswordTxtInL">
-            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="#dcdcdc" IsPassword="True"/>
+            <Entry x:Name="ConfirmPasswordEntry" BackgroundColor="#dcdcdc"/>
         </entry:SfTextInputLayout>
         <buttons:SfButton Text="التالي" WidthRequest="120" HeightRequest="40" x:Name="NextSaveBtn" Clicked="NextSaveBtnClicked"/>
         <buttons:SfButton Text="السابق" WidthRequest="120" HeightRequest="40" x:Name="PreCancelBtn" Clicked="PreCancelBtnClicked"/>
-    </VerticalStackLayout>
+    </StackLayout>
 </ContentPage>

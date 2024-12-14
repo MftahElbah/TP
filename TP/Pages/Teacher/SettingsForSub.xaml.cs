@@ -8,7 +8,7 @@ namespace TP.Pages.Teacher;
 
 public partial class SettingsForSub : ContentPage
 {
-	public int SubId;
+    public int SubId;
     public ObservableCollection<string> DepNames { get; set; }
     public ObservableCollection<string> BranchesName { get; set; }
     public ObservableCollection<int> Classes { get; set; }
@@ -16,15 +16,15 @@ public partial class SettingsForSub : ContentPage
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
 
     public SettingsForSub(int id)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         _database = new SQLiteAsyncConnection(dbPath);
         SubId = id;
 
         Classes = new ObservableCollection<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8 });
         ClassComboBox.ItemsSource = Classes;
-       
+
     }
 
     protected override async void OnAppearing()
@@ -94,52 +94,59 @@ public partial class SettingsForSub : ContentPage
         }
     }
 
-    private void DeleteButtonClicked(object sender, EventArgs e){
+    private void DeleteButtonClicked(object sender, EventArgs e)
+    {
         PasswordPopup.IsVisible = true;
-        PasswordPopup.BackgroundColor = Color.FromRgba(0,0,0,0.5);
+
     }
     private void CancelButtonClicked(object sender, EventArgs e)
     {
         PasswordPopup.IsVisible = false; // Hide the popup
     }
-    private async void AgreeButtonClicked(object sender, EventArgs e){
+    private async void AgreeButtonClicked(object sender, EventArgs e)
+    {
         string password = PasswordEntry.Text; // Retrieve entered password
-        
-        if (string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
-        string pass = PasswordEntry.Text;
         var agree = await _database.Table<UsersAccountTable>()
-                                           .Where(b => b.UserId == UserSession.UserId && b.Password == pass)
+                                           .Where(b => b.UserId == UserSession.UserId && b.Password == password)
                                            .FirstOrDefaultAsync();
-        if (agree == null) { return; }
+        if (agree == null || string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
 
         // Deletes all branches associated with the department.
         var SubStdToDelete = await _database.Table<DegreeTable>().Where(b => b.SubId == SubId).ToListAsync();
+        var booksToDelete = await _database.Table<SubjectBooks>().Where(b => b.SubId == SubId).ToListAsync();
+        var postsToDelete = await _database.Table<SubjectPosts>().Where(b => b.SubId == SubId).ToListAsync();
+        var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
         foreach (var delete in SubStdToDelete)
         {
             await _database.DeleteAsync(delete); // Deletes the branches from the database.
         }
-        var booksToDelete = await _database.Table<SubjectBooks>().Where(b => b.SubId == SubId).ToListAsync();
         foreach (var book in booksToDelete)
         {
             await _database.DeleteAsync(book); // Deletes the branches from the database.
         }
-        var postsToDelete = await _database.Table<SubjectPosts>().Where(b => b.SubId == SubId).ToListAsync();
         foreach (var post in postsToDelete)
         {
             await _database.DeleteAsync(post); // Deletes the branches from the database.
         }
-        var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
         await _database.DeleteAsync(Sub);
         await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
-        await Navigation.PushAsync(new SubjectSelectionPage());
+
+        if (Navigation?.NavigationStack?.Count > 2)
+        {
+            var secondLastPage = Navigation.NavigationStack[^2];
+            Navigation.RemovePage(secondLastPage); // Removes the second last page
+            await Navigation.PopAsync(); // Pops the last page
+        }
+        
     }
 
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
         string depname = DepartmentComboBox.Text;
         string branchname = BranchComboBox.Text;
+        string Name = NameEntry.Text.ToLower();
 
-        if (string.IsNullOrWhiteSpace(NameEntry.Text) || string.IsNullOrWhiteSpace(depname) || string.IsNullOrWhiteSpace(branchname))
+        if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(depname) || string.IsNullOrWhiteSpace(branchname))
         {
             await DisplayAlert("Error", "All fields are required.", "OK");
             return;
@@ -162,16 +169,16 @@ public partial class SettingsForSub : ContentPage
                 return;
             }
 
-                var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
-                if (Sub != null)
-                {
-                    Sub.SubName = NameEntry.Text;
-                    Sub.SubDep = dep.DepId;
-                    Sub.SubBranch = branch.BranchId;
-                    Sub.SubClass = selectedClass;
-                    Sub.ShowDeg = ShowDegSwitch.IsOn.Value;
-                    await _database.UpdateAsync(Sub);
-                }
+            var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
+            if (Sub != null)
+            {
+                Sub.SubName = Name;
+                Sub.SubDep = dep.DepId;
+                Sub.SubBranch = branch.BranchId;
+                Sub.SubClass = selectedClass;
+                Sub.ShowDeg = ShowDegSwitch.IsOn.Value;
+                await _database.UpdateAsync(Sub);
+            }
             await DisplayAlert("تم التعديل", "تم التعديل بنجاح", "حسنا");
 
             await Navigation.PopAsync();

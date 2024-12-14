@@ -92,6 +92,8 @@ public partial class SignupPage : ContentPage
             UserType = 3
         };
         await _database.InsertAsync(newuser);
+        stepProgress.ActiveStepIndex = 2;
+        await Task.Delay(2000);
         await DisplayAlert("نجحت", "تم التسجيل بنجاح", "حسنا");
         await Navigation.PopAsync();
 
@@ -118,7 +120,7 @@ public partial class SignupPage : ContentPage
             ConfirmPasswordTxtInL.IsVisible = false;
             NextSaveBtn.Text = "التالي";
             PreCancelBtn.Text = "الغاء";
-            stepProgress.ActiveStepIndex = 0;
+            stepProgress.ActiveStepIndex = -1;
         }
         else if (step == 1)
         {
@@ -131,7 +133,7 @@ public partial class SignupPage : ContentPage
             ConfirmPasswordTxtInL.IsVisible = true;
             NextSaveBtn.Text = "تسجيل";
             PreCancelBtn.Text = "السابق";
-            stepProgress.ActiveStepIndex = 1;
+            stepProgress.ActiveStepIndex = 0;
         }
     }
 }

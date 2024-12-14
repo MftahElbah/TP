@@ -11,4 +11,7 @@
     <FlyoutItem Title="انضمام لمادة جديدة">
         <ShellContent ContentTemplate="{DataTemplate local:RequestSubjectPage}" />
     </FlyoutItem>
+    <Shell.FlyoutFooter>
+        <Button Text="خروج" Clicked="OnLogoutClicked"/>
+    </Shell.FlyoutFooter>
 </Shell>

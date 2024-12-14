@@ -24,6 +24,7 @@ public partial class SubjectCenterTeacher : ContentPage
     public int SSubId;
     public readonly SQLiteAsyncConnection _database;
     private FileResult result;
+    public bool[] Emptys = new bool[3];
     public SubjectCenterTeacher(int subid)
 	{
 		InitializeComponent();
@@ -36,27 +37,14 @@ public partial class SubjectCenterTeacher : ContentPage
         DegreeTableGetter = new ObservableCollection<DegreeTable>();
         /*suby = new ObservableCollection<SubForStdTable>();*/
         BindingContext = this;
-        PageShowStatus(1);
     }
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        await LoadPosts();
         await LoadData();
         await LoadBooks();
-        await LoadPosts();
-    }
-
-    private async Task LoadBooks()
-    {
-        var books = await _database.Table<SubjectBooks>()
-            .Where(b => b.SubId == SSubId)
-            .OrderByDescending(b => b.UploadDate)
-            .ToListAsync();
-
-        Books.Clear();
-        foreach (var book in books) { 
-            Books.Add(book);
-        } 
+        PageShowStatus(1);
     }
     private async Task LoadPosts()
     {
@@ -65,18 +53,45 @@ public partial class SubjectCenterTeacher : ContentPage
             .Where(b => b.SubId == SSubId)
             .OrderByDescending(b => b.PostDate)
             .ToListAsync();
-
+        if (posts.Count == 0 ) {
+            Emptys[0] = true;
+            return;
+        }
         foreach (var post in posts) {
             Posts.Add(post);
-        } 
+        }
+        Emptys[0] = false;
     }
+
     private async Task LoadData()
     {
         var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SSubId).ToListAsync();
-        if (degreeTableData != null)
-        {
             DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
+        if (degreeTableData.Count == 0)
+        {
+            Emptys[1] = true;
+            return;
         }
+        Emptys[1] = false;
+    }
+    private async Task LoadBooks()
+    {
+        var books = await _database.Table<SubjectBooks>()
+            .Where(b => b.SubId == SSubId)
+            .OrderByDescending(b => b.UploadDate)
+            .ToListAsync();
+
+        Books.Clear();
+        
+        //to check if its empty or not to load message
+        if(books.Count == 0) { 
+            Emptys[2]=true;
+            return;
+        }
+        foreach (var book in books) { 
+            Books.Add(book);
+        }
+        Emptys[2] = false;
     }
 
     private async void OnMenuClicked(object sender, EventArgs e)
@@ -129,22 +144,6 @@ public partial class SubjectCenterTeacher : ContentPage
                 await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
             }
         }
-            /*var tappedView = (sender as View);
-            var selectedBook = tappedView?.BindingContext as SubjectBooks;
-
-            if (selectedBook == null)
-                return;
-
-            bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {selectedBook.BookName}؟", "نعم", "لا");
-            if (confirm)
-            {
-                // Delete from database
-                await _database.DeleteAsync(selectedBook);
-
-                // Remove from collection
-                *//*(BindingContext as SubjectBooks)?Books.Remove(selectedBook);*//*
-
-            }*/
         }
     private async void SaveBookClicked(object sender, EventArgs e)
     {
@@ -225,6 +224,15 @@ public partial class SubjectCenterTeacher : ContentPage
         Postslistview.SelectedItem = null;
     }
 
+    private async void DeleteDegreeClicked(object sender, EventArgs e) {
+        bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
+        if (!isConfirmed) { return; }
+        string StdNameFromLbl = StdNameEntry.Text;
+        var DelDeg = await _database.Table<DegreeTable>().Where(d => d.StdName == StdNameFromLbl).FirstOrDefaultAsync();
+        await _database.DeleteAsync(DelDeg);
+        PopupEditDegreeWindow.IsVisible = false;
+        await LoadData();
+    }
     private async void SaveDegreeClicked(object sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(DegreeEntry.Text) || string.IsNullOrEmpty(MidDegreeEntry.Text)) { 
@@ -280,6 +288,10 @@ public partial class SubjectCenterTeacher : ContentPage
             BooksShower.TextColor= Color.FromArgb("#1A1A1A");
             BooksShower.Background = Colors.Transparent;
             PdfListView.IsVisible = false;
+
+            NoExistTitle.Text = "لا يوجد منشورات";
+            NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+            EmptyMessage.IsVisible = Emptys[0];
         }
         //to show Degrees Table
         if(Status == 2) {
@@ -294,6 +306,11 @@ public partial class SubjectCenterTeacher : ContentPage
             BooksShower.TextColor = Color.FromArgb("#1A1A1A");
             BooksShower.Background = Colors.Transparent;
             PdfListView.IsVisible = false;
+
+            
+            NoExistTitle.Text = "لا يوجد طالب مشترك";
+            NoExistSubTitle.Text = "تأكد من صفحة \"طلبات الانضمام\" الموجودة في القائمة";            
+            EmptyMessage.IsVisible = Emptys[1];
         }
         //to show To show books
         if(Status == 3)
@@ -309,6 +326,11 @@ public partial class SubjectCenterTeacher : ContentPage
             BooksShower.TextColor = Color.FromArgb("#DCDCDC");
             BooksShower.Background = Color.FromArgb("#2374AB");
             PdfListView.IsVisible = true;
+
+
+            NoExistTitle.Text = "لا يوجد كتب";
+            NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+            EmptyMessage.IsVisible = Emptys[2];
         }
     }
 }
