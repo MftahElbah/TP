@@ -21,10 +21,8 @@ public partial class EditSubject : ContentPage
         ids = id;
         _database = new SQLiteAsyncConnection(dbPath);
 
-        
-        Classes = new ObservableCollection<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8 });
-        //BindingContext = this;
-        ClassComboBox.ItemsSource = Classes;
+        /*//BindingContext = this;
+        ClassComboBox.ItemsSource = Classes;*/
         if (string.IsNullOrEmpty(id)) {
             return;
         }
@@ -51,6 +49,8 @@ public partial class EditSubject : ContentPage
 
         // Bind it to the ComboBox
         DepartmentComboBox.ItemsSource = DepNames;
+
+        
     }
 
 
@@ -58,8 +58,9 @@ public partial class EditSubject : ContentPage
     {
         string depname = DepartmentComboBox.Text;
         string branchname = BranchComboBox.Text;
+        string Name = NameEntry.Text.ToLower();
 
-        if (string.IsNullOrWhiteSpace(NameEntry.Text) || string.IsNullOrWhiteSpace(depname) || string.IsNullOrWhiteSpace(branchname))
+        if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(depname) || string.IsNullOrWhiteSpace(branchname))
         {
             await DisplayAlert("Error", "All fields are required.", "OK");
             return;
@@ -87,7 +88,7 @@ public partial class EditSubject : ContentPage
 
                 var Sub = new SubTable
                 {
-                    SubName = NameEntry.Text,
+                    SubName = Name,
                     SubDep = dep.DepId,
                     SubBranch = branch.BranchId,
                     SubClass = selectedClass,
@@ -104,7 +105,7 @@ public partial class EditSubject : ContentPage
                 var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == idnum);
                 if (Sub != null)
                 {
-                    Sub.SubName = NameEntry.Text;
+                    Sub.SubName = Name;
                     Sub.SubDep = dep.DepId;
                     Sub.SubBranch = branch.BranchId;
                     Sub.SubClass = selectedClass;
@@ -137,6 +138,16 @@ public partial class EditSubject : ContentPage
     private void DepComboBoxSelectionChanged(object sender, EventArgs e)
     {
         LoadBranchData(DepartmentComboBox.Text);
+        if (DepartmentComboBox.Text == "الاتجاه العام")
+        {
+            Classes = new ObservableCollection<int>(new[] {1});
+            
+        }
+        else
+        {
+            Classes = new ObservableCollection<int>(new[] { 2, 3, 4, 5, 6, 7, 8 });
+        }
+        ClassComboBox.ItemsSource = Classes;
     }
 
     private async void LoadBranchData(string depname)
@@ -168,11 +179,11 @@ public partial class EditSubject : ContentPage
         //1 to insert , 2 to update
         if (Ch == 1)
         {
-            DeleteButton.IsVisible = false;
+            /*DeleteButton.IsVisible = false;*/
         }
         else if (Ch == 2)
         {
-            DeleteButton.IsVisible = true;  
+            /*DeleteButton.IsVisible = true;  */
         }
     }
 

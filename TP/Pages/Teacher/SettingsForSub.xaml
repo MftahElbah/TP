@@ -7,47 +7,56 @@
              xmlns:popup ="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
              x:Class="TP.Pages.Teacher.SettingsForSub"
+             FlowDirection="RightToLeft"
              >
-    <StackLayout>
-        <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Outlined" WidthRequest="300">
-            <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
-        </entry:SfTextInputLayout>
-        <editors:SfComboBox x:Name="DepartmentComboBox"
+    <Grid>
+
+        <StackLayout>
+            <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Outlined" WidthRequest="300">
+                <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
+            </entry:SfTextInputLayout>
+            <editors:SfComboBox x:Name="DepartmentComboBox"
                WidthRequest="300"
                HeightRequest="50"
                BackgroundColor="#DCDCDC"
                Margin="10"
                SelectionChanged="DepComboBoxSelectionChanged"
                />
-        <editors:SfComboBox x:Name="BranchComboBox"
+            <editors:SfComboBox x:Name="BranchComboBox"
                WidthRequest="300"
                HeightRequest="50"
                BackgroundColor="#DCDCDC"
                Margin="10"
                />
-        <editors:SfComboBox x:Name="ClassComboBox"
+            <editors:SfComboBox x:Name="ClassComboBox"
                WidthRequest="300"
                HeightRequest="50"
                BackgroundColor="#DCDCDC"
                Margin="10"
                ItemsSource="{Binding Classes}"
                     />
-        <buttons:SfSwitch x:Name="ShowDegSwitch"/>
-        <Button Text="حفظ" Clicked="OnSaveButtonClicked" x:Name="SaveBtn"/>
-        <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteBtn"/>
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label Text="عرض الدرجات على الطالب" VerticalTextAlignment="Center" FontSize="16"/>
+            <buttons:SfSwitch x:Name="ShowDegSwitch" />
+            </HorizontalStackLayout>
+            <Button Text="حفظ" Clicked="OnSaveButtonClicked" x:Name="SaveBtn"/>
+            <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteBtn"/>
 
-        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30">
-            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20">
-                <StackLayout>
+        </StackLayout>
+        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30" BackgroundColor="#80000000">
+            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20" VerticalOptions="Center">
+                <StackLayout Spacing="20">
                     <Label Text="هل انت متأكد من الحذف ؟" HorizontalOptions="Center" FontSize="Medium"/>
-                    <entry:SfTextInputLayout Hint="أدخل كلمة السر للتأكيد" ContainerType="Outlined" WidthRequest="300" EnablePasswordVisibilityToggle="True">
+                    <entry:SfTextInputLayout Hint="أدخل كلمة السر للتأكيد" ContainerType="Filled" WidthRequest="300" EnablePasswordVisibilityToggle="True">
                         <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
                     </entry:SfTextInputLayout>
-                    <Button Text="موافقة" Clicked="AgreeButtonClicked" HorizontalOptions="End" />
-                    <Button Text="إلغاء" Clicked="CancelButtonClicked" HorizontalOptions="Start" />
+                    <FlexLayout AlignContent="Center" JustifyContent="SpaceAround">
+                        <Button Text="موافقة" Clicked="AgreeButtonClicked"  />
+                        <Button Text="إلغاء" Clicked="CancelButtonClicked"  />
+                    </FlexLayout>
                 </StackLayout>
             </Frame>
         </ContentView>
 
-    </StackLayout>
+    </Grid>
 </ContentPage>

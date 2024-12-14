@@ -35,12 +35,13 @@
                        HeightRequest="50"
                        BackgroundColor="#DCDCDC"
                        Margin="10"
-                       ItemsSource="{Binding Classes}"
                             />
         
                       
 
         <Button Text="حفظ" Clicked="OnSaveButtonClicked" />
+        <!--
         <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteButton" />
+        -->
     </VerticalStackLayout>
 </ContentPage>

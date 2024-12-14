@@ -11,7 +11,7 @@ public partial class SubjectCenterStd : ContentPage
     public ObservableCollection<SubjectPosts> Posts { get; set; }
     public int SubId;
     public readonly SQLiteAsyncConnection _database;
-    private FileResult result;
+    
     public SubjectCenterStd(int subid,bool showdeg)
 	{
 		InitializeComponent();

@@ -32,15 +32,29 @@ public partial class LoginPage : ContentPage
         }
         UserSession.UserId = IfUserExist.UserId;
         UserSession.Name = IfUserExist.Name;
+        UserSession.Password = IfUserExist.Password;
         UserSession.UserType = IfUserExist.UserType;
         if (UserSession.UserType == 3)
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new StudentShell()));
+            /*await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new StudentShell()));
+            Application.Current.MainPage = new NavigationPage(new StudentShell());
+*/
+
+            if (Application.Current?.Windows.Count > 0)
+            {
+                Application.Current.Windows[0].Page = new NavigationPage(new StudentShell());
+            }
+
             return;
         }
         if (UserSession.UserType == 2)
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new TeacherAppShell()));
+            /*await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new TeacherAppShell()));*/
+
+            if (Application.Current?.Windows.Count > 0)
+            {
+                Application.Current.Windows[0].Page = new NavigationPage(new TeacherAppShell());
+            }
             return;
         }
         await DisplayAlert("suc", "im dead", "حسنا");
