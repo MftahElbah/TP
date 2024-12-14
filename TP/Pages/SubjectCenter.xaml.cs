@@ -2,11 +2,11 @@
 using Syncfusion.Maui.ListView;
 using System.Collections.ObjectModel;
 using TP.Methods;
+using TP.Pages.Teacher;
 
+namespace TP.Pages;
 
-namespace TP.Pages.Teacher;
-
-public partial class SubjectCenterTeacher : ContentPage
+public partial class SubjectCenter : ContentPage
 {
     private DatabaseHelper _databaseHelper;
     public ObservableCollection<SubjectBooks> Books { get; set; }
@@ -21,13 +21,13 @@ public partial class SubjectCenterTeacher : ContentPage
         }
     }
     public ObservableCollection<SubjectPosts> Posts { get; set; }
-    public int SSubId;
+    public int SubId;
     public readonly SQLiteAsyncConnection _database;
     private FileResult result;
-    public SubjectCenterTeacher(int subid)
+    public SubjectCenter(int subid)
 	{
 		InitializeComponent();
-        SSubId = subid;
+        SubId = subid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
         _database = new SQLiteAsyncConnection(dbPath);
@@ -49,7 +49,7 @@ public partial class SubjectCenterTeacher : ContentPage
     private async Task LoadBooks()
     {
         var books = await _database.Table<SubjectBooks>()
-            .Where(b => b.SubId == SSubId)
+            .Where(b => b.SubId == SubId)
             .OrderByDescending(b => b.UploadDate)
             .ToListAsync();
 
@@ -62,7 +62,7 @@ public partial class SubjectCenterTeacher : ContentPage
     {
         Posts.Clear();
         var posts = await _database.Table<SubjectPosts>()
-            .Where(b => b.SubId == SSubId)
+            .Where(b => b.SubId == SubId)
             .OrderByDescending(b => b.PostDate)
             .ToListAsync();
 
@@ -72,7 +72,7 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async Task LoadData()
     {
-        var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SSubId).ToListAsync();
+        var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SubId).ToListAsync();
         if (degreeTableData != null)
         {
             DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
@@ -81,28 +81,28 @@ public partial class SubjectCenterTeacher : ContentPage
 
     private async void OnMenuClicked(object sender, EventArgs e)
     {
-        var action = await DisplayActionSheet("قائمة المادة", null, null, "اضف منشور", "أضف كتاب", "الأعدادات", "طلبات الانضمام");
+        var action = await DisplayActionSheet("قائمة المادة", null, null, "اضف منشور", "أضف كتاب", "طلبات الانضمام", "الأعدادات");
 
         switch (action)
         {
             case "اضف منشور":
-                await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null)); // Navigate to Add Post page
+                await Navigation.PushAsync(new EditPostPage(SubId)); // Navigate to Add Post page
                 break;
             case "أضف كتاب":
                 UploadBook(1); // Navigate to Add Book page
                 break;
             case "طلبات الانضمام":
-                await Navigation.PushAsync(new RequestMangment(SSubId)); // Navigate to Requests page
+                await Navigation.PushAsync(new RequestMangment(SubId)); // Navigate to Requests page
                 break;
             case "الأعدادات":
-                await Navigation.PushAsync(new SettingsForSub(SSubId)); // Navigate to Settings page
+                /*await Navigation.PushAsync(new SettingsPage());*/ // Navigate to Settings page
                 break;
         }
     }
 
-    private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
+    private async void OnBookTapped(object sender, Microsoft.Maui.Controls.ItemTappedEventArgs e)
     {
-        if (e.DataItem is SubjectBooks selectedPdf)
+        if (e.Item is SubjectBooks selectedPdf)
         {
             // Save the file temporarily
             var tempPath = Path.Combine(FileSystem.CacheDirectory, selectedPdf.BookName);
@@ -115,37 +115,6 @@ public partial class SubjectCenterTeacher : ContentPage
             });
         }
     }
-
-    private async void LongBookTapped(object sender, Syncfusion.Maui.ListView.ItemLongPressEventArgs e)
-    {
-        var delbook = e.DataItem as SubjectBooks;
-        if (delbook!=null)
-        {
-            bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {delbook.BookName}؟", "نعم", "لا");
-            if (confirm)
-            {
-                await _database.DeleteAsync(delbook);
-                Books.Remove(delbook);
-                await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
-            }
-        }
-            /*var tappedView = (sender as View);
-            var selectedBook = tappedView?.BindingContext as SubjectBooks;
-
-            if (selectedBook == null)
-                return;
-
-            bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {selectedBook.BookName}؟", "نعم", "لا");
-            if (confirm)
-            {
-                // Delete from database
-                await _database.DeleteAsync(selectedBook);
-
-                // Remove from collection
-                *//*(BindingContext as SubjectBooks)?Books.Remove(selectedBook);*//*
-
-            }*/
-        }
     private async void SaveBookClicked(object sender, EventArgs e)
     {
         if(BookNameEntry == null)
@@ -178,7 +147,7 @@ public partial class SubjectCenterTeacher : ContentPage
             var fileContent = await File.ReadAllBytesAsync(result.FullPath);
 
             var pdfFile = new SubjectBooks{
-                SubId = SSubId,
+                SubId = SubId,
                 BookName = BookNameEntry.Text,
                 BookFile = fileContent,
                 UploadDate = DateTime.Now,
@@ -186,7 +155,7 @@ public partial class SubjectCenterTeacher : ContentPage
 
             await _database.InsertAsync(pdfFile);
             var pdfPost = new SubjectPosts{
-                SubId = SSubId,
+                SubId = SubId,
                 PostTitle = "تم اضافة كتاب جديد",
                 PostDes = $"تم اضافة كتاب \"{BookNameEntry.Text}\" في قسم الكتب",
                 PostDate = DateTime.Now,
@@ -197,32 +166,25 @@ public partial class SubjectCenterTeacher : ContentPage
             await LoadPosts();
         }
     }
-    private void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
+    private async void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
         if (DegreeTableDataGrid.SelectedRow == null)
         {
             return;
         }
-
         var DataRow = DegreeTableDataGrid.SelectedRow;
+
+        /*var stdName = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
+        var degree = DataRow?.GetType().GetProperty("Deg")?.GetValue(DataRow)?.ToString();
+        var midDegree = DataRow?.GetType().GetProperty("MidDeg")?.GetValue(DataRow)?.ToString();
+        var total = DataRow?.GetType().GetProperty("Total")?.GetValue(DataRow)?.ToString();*/
         StdNameEntry.Text = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
         DegreeEntry.Text = DataRow?.GetType().GetProperty("Deg")?.GetValue(DataRow)?.ToString();
         MidDegreeEntry.Text = DataRow?.GetType().GetProperty("MiddelDeg")?.GetValue(DataRow)?.ToString();
 
         PopupEditDegreeWindow.IsVisible = true;
         DegreeTableDataGrid.SelectedRow = null;
-    }
-    private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
-    {
-        if (Postslistview.SelectedItem == null)
-        {
-            return;
-        }
-        var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
-
-        await Navigation.PushAsync(new EditPostPage(SSubId, SelectedPost.PostId.ToString(), SelectedPost.PostTitle, SelectedPost.PostDes)); // i want here to take data from selected list view
-
-        Postslistview.SelectedItem = null;
+        await LoadData();
     }
 
     private async void SaveDegreeClicked(object sender, EventArgs e)
@@ -244,8 +206,9 @@ public partial class SubjectCenterTeacher : ContentPage
         
         await _database.UpdateAsync(deg);
         PopupEditDegreeWindow.IsVisible = false;
-        await LoadData();
     }
+
+    
     private void CancelDegreeClicked(object sender, EventArgs e)
     {
         // Hide popup

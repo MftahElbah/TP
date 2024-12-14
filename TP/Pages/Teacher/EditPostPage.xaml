@@ -18,7 +18,6 @@
            x:Name="DesTxtInL">
             <Editor x:Name="DesEditor" BackgroundColor="#dcdcdc" HeightRequest="200" TextChanged="DesEditorChanged"/>
         </entry:SfTextInputLayout>
-        <buttons:SfButton x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" Background="#D3B05F" TextColor="#1A1A1A"/>
-        <buttons:SfButton x:Name="DeleteBtn" IsVisible="False" Clicked="DeleteClicked" Text="حذف" Background="#F02C2C"/>
+        <buttons:SfButton x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked"/>
     </VerticalStackLayout>
 </ContentPage>
