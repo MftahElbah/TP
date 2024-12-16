@@ -11,18 +11,16 @@ namespace TP
         public string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         public readonly SQLiteAsyncConnection _database;
         public App(){
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF5cXmBCf1FpR2NGfV5ycEVFal1WTnRbUiweQnxTdEFiW35dcHdUQWJYUUB3WQ==");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYyMjQ0N0AzMjM4MmUzMDJlMzBmUU9MTWVkem5xU2RxNUE0anZ5UVY1SHV4eWlrZWxEa1ZzMFdXKzFraENZPQ==");
             
             InitializeComponent();
             _database=new SQLiteAsyncConnection(dbPath);
-            MainPage = new ContentPage();
-            /*
-             * how to convert from MainPage = new ContentPage();
-            if (Application.Current?.Windows.Count > 0)
-            {
-                Application.Current.Windows[0].Page = new NavigationPage(new StartPage());
-            }
-        */
+            /*MainPage = new ContentPage();*/
+        }
+
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(new ContentPage());
         }
         protected override async void OnStart(){
             string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
@@ -81,7 +79,11 @@ namespace TP
             catch (Exception ex)
             {
                 // Handle exceptions (e.g., logging)
-                MainPage = new ContentPage { Content = new Label { Text = $"Error: {ex.Message}" } };
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = new NavigationPage(new ContentPage { Content = new Label { Text = $"Error: {ex.Message}" } });
+                }
+                /*MainPage = new ContentPage { Content = new Label { Text = $"Error: {ex.Message}" } };*/
             }
         }
 
