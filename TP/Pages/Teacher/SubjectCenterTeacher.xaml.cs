@@ -278,15 +278,15 @@ public partial class SubjectCenterTeacher : ContentPage
         //to show posts
         if(Status == 1) {
             PostsShower.TextColor = Color.FromArgb("#DCDCDC");
-            PostsShower.Background = Color.FromArgb("#2374AB");
+            PostsShower.BackgroundColor = Color.FromArgb("#2374AB");
             Postslistview.IsVisible = true;
 
             DegreesShower.TextColor= Color.FromArgb("#1A1A1A");
-            DegreesShower.Background = Colors.Transparent;
+            DegreesShower.BackgroundColor = Colors.Transparent;
             DegreeTableDataGrid.IsVisible = false;
 
             BooksShower.TextColor= Color.FromArgb("#1A1A1A");
-            BooksShower.Background = Colors.Transparent;
+            BooksShower.BackgroundColor = Colors.Transparent;
             PdfListView.IsVisible = false;
 
             NoExistTitle.Text = "لا يوجد منشورات";
@@ -296,15 +296,15 @@ public partial class SubjectCenterTeacher : ContentPage
         //to show Degrees Table
         if(Status == 2) {
             PostsShower.TextColor = Color.FromArgb("#1A1A1A");
-            PostsShower.Background = Colors.Transparent;
+            PostsShower.BackgroundColor = Colors.Transparent;
             Postslistview.IsVisible = false;
 
             DegreesShower.TextColor = Color.FromArgb("#DCDCDC");
-            DegreesShower.Background = Color.FromArgb("#2374AB");
+            DegreesShower.BackgroundColor = Color.FromArgb("#2374AB");
             DegreeTableDataGrid.IsVisible = true;
 
             BooksShower.TextColor = Color.FromArgb("#1A1A1A");
-            BooksShower.Background = Colors.Transparent;
+            BooksShower.BackgroundColor = Colors.Transparent;
             PdfListView.IsVisible = false;
 
             
@@ -316,15 +316,15 @@ public partial class SubjectCenterTeacher : ContentPage
         if(Status == 3)
         {
             PostsShower.TextColor = Color.FromArgb("#1A1A1A");
-            PostsShower.Background = Colors.Transparent;
+            PostsShower.BackgroundColor = Colors.Transparent;
             Postslistview.IsVisible = false;
 
             DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
-            DegreesShower.Background = Colors.Transparent;
+            DegreesShower.BackgroundColor = Colors.Transparent;
             DegreeTableDataGrid.IsVisible = false;
 
             BooksShower.TextColor = Color.FromArgb("#DCDCDC");
-            BooksShower.Background = Color.FromArgb("#2374AB");
+            BooksShower.BackgroundColor = Color.FromArgb("#2374AB");
             PdfListView.IsVisible = true;
 
 

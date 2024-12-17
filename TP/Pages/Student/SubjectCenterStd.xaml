@@ -3,16 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
-             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Student.SubjectCenterStd"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft">
     
     <VerticalStackLayout>
-        <buttons:SfButton x:Name="ShowDegree" Text="عرض الدرجات" Clicked="ShowDegreeClicked"/>
+        <Button x:Name="ShowDegree" Text="عرض الدرجات" Clicked="ShowDegreeClicked"/>
         <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="300" HeightRequest="50" HorizontalOptions="Center">
-            <buttons:SfButton Text="المنشورات" WidthRequest="150" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked"/>
-            <buttons:SfButton Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
+            <Button Text="المنشورات" WidthRequest="150" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked"/>
+            <Button Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
         </FlexLayout>
 
         <listview:SfListView x:Name="PdfListView"

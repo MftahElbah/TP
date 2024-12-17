@@ -39,7 +39,7 @@ namespace TP
                 {
                     if (Application.Current?.Windows.Count > 0)
                     {
-                        Application.Current.Windows[0].Page = new NavigationPage(new StartPage());
+                        Application.Current.Windows[0].Page = new NavigationPage(new LoginPage());
                     }
                     return;
                 }
@@ -51,7 +51,7 @@ namespace TP
                 {
                     if (Application.Current?.Windows.Count > 0)
                     {
-                        Application.Current.Windows[0].Page = new NavigationPage(new StartPage());
+                        Application.Current.Windows[0].Page = new NavigationPage(new LoginPage());
                     }
                     return;
                 }

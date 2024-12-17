@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
-             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
              x:Class="TP.Pages.Teacher.SubjectCenterTeacher"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft"
@@ -20,9 +19,9 @@
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
                 <FlexLayout JustifyContent="SpaceEvenly" VerticalOptions="Center">
-                    <buttons:SfButton Text="المنشورات" WidthRequest="100" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked" Background="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
-                    <buttons:SfButton Text="الدرجات" WidthRequest="100" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked" Background="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
-                    <buttons:SfButton Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked" Background="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
+                    <Button CornerRadius="20" Text="المنشورات" WidthRequest="100" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
+                    <Button CornerRadius="20" Text="الدرجات" WidthRequest="100" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
+                    <Button CornerRadius="20" Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
             </FlexLayout>
             </Border>
 
@@ -43,7 +42,6 @@
                     <datagrid:DataGridTextColumn HeaderText="المجموع" MappingName="Total" />
                 </datagrid:SfDataGrid.Columns>
             </datagrid:SfDataGrid>
-
 
             <listview:SfListView x:Name="PdfListView"
                      ItemsSource="{Binding Books}"
@@ -163,8 +161,8 @@
                 <FlexLayout JustifyContent="SpaceAround" Direction="Column" AlignContent="Center" AlignItems="Center">
                     <Label Text="اضافة كتاب" HorizontalOptions="Center" FontSize="Title"/>
                     <Entry Text="" x:Name="BookNameEntry" FontSize="20" HorizontalOptions="Center"/>
-                    <buttons:SfButton Text="حفظ" Clicked="SaveBookClicked" WidthRequest="100" HeightRequest="40" />
-                    <buttons:SfButton Text="الغاء" Clicked="CancelBookClicked" WidthRequest="100" HeightRequest="40" />
+                    <Button Text="حفظ" Clicked="SaveBookClicked" WidthRequest="100" HeightRequest="40" />
+                    <Button Text="الغاء" Clicked="CancelBookClicked" WidthRequest="100" HeightRequest="40" />
                 </FlexLayout>
             </Frame>
         </ContentView>

@@ -83,11 +83,11 @@ public partial class EditPostPage : ContentPage
 		if (string.IsNullOrEmpty(TitleEntry.Text) || string.IsNullOrEmpty(DesEditor.Text))
 		{
 			SaveBtn.IsEnabled = false;
-			SaveBtn.Background = Color.FromArgb("#D9D9D9");
+			SaveBtn.BackgroundColor = Color.FromArgb("#D9D9D9");
 		}
 		else {
             SaveBtn.IsEnabled = true;
-            SaveBtn.Background = Color.FromArgb("#D3B05F");
+            SaveBtn.BackgroundColor = Color.FromArgb("#D3B05F");
         }
 	}
 

@@ -1,9 +1,10 @@
 ﻿using SQLite;
 using System.Collections.ObjectModel;
 using TP.Methods;
-using TP.Pages.Level1;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
+using static Android.Net.Http.SslCertificate;
+using static Java.Util.Jar.Attributes;
 
 
 
@@ -113,7 +114,35 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private async void AddClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new EditSubject(null, null, null, null, null, 1));
+        /*await Navigation.PushAsync(new EditSubject(null, null, null, null, null, 1));*/
+        AddSubPopupWindow.IsVisible = true;
+    }
+    private async void CancelSubClick(object sender, EventArgs e)
+    {
+        
+        AddSubPopupWindow.IsVisible = false;
+    }
+
+    private async void CreateSubClick(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(SubNameEntry.Text)){
+            await DisplayAlert("Error", "All fields are required.", "OK");
+            return;
+        }
+        try{
+           var Sub = new SubTable{
+               SubName = SubNameEntry.Text,
+               UserId = UserSession.UserId,
+               ShowDeg = false,
+               };
+           await _database.InsertAsync(Sub);
+           await DisplayAlert("تمت", "تم انشاء المادة بنجاح", "حسنا"); 
+        }
+        catch (Exception ex){
+            await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+        }
+        AddSubPopupWindow.IsVisible = false;
+        await LoadSubjects();
     }
     private async void OnItemSelected(object sender, SelectionChangedEventArgs e)
     {

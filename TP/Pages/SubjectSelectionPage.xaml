@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.SubjectSelectionPage">
     <Grid>
     <AbsoluteLayout>
@@ -65,6 +65,7 @@
                 Margin="20"
                 Clicked="AddClicked" />
     </AbsoluteLayout>
+        
     <ContentView x:Name="SaveSession" IsVisible="False" BackgroundColor="#80000000">
         <Frame Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="300" HeightRequest="200">
             <FlexLayout JustifyContent="SpaceAround" Direction="Column" AlignContent="Center" AlignItems="Center">
@@ -74,12 +75,32 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <buttons:SfButton Text="نعم" Clicked="SaveSessionClicked" WidthRequest="70" HeightRequest="40" Grid.Column="1" Margin="10"/>
-                        <buttons:SfButton Text="لا" Clicked="CancelClicked" WidthRequest="70" HeightRequest="40" Grid.Column="0" Margin="10"/>
+                        <Button Text="نعم" Clicked="SaveSessionClicked" WidthRequest="70" HeightRequest="40" Grid.Column="1" Margin="10"/>
+                        <Button Text="لا" Clicked="CancelClicked" WidthRequest="70" HeightRequest="40" Grid.Column="0" Margin="10"/>
                     </Grid>
             </FlexLayout>
         </Frame>
     </ContentView>
-        
+
+        <ContentView x:Name="AddSubPopupWindow" IsVisible="False" BackgroundColor="#80000000">
+            <Border Padding="20" BackgroundColor="#ffffff" HeightRequest="200" WidthRequest="300">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                    <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Filled" WidthRequest="200" HeightRequest="100">
+                        <Entry x:Name="SubNameEntry"/>
+                    </entry:SfTextInputLayout>
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Clicked="CancelSubClick" Text="الغاء"/>
+                        <Button Clicked="CreateSubClick" Text="انشاء"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+            </Border>
+        </ContentView>
+
     </Grid>
 </ContentPage>

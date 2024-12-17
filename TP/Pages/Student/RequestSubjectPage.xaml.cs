@@ -1,5 +1,4 @@
 ﻿using SQLite;
-using Syncfusion.Maui.Buttons;
 using Syncfusion.Maui.PullToRefresh;
 using System.Collections.ObjectModel;
 using TP.Methods;
@@ -70,7 +69,7 @@ public partial class RequestSubjectPage : ContentPage
         
         // Search for subjects with names matching the search text
         var filteredSubjects = await _database.Table<SubTable>()
-                                              .Where(s => s.SubName.Contains(searchText) || s.SubTeacher.Contains(searchText))
+                                              .Where(s => s.SubName.Contains(searchText))
                                               .ToListAsync();
         Subjects.Clear();
         if (filteredSubjects.Count == 0) {
@@ -97,7 +96,7 @@ public partial class RequestSubjectPage : ContentPage
 
     private async void OnSendRequestClicked(object sender, EventArgs e)
     {
-        var button = sender as SfButton;
+        var button = sender as Button;
         var subject = button.BindingContext as SubTable;
         if(button.Text == "تم الأرسال")
         {
@@ -115,7 +114,7 @@ public partial class RequestSubjectPage : ContentPage
             };
             await _database.InsertAsync(request);
             button.Text = "تم الأرسال";
-            button.Background = Colors.Gray;
+            button.BackgroundColor = Colors.Gray;
         }
     }
     private async void OnPullToRefreshRefreshing(object sender, EventArgs args)
