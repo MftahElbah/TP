@@ -11,11 +11,10 @@ namespace TP
         public string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         public readonly SQLiteAsyncConnection _database;
         public App(){
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYyMjQ0N0AzMjM4MmUzMDJlMzBmUU9MTWVkem5xU2RxNUE0anZ5UVY1SHV4eWlrZWxEa1ZzMFdXKzFraENZPQ==");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
             
             InitializeComponent();
             _database=new SQLiteAsyncConnection(dbPath);
-            /*MainPage = new ContentPage();*/
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

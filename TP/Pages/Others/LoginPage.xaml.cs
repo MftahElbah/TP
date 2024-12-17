@@ -15,6 +15,21 @@ public partial class LoginPage : ContentPage
         _database = new SQLiteAsyncConnection(dbPath);
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await DeleteSession();
+    }
+
+    private async Task DeleteSession()
+    {
+        var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
+        if (session != null)
+        {
+            await _database.DeleteAsync(session);
+        }
+    }
+
     private async void LoginBtnClicked(object sender, EventArgs e)
     {
         if(string.IsNullOrEmpty(UsernameEntry.Text) || string.IsNullOrEmpty(PasswordEntry.Text))

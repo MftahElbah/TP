@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              x:Class="TP.Pages.Teacher.SubjectCenterTeacher"
@@ -12,18 +13,83 @@
     </ContentPage.ToolbarItems>
     <Grid>
 
-        <VerticalStackLayout HorizontalOptions="Center">
+        <Grid HorizontalOptions="Center">
 
-            <Border BackgroundColor="#DCDCDC" HorizontalOptions="Center"  Margin="10" Padding="10">
-                <Border.StrokeShape >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <Border BackgroundColor="#DCDCDC" HorizontalOptions="Center" Grid.Row="0" Padding="10">
+                <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
-                <FlexLayout JustifyContent="SpaceEvenly" VerticalOptions="Center">
-                    <Button CornerRadius="20" Text="المنشورات" WidthRequest="100" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
-                    <Button CornerRadius="20" Text="الدرجات" WidthRequest="100" HeightRequest="40" x:Name="DegreesShower" Clicked="DegreesShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
-                    <Button CornerRadius="20" Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked" BackgroundColor="Transparent" TextColor="#1a1a1a" FontFamily="Cairo"/>
-            </FlexLayout>
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                    <Button CornerRadius="20" Text="المنشورات" x:Name="PostsShower" Clicked="PostsShowerClicked" FontFamily="Cairo" FontSize="16"/>
+                    <Button CornerRadius="20" Text="الدرجات" x:Name="DegreesShower" Clicked="DegreesShowerClicked" FontFamily="Cairo" FontSize="16"/>
+                    <Button CornerRadius="20" Text="الكتب" x:Name="BooksShower" Clicked="BooksShowerClicked" FontFamily="Cairo" FontSize="16"/>
+                </HorizontalStackLayout>
             </Border>
+            
+            <listview:SfListView x:Name="Postslistview"
+             ItemsSource="{Binding Posts}"
+             ItemSize="200"
+             SelectionMode="Single"
+             SelectionChanged="SelectionPostChanged"
+             IsScrollingEnabled="True"
+             ScrollBarVisibility="Always"
+             SelectionBackground="Transparent"
+             Grid.Row="1"
+             >
+                <listview:SfListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            BackgroundColor="#D9D9D9"
+                            Margin="10"
+                            Padding="10"
+                            ColumnSpacing="5"
+                            RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <!-- For the button row -->
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding PostTitle}" 
+                       Grid.Row="0"
+                       FontFamily="Cairo"
+                       HorizontalOptions="Start" 
+                       VerticalOptions="Start" 
+                       FontAttributes="Bold" 
+                       FontSize="16" 
+                       TextColor="#1A1A1A"/>
+                            <Label Text="{Binding PostDes}" 
+                       FontFamily="Cairo"
+                       Grid.Row="1"
+                       HorizontalOptions="Start" 
+                       VerticalOptions="Center"
+                       FontSize="16" 
+                       TextColor="#1A1A1A"/>
+                            <Label Text="{Binding PostDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
+                       Grid.Row="2"
+                       FontFamily="Cairo"
+                       HorizontalOptions="Start" 
+                       VerticalOptions="End" 
+                       FontSize="14" 
+                       FontAttributes="Italic"
+                       TextColor="#1A1A1A"/>
+
+                        </Grid>
+                    </DataTemplate>
+                </listview:SfListView.ItemTemplate>
+            </listview:SfListView>
 
             <datagrid:SfDataGrid x:Name="DegreeTableDataGrid"
                        ItemsSource="{Binding DegreeTableSetter}"
@@ -33,7 +99,8 @@
                        ColumnWidthMode="Fill"
                        AutoGenerateColumnsMode="None"
                        IsVisible="False"
-                                 
+                       Grid.Row="1"
+                              
                        >
                 <datagrid:SfDataGrid.Columns >
                     <datagrid:DataGridTextColumn HeaderText="اسم" MappingName="StdName" />
@@ -49,7 +116,10 @@
                      IsVisible="False"
                      ItemTapped="BookTapped"
                      ItemLongPress="LongBookTapped"
-                     SelectionMode="None">
+                     SelectionMode="None"
+                     SelectionBackground="Transparent"
+                     Grid.Row="1"
+                     >
                 <listview:SfListView.ItemTemplate>
                     <DataTemplate>
                         <Grid BackgroundColor="#FFFFFF"
@@ -77,60 +147,7 @@
             </listview:SfListView>
 
 
-            <listview:SfListView x:Name="Postslistview"
-                         ItemsSource="{Binding Posts}"
-                         ItemSize="200"
-                         SelectionMode="Single"
-                         SelectionChanged="SelectionPostChanged"
-                         IsScrollingEnabled="True"
-                         ScrollBarVisibility="Default"
-                         >
-                <listview:SfListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid BackgroundColor="#D9D9D9"
-                          Margin="10"
-                          Padding="10"
-                          ColumnSpacing="5"
-                          RowSpacing="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Text="{Binding PostTitle}" 
-                            Grid.Row="0"
-                            FontFamily="Cairo"
-                            HorizontalOptions="Start" 
-                            VerticalOptions="Start" 
-                            FontAttributes="Bold" 
-                            FontSize="16" 
-                            TextColor="#1A1A1A"/>
-                            <Label Text="{Binding PostDes}" 
-                            FontFamily="Cairo"
-                            Grid.Row="1"
-                            HorizontalOptions="Start" 
-                            VerticalOptions="Center"
-                            FontSize="16" 
-                            TextColor="#1A1A1A"/>
-                            <Label Text="{Binding PostDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}"
-                            Grid.Row="2"
-                            FontFamily="Cairo"
-                            HorizontalOptions="Start" 
-                            VerticalOptions="End" 
-                            FontSize="14" 
-                            FontAttributes="Italic"
-                            TextColor="#1A1A1A"/>
-                        </Grid>
-                    </DataTemplate>
-                </listview:SfListView.ItemTemplate>
-            </listview:SfListView>
-
-
-        </VerticalStackLayout>
+        </Grid>
        
 
         <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
@@ -167,17 +184,35 @@
             </Frame>
         </ContentView>
         
+        <ContentView x:Name="EditPostPopupWindow" IsVisible="False" BackgroundColor="#80000000" >
+            
+                <Border Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="20">
+                        <Button Text="تعديل" Clicked="EditPostClicked" HorizontalOptions="End" FontSize="16" FontFamily="Cairo"/>
+                        <Label x:Name="IdLblPopup" HorizontalOptions="Center" FontSize="20" IsVisible="False"/>
+                        <Label x:Name="DeadLineTimeLblPopup" HorizontalOptions="Center" FontSize="16" IsVisible="False"/>
+                        <Label x:Name="TitleLblPopup" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo"/>
+                        <Label x:Name="DesLblPopup" HorizontalOptions="Start" FontSize="20" FontFamily="Cairo"/>
+                        <Button Text="الغاء" Clicked="CancelPostClicked" HorizontalOptions="Center" Padding="20,0" FontSize="16" FontFamily="Cairo"/>
+                        <Button Text="عرض الملفات المرفوعة" x:Name="ShowAssignments" Clicked="ShowAssignmentsClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="Cairo"/>
+                    </VerticalStackLayout>
+                </Border>
+            
+        </ContentView>
+        
         <ContentView x:Name="EmptyMessage" IsVisible="False" >
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                
-                    <Label Text="لا يوجد منشور" 
+                <Label Text="لا يوجد منشور" 
                         FontSize="Title" 
                         HorizontalTextAlignment="Center" 
                         VerticalTextAlignment="Center"
                            FontFamily="Cairo"
                         FontAttributes="Bold" 
                         x:Name="NoExistTitle"/>
-                    <Label Text=' يمكنك اضافته عن طريق القائمة ' 
+                <Label Text=' يمكنك اضافته عن طريق القائمة ' 
                         FontSize="Subtitle" 
                         HorizontalTextAlignment="Center" 
                         VerticalTextAlignment="Center" 
@@ -185,7 +220,6 @@
                         TextColor="Gray"
                         x:Name="NoExistSubTitle"
                         />
-                
             </VerticalStackLayout>
         </ContentView>
         

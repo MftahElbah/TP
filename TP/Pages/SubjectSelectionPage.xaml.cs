@@ -3,8 +3,7 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
-using static Android.Net.Http.SslCertificate;
-using static Java.Util.Jar.Attributes;
+
 
 
 

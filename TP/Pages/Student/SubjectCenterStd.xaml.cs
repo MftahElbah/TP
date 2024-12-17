@@ -24,16 +24,15 @@ public partial class SubjectCenterStd : ContentPage
         if (!showdeg)
         { ShowDegree.IsVisible = false; }
         BindingContext = this;
-        PageShowStatus(1);
     }
-    protected override async void OnAppearing()
-    {
+    protected override async void OnAppearing(){
         base.OnAppearing();
         await LoadBooks();
         await LoadPosts();
+        PageShowStatus(1);
     }
 
-    private async Task LoadBooks()
+   private async Task LoadBooks()
     {
         var books = await _database.Table<SubjectBooks>()
             .Where(b => b.SubId == SubId)
@@ -57,21 +56,37 @@ public partial class SubjectCenterStd : ContentPage
             Posts.Add(post);
         } 
     }
- private async Task LoadBtn()
-    {
-        Posts.Clear();
-        var lb = await _database.Table<SubTable>()
-            .Where(b => b.SubId == SubId)
-            .FirstOrDefaultAsync();
 
-        if (lb.ShowDeg)
+
+    private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
+    {
+        if (Postslistview.SelectedItem == null)
         {
-            ShowDegree.IsVisible = true;
             return;
         }
-        ShowDegree.IsVisible = false;
+        ShowAssignments.IsVisible = false;
+        var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
+
+        IdLblPopup.Text = SelectedPost.PostId.ToString();
+        TitleLblPopup.Text = SelectedPost.PostTitle;
+        DesLblPopup.Text = SelectedPost.PostDes;
+        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
+        if (!String.IsNullOrEmpty(DeadLineTimeLblPopup.Text))
+        {
+            ShowAssignments.IsVisible = true;
+        }
+
+        PostPopupWindow.IsVisible = true;
+        Postslistview.SelectedItem = null;
     }
- 
+
+    private async void ShowAssignmentsClicked(object sender, EventArgs e)
+    {
+    }
+    private async void CancelPostClicked(object sender, EventArgs e)
+    {
+        PostPopupWindow.IsVisible = false;
+    }
     private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
     {
         if (e.DataItem is SubjectBooks selectedPdf)

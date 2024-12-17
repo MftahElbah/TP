@@ -53,7 +53,7 @@ public partial class SubjectCenterTeacher : ContentPage
             .Where(b => b.SubId == SSubId)
             .OrderByDescending(b => b.PostDate)
             .ToListAsync();
-        if (posts.Count == 0 ) {
+        if (posts.Count == 0) {
             Emptys[0] = true;
             return;
         }
@@ -101,7 +101,7 @@ public partial class SubjectCenterTeacher : ContentPage
         switch (action)
         {
             case "اضف منشور":
-                await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null)); // Navigate to Add Post page
+                await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null,null)); // Navigate to Add Post page
                 break;
             case "أضف كتاب":
                 UploadBook(1); // Navigate to Add Book page
@@ -189,6 +189,7 @@ public partial class SubjectCenterTeacher : ContentPage
                 PostTitle = "تم اضافة كتاب جديد",
                 PostDes = $"تم اضافة كتاب \"{BookNameEntry.Text}\" في قسم الكتب",
                 PostDate = DateTime.Now,
+                DeadLineTime = null,
             };
             await _database.InsertAsync(pdfPost);
             PopupEditBookNameWindow.IsVisible = false;
@@ -217,13 +218,31 @@ public partial class SubjectCenterTeacher : ContentPage
         {
             return;
         }
+        ShowAssignments.IsVisible = false;
         var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
 
-        await Navigation.PushAsync(new EditPostPage(SSubId, SelectedPost.PostId.ToString(), SelectedPost.PostTitle, SelectedPost.PostDes)); // i want here to take data from selected list view
+        IdLblPopup.Text = SelectedPost.PostId.ToString();
+        TitleLblPopup.Text = SelectedPost.PostTitle;
+        DesLblPopup.Text = SelectedPost.PostDes;
+        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
+        if(!String.IsNullOrEmpty(DeadLineTimeLblPopup.Text))
+        {
+            ShowAssignments.IsVisible = true;
+        }
 
+        EditPostPopupWindow.IsVisible = true;
         Postslistview.SelectedItem = null;
     }
 
+    private async void ShowAssignmentsClicked(object sender, EventArgs e) { 
+    }
+    private async void CancelPostClicked(object sender, EventArgs e) {
+        EditPostPopupWindow.IsVisible = false;
+    }
+    private async void EditPostClicked(object sender, EventArgs e) { 
+        
+        await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text,DeadLineTimeLblPopup.Text)); // i want here to take data from selected list view
+    }
     private async void DeleteDegreeClicked(object sender, EventArgs e) {
         bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
         if (!isConfirmed) { return; }

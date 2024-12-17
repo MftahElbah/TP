@@ -6,20 +6,34 @@
              x:Class="TP.Pages.Student.SubjectCenterStd"
              BackgroundColor="#E4E4E4"
              FlowDirection="RightToLeft">
-    
-    <VerticalStackLayout>
-        <Button x:Name="ShowDegree" Text="عرض الدرجات" Clicked="ShowDegreeClicked"/>
-        <FlexLayout BackgroundColor="#DCDCDC" JustifyContent="SpaceEvenly" WidthRequest="300" HeightRequest="50" HorizontalOptions="Center">
-            <Button Text="المنشورات" WidthRequest="150" HeightRequest="40" x:Name="PostsShower" Clicked="PostsShowerClicked"/>
-            <Button Text="الكتب" WidthRequest="70" HeightRequest="40" x:Name="BooksShower" Clicked="BooksShowerClicked"/>
-        </FlexLayout>
+    <Grid>
+        <Grid>
+            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <Button x:Name="ShowDegree" Text="عرض الدرجات" Clicked="ShowDegreeClicked" HorizontalOptions="Center" Grid.Row="0"/>
+            <Border BackgroundColor="#DCDCDC" HorizontalOptions="Center" Grid.Row="1" Padding="10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+            <Button Text="المنشورات" x:Name="PostsShower" Clicked="PostsShowerClicked" FontFamily="Cairo" FontSize="16" CornerRadius="20"/>
+            <Button Text="الكتب" x:Name="BooksShower" Clicked="BooksShowerClicked" FontFamily="Cairo" FontSize="16" CornerRadius="20"/>
+        </HorizontalStackLayout>
+            </Border>
+            
         <listview:SfListView x:Name="PdfListView"
                      ItemsSource="{Binding Books}"
                      ItemSize="100"
                      IsVisible="False"
                      ItemTapped="BookTapped"
-                     SelectionMode="Single">
+                     SelectionMode="Single"
+                             Grid.Row="2">
             <listview:SfListView.ItemTemplate>
                 <DataTemplate>
                     <Grid BackgroundColor="#FFFFFF"
@@ -45,16 +59,22 @@
                 </DataTemplate>
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
+        
 
 
-        <listview:SfListView x:Name="Postslistview"
+                    <listview:SfListView x:Name="Postslistview"
                          ItemsSource="{Binding Posts}"
                          ItemSize="200"
                          SelectionMode="Single"
                          IsScrollingEnabled="True"
                          ScrollBarVisibility="Default"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"
+                         Grid.Row="2"
+                         SelectionChanged="SelectionPostChanged"
+                                         SelectionBackground="Transparent"
                          >
-            <listview:SfListView.ItemTemplate>
+                        <listview:SfListView.ItemTemplate>
                 <DataTemplate>
                     <Grid BackgroundColor="#D9D9D9"
                           Margin="10"
@@ -94,7 +114,28 @@
                 </DataTemplate>
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
-
+        </Grid>
         
-    </VerticalStackLayout>
+       
+    
+        
+        <ContentView x:Name="PostPopupWindow" IsVisible="False" BackgroundColor="#80000000" >
+            <ScrollView>
+                <Border Padding="20" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="20">
+                        <Label x:Name="IdLblPopup" HorizontalOptions="Center" FontSize="20" IsVisible="False"/>
+                        <Label x:Name="DeadLineTimeLblPopup" HorizontalOptions="Center" FontSize="16" IsVisible="False"/>
+                        <Label x:Name="TitleLblPopup" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo"/>
+                        <Label x:Name="DesLblPopup" HorizontalOptions="Start" FontSize="20" FontFamily="Cairo"/>
+                        <Button Text="الغاء" Clicked="CancelPostClicked" HorizontalOptions="Center" Padding="20,0" FontSize="16" FontFamily="Cairo"/>
+                        <Button Text="رفع" x:Name="ShowAssignments" Clicked="ShowAssignmentsClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="Cairo"/>
+                    </VerticalStackLayout>
+                </Border>
+            </ScrollView>
+        </ContentView>
+       
+    </Grid>
 </ContentPage>

@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-             x:Class="TP.Pages.Teacher.EditPostPage"
-             Title="EditPostPage">
-    <VerticalStackLayout>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+    xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    x:Class="TP.Pages.Teacher.EditPostPage"
+    FlowDirection="RightToLeft"
+    Title="EditPostPage">
+    <VerticalStackLayout Spacing="10">
         <Label 
             Text="اضف منشور جديد"
+            FontSize="Title" FontFamily="Cairo"
             VerticalOptions="Start" 
             HorizontalOptions="Center" />
-        <entry:SfTextInputLayout Hint="عنوان" ContainerType="Outlined" WidthRequest="300"
+        <entry:SfTextInputLayout Hint="عنوان" ContainerType="Outlined" WidthRequest="300" 
            x:Name="TitleTxtInL">
-            <Entry x:Name="TitleEntry" BackgroundColor="#dcdcdc" TextChanged="TitleEntryChanged"/>
+            <Entry x:Name="TitleEntry" BackgroundColor="#dcdcdc" TextChanged="TitleEntryChanged" FontSize="16" FontFamily="Cairo"/>
         </entry:SfTextInputLayout>
-        <entry:SfTextInputLayout Hint="وصف" ContainerType="Outlined" WidthRequest="300"
+        <entry:SfTextInputLayout Hint="وصف" ContainerType="Outlined" WidthRequest="300" 
            x:Name="DesTxtInL">
-            <Editor x:Name="DesEditor" BackgroundColor="#dcdcdc" HeightRequest="200" TextChanged="DesEditorChanged"/>
+            <Editor x:Name="DesEditor" BackgroundColor="#dcdcdc" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo"/>
         </entry:SfTextInputLayout>
-        <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D3B05F" TextColor="#1A1A1A"/>
-        <Button x:Name="DeleteBtn" IsVisible="False" Clicked="DeleteClicked" Text="حذف" BackgroundColor="#F02C2C"/>
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+            <RadioButton x:Name="PostRadio" GroupName="PostType" Content="منشور" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
+            <RadioButton x:Name="AssignmentRadio" GroupName="PostType" Content="واجب" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
+        </HorizontalStackLayout>
+        <Button Text="اخر موعد" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" WidthRequest="100" FontSize="16" FontFamily="Cairo"/>
+        <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog"/>
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+            <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D3B05F" TextColor="#1A1A1A" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
+        <Button x:Name="DeleteBtn" IsVisible="False" Clicked="DeleteClicked" Text="حذف" BackgroundColor="#F02C2C" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>
