@@ -49,6 +49,7 @@ public partial class LoginPage : ContentPage
         UserSession.Name = IfUserExist.Name;
         UserSession.Password = IfUserExist.Password;
         UserSession.UserType = IfUserExist.UserType;
+        UserSession.sessionyn = false;
         if (UserSession.UserType == 3)
         {
             /*await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new StudentShell()));

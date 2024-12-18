@@ -191,12 +191,15 @@
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="20">
+                    <FlexLayout JustifyContent="SpaceBetween" HorizontalOptions="Center" VerticalOptions="Start">
+                        <Button Text="X" Clicked="CancelPostClicked" HorizontalOptions="Start" FontSize="16" FontFamily="Cairo" CornerRadius="60"/>
                         <Button Text="تعديل" Clicked="EditPostClicked" HorizontalOptions="End" FontSize="16" FontFamily="Cairo"/>
+                    </FlexLayout>
                         <Label x:Name="IdLblPopup" HorizontalOptions="Center" FontSize="20" IsVisible="False"/>
                         <Label x:Name="DeadLineTimeLblPopup" HorizontalOptions="Center" FontSize="16" IsVisible="False"/>
                         <Label x:Name="TitleLblPopup" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo"/>
                         <Label x:Name="DesLblPopup" HorizontalOptions="Start" FontSize="20" FontFamily="Cairo"/>
-                        <Button Text="الغاء" Clicked="CancelPostClicked" HorizontalOptions="Center" Padding="20,0" FontSize="16" FontFamily="Cairo"/>
+                        <Button Text="عرض ملف الشرح" x:Name="ShowDesFileBtn" Clicked="ShowDesFileBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="Cairo"/>
                         <Button Text="عرض الملفات المرفوعة" x:Name="ShowAssignments" Clicked="ShowAssignmentsClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="Cairo"/>
                     </VerticalStackLayout>
                 </Border>

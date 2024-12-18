@@ -73,12 +73,15 @@ namespace TP
         public string PostDes { get; set; }
         public DateTime PostDate { get; set; }
         public DateTime? DeadLineTime { get; set; }
+        public Byte[] PostDesFile { get; set; }
         
     }
     public class SubjectAssignments{
         public int PostId { get; set; }
         public int StdId { get; set; }
+        public string StdName { get; set; }
         public Byte[] AssignmentFile { get; set; }
+        public string FileType { get; set; }
 
     }
 }

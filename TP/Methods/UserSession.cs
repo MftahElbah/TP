@@ -12,5 +12,6 @@ namespace TP.Methods
         public static string Name { get; set; }
         public static string Password { get; set; }
         public static int UserType { get; set; }
+        public static bool sessionyn {  get; set; }
     }
 }

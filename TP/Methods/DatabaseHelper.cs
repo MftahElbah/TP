@@ -28,6 +28,7 @@ namespace TP.Methods
             await _database.CreateTableAsync<SubjectBooks>();
             await _database.CreateTableAsync<SubjectPosts>();
             await _database.CreateTableAsync<UserSessionTable>();
+            await _database.CreateTableAsync<SubjectAssignments>();
 
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 

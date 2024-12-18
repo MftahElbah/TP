@@ -26,9 +26,10 @@
             <RadioButton x:Name="AssignmentRadio" GroupName="PostType" Content="واجب" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
         </HorizontalStackLayout>
         <Button Text="اخر موعد" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" WidthRequest="100" FontSize="16" FontFamily="Cairo"/>
-        <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog"/>
+        <Button Text="رفع ملف للتوضيح" x:Name="UploadDesBtn" Clicked="UploadDesBtnClicked" WidthRequest="100" FontSize="16" FontFamily="Cairo" IsVisible="False"/>
+        <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" SelectionChanged="TimeChanged"/>
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-            <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D3B05F" TextColor="#1A1A1A" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
+            <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D9D9D9" TextColor="#1A1A1A" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
         <Button x:Name="DeleteBtn" IsVisible="False" Clicked="DeleteClicked" Text="حذف" BackgroundColor="#F02C2C" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
         </HorizontalStackLayout>
     </VerticalStackLayout>

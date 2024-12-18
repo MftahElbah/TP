@@ -80,6 +80,9 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private async Task CheckSession()
     {
+        if (UserSession.sessionyn) { 
+            return;
+        }
         SaveSession.IsVisible = false;
         var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
 
@@ -87,6 +90,7 @@ public partial class SubjectSelectionPage : ContentPage
         if (session == null)
         {
             SaveSession.IsVisible = true;
+            UserSession.sessionyn = true;
             return;
         }
     }

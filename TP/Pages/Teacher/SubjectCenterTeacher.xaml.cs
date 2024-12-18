@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Dalvik.SystemInterop;
+using SQLite;
 using Syncfusion.Maui.ListView;
 using System.Collections.ObjectModel;
 using TP.Methods;
@@ -38,6 +39,8 @@ public partial class SubjectCenterTeacher : ContentPage
         /*suby = new ObservableCollection<SubForStdTable>();*/
         BindingContext = this;
     }
+
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -62,7 +65,6 @@ public partial class SubjectCenterTeacher : ContentPage
         }
         Emptys[0] = false;
     }
-
     private async Task LoadData()
     {
         var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SSubId).ToListAsync();
@@ -94,6 +96,7 @@ public partial class SubjectCenterTeacher : ContentPage
         Emptys[2] = false;
     }
 
+
     private async void OnMenuClicked(object sender, EventArgs e)
     {
         var action = await DisplayActionSheet("قائمة المادة", null, null, "اضف منشور", "أضف كتاب", "الأعدادات", "طلبات الانضمام");
@@ -115,50 +118,69 @@ public partial class SubjectCenterTeacher : ContentPage
         }
     }
 
-    private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
-    {
-        if (e.DataItem is SubjectBooks selectedPdf)
-        {
-            // Save the file temporarily
-            var tempPath = Path.Combine(FileSystem.CacheDirectory, selectedPdf.BookName);
-            await File.WriteAllBytesAsync(tempPath, selectedPdf.BookFile);
 
-            // Open the file
-            await Launcher.Default.OpenAsync(new OpenFileRequest
-            {
-                File = new ReadOnlyFile(tempPath)
-            });
+    private void PostsShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(1);
+    }
+    private void DegreesShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(2);
+    }
+    private void BooksShowerClicked(object sender, EventArgs e)
+    {
+        PageShowStatus(3);
+    }
+    private void PageShowStatus(int status)
+    {
+        // Reset all controls to the default state
+        PostsShower.TextColor = Color.FromArgb("#1A1A1A");
+        PostsShower.BackgroundColor = Colors.Transparent;
+        Postslistview.IsVisible = false;
+
+        DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
+        DegreesShower.BackgroundColor = Colors.Transparent;
+        DegreeTableDataGrid.IsVisible = false;
+
+        BooksShower.TextColor = Color.FromArgb("#1A1A1A");
+        BooksShower.BackgroundColor = Colors.Transparent;
+        PdfListView.IsVisible = false;
+
+        switch (status)
+        {
+            case 1: // Show posts
+                PostsShower.TextColor = Color.FromArgb("#DCDCDC");
+                PostsShower.BackgroundColor = Color.FromArgb("#2374AB");
+                Postslistview.IsVisible = true;
+
+                NoExistTitle.Text = "لا يوجد منشورات";
+                NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+                EmptyMessage.IsVisible = Emptys[0];
+                break;
+
+            case 2: // Show degrees table
+                DegreesShower.TextColor = Color.FromArgb("#DCDCDC");
+                DegreesShower.BackgroundColor = Color.FromArgb("#2374AB");
+                DegreeTableDataGrid.IsVisible = true;
+
+                NoExistTitle.Text = "لا يوجد طالب مشترك";
+                NoExistSubTitle.Text = "تأكد من صفحة \"طلبات الانضمام\" الموجودة في القائمة";
+                EmptyMessage.IsVisible = Emptys[1];
+                break;
+
+            case 3: // Show books
+                BooksShower.TextColor = Color.FromArgb("#DCDCDC");
+                BooksShower.BackgroundColor = Color.FromArgb("#2374AB");
+                PdfListView.IsVisible = true;
+
+                NoExistTitle.Text = "لا يوجد كتب";
+                NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+                EmptyMessage.IsVisible = Emptys[2];
+                break;
         }
     }
 
-    private async void LongBookTapped(object sender, Syncfusion.Maui.ListView.ItemLongPressEventArgs e)
-    {
-        var delbook = e.DataItem as SubjectBooks;
-        if (delbook!=null)
-        {
-            bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {delbook.BookName}؟", "نعم", "لا");
-            if (confirm)
-            {
-                await _database.DeleteAsync(delbook);
-                Books.Remove(delbook);
-                await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
-            }
-        }
-        }
-    private async void SaveBookClicked(object sender, EventArgs e)
-    {
-        if(BookNameEntry == null)
-        {
-            await DisplayAlert("خطا", "يجب ان يكون حقل الاسم غير فارغ", "حسنا");
-            return;
-        }
-        UploadBook(2);
-    }
-    private void CancelBookClicked(object sender, EventArgs e)
-    {
-        PopupEditBookNameWindow.IsVisible = false;
-        return;
-    }
+
     public async void UploadBook(int step)
     {
         if (step == 1) {
@@ -197,6 +219,51 @@ public partial class SubjectCenterTeacher : ContentPage
             await LoadPosts();
         }
     }
+    private async void SaveBookClicked(object sender, EventArgs e)
+    {
+        if(BookNameEntry == null)
+        {
+            await DisplayAlert("خطا", "يجب ان يكون حقل الاسم غير فارغ", "حسنا");
+            return;
+        }
+        UploadBook(2);
+    }
+    private void CancelBookClicked(object sender, EventArgs e)
+    {
+        PopupEditBookNameWindow.IsVisible = false;
+        return;
+    }
+    private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
+    {
+        if (e.DataItem is SubjectBooks selectedPdf)
+        {
+            // Save the file temporarily
+            var tempPath = Path.Combine(FileSystem.CacheDirectory, selectedPdf.BookName);
+            await File.WriteAllBytesAsync(tempPath, selectedPdf.BookFile);
+
+            // Open the file
+            await Launcher.Default.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(tempPath)
+            });
+        }
+    }
+    private async void LongBookTapped(object sender, Syncfusion.Maui.ListView.ItemLongPressEventArgs e)
+    {
+        var delbook = e.DataItem as SubjectBooks;
+        if (delbook!=null)
+        {
+            bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {delbook.BookName}؟", "نعم", "لا");
+            if (confirm)
+            {
+                await _database.DeleteAsync(delbook);
+                Books.Remove(delbook);
+                await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
+            }
+        }
+        }
+
+
     private void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
     {
         if (DegreeTableDataGrid.SelectedRow == null)
@@ -211,46 +278,6 @@ public partial class SubjectCenterTeacher : ContentPage
 
         PopupEditDegreeWindow.IsVisible = true;
         DegreeTableDataGrid.SelectedRow = null;
-    }
-    private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
-    {
-        if (Postslistview.SelectedItem == null)
-        {
-            return;
-        }
-        ShowAssignments.IsVisible = false;
-        var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
-
-        IdLblPopup.Text = SelectedPost.PostId.ToString();
-        TitleLblPopup.Text = SelectedPost.PostTitle;
-        DesLblPopup.Text = SelectedPost.PostDes;
-        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
-        if(!String.IsNullOrEmpty(DeadLineTimeLblPopup.Text))
-        {
-            ShowAssignments.IsVisible = true;
-        }
-
-        EditPostPopupWindow.IsVisible = true;
-        Postslistview.SelectedItem = null;
-    }
-
-    private async void ShowAssignmentsClicked(object sender, EventArgs e) { 
-    }
-    private async void CancelPostClicked(object sender, EventArgs e) {
-        EditPostPopupWindow.IsVisible = false;
-    }
-    private async void EditPostClicked(object sender, EventArgs e) { 
-        
-        await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text,DeadLineTimeLblPopup.Text)); // i want here to take data from selected list view
-    }
-    private async void DeleteDegreeClicked(object sender, EventArgs e) {
-        bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
-        if (!isConfirmed) { return; }
-        string StdNameFromLbl = StdNameEntry.Text;
-        var DelDeg = await _database.Table<DegreeTable>().Where(d => d.StdName == StdNameFromLbl).FirstOrDefaultAsync();
-        await _database.DeleteAsync(DelDeg);
-        PopupEditDegreeWindow.IsVisible = false;
-        await LoadData();
     }
     private async void SaveDegreeClicked(object sender, EventArgs e)
     {
@@ -278,78 +305,69 @@ public partial class SubjectCenterTeacher : ContentPage
         // Hide popup
         PopupEditDegreeWindow.IsVisible = false;
     }
-
-    private void PostsShowerClicked(object sender, EventArgs e)
-    {
-        PageShowStatus(1);
-    }
-    private void DegreesShowerClicked(object sender, EventArgs e)
-    {
-        PageShowStatus(2);
-    }
-    private void BooksShowerClicked(object sender, EventArgs e)
-    {
-        PageShowStatus(3);
+    private async void DeleteDegreeClicked(object sender, EventArgs e) {
+        bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
+        if (!isConfirmed) { return; }
+        string StdNameFromLbl = StdNameEntry.Text;
+        var DelDeg = await _database.Table<DegreeTable>().Where(d => d.StdName == StdNameFromLbl).FirstOrDefaultAsync();
+        await _database.DeleteAsync(DelDeg);
+        PopupEditDegreeWindow.IsVisible = false;
+        await LoadData();
     }
 
-    public void PageShowStatus(int Status)
+
+    private void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
     {
-        //to show posts
-        if(Status == 1) {
-            PostsShower.TextColor = Color.FromArgb("#DCDCDC");
-            PostsShower.BackgroundColor = Color.FromArgb("#2374AB");
-            Postslistview.IsVisible = true;
-
-            DegreesShower.TextColor= Color.FromArgb("#1A1A1A");
-            DegreesShower.BackgroundColor = Colors.Transparent;
-            DegreeTableDataGrid.IsVisible = false;
-
-            BooksShower.TextColor= Color.FromArgb("#1A1A1A");
-            BooksShower.BackgroundColor = Colors.Transparent;
-            PdfListView.IsVisible = false;
-
-            NoExistTitle.Text = "لا يوجد منشورات";
-            NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
-            EmptyMessage.IsVisible = Emptys[0];
-        }
-        //to show Degrees Table
-        if(Status == 2) {
-            PostsShower.TextColor = Color.FromArgb("#1A1A1A");
-            PostsShower.BackgroundColor = Colors.Transparent;
-            Postslistview.IsVisible = false;
-
-            DegreesShower.TextColor = Color.FromArgb("#DCDCDC");
-            DegreesShower.BackgroundColor = Color.FromArgb("#2374AB");
-            DegreeTableDataGrid.IsVisible = true;
-
-            BooksShower.TextColor = Color.FromArgb("#1A1A1A");
-            BooksShower.BackgroundColor = Colors.Transparent;
-            PdfListView.IsVisible = false;
-
-            
-            NoExistTitle.Text = "لا يوجد طالب مشترك";
-            NoExistSubTitle.Text = "تأكد من صفحة \"طلبات الانضمام\" الموجودة في القائمة";            
-            EmptyMessage.IsVisible = Emptys[1];
-        }
-        //to show To show books
-        if(Status == 3)
+        if (Postslistview.SelectedItem == null)
         {
-            PostsShower.TextColor = Color.FromArgb("#1A1A1A");
-            PostsShower.BackgroundColor = Colors.Transparent;
-            Postslistview.IsVisible = false;
-
-            DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
-            DegreesShower.BackgroundColor = Colors.Transparent;
-            DegreeTableDataGrid.IsVisible = false;
-
-            BooksShower.TextColor = Color.FromArgb("#DCDCDC");
-            BooksShower.BackgroundColor = Color.FromArgb("#2374AB");
-            PdfListView.IsVisible = true;
-
-
-            NoExistTitle.Text = "لا يوجد كتب";
-            NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
-            EmptyMessage.IsVisible = Emptys[2];
+            return;
         }
+        ShowAssignments.IsVisible = false;
+        ShowDesFileBtn.IsVisible = false;
+        var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
+
+        IdLblPopup.Text = SelectedPost.PostId.ToString();
+        TitleLblPopup.Text = SelectedPost.PostTitle;
+        DesLblPopup.Text = SelectedPost.PostDes;
+        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
+        if(!String.IsNullOrEmpty(DeadLineTimeLblPopup.Text))
+        {
+            ShowAssignments.IsVisible = true;
+        }
+        if (SelectedPost.PostDesFile != null) {
+            ShowDesFileBtn.IsVisible = true;
+        }
+        EditPostPopupWindow.IsVisible = true;
+        Postslistview.SelectedItem = null;
     }
+    private async void ShowAssignmentsClicked(object sender, EventArgs e) { 
+        await Navigation.PushAsync(new AssignmentsPage(int.Parse(IdLblPopup.Text)));
+    }
+    private async void EditPostClicked(object sender, EventArgs e) { 
+        
+        await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text,DeadLineTimeLblPopup.Text)); // i want here to take data from selected list view
+    }
+    private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
+        int pid = int.Parse(IdLblPopup.Text);
+        var desFile = await _database.Table<SubjectPosts>()
+           .FirstOrDefaultAsync(a => a.PostId == pid);
+
+
+        // Write the file to the temporary directory
+        byte[] fileBytes = desFile.PostDesFile;
+        var tempPath = Path.Combine(FileSystem.CacheDirectory, $"{desFile.PostTitle}.pdf");
+        await File.WriteAllBytesAsync(tempPath, fileBytes);
+
+
+        // Open the file
+        await Launcher.Default.OpenAsync(new OpenFileRequest
+        {
+            File = new ReadOnlyFile(tempPath)
+        });
+    }
+    private void CancelPostClicked(object sender, EventArgs e) {
+        EditPostPopupWindow.IsVisible = false;
+    }
+
+
 }
