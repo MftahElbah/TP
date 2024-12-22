@@ -11,6 +11,7 @@ public partial class SubjectCenterTeacher : ContentPage
 {
     private DatabaseHelper _databaseHelper;
     public ObservableCollection<SubjectBooks> Books { get; set; }
+    public string CCC { get; set; }
     private ObservableCollection<DegreeTable> DegreeTableGetter;
     public ObservableCollection<DegreeTable> DegreeTableSetter
     {
@@ -25,10 +26,13 @@ public partial class SubjectCenterTeacher : ContentPage
     public int SSubId;
     public readonly SQLiteAsyncConnection _database;
     private FileResult result;
+    public string namevar;
     public bool[] Emptys = new bool[3];
     public SubjectCenterTeacher(int subid)
 	{
 		InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
+
         SSubId = subid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
@@ -97,27 +101,38 @@ public partial class SubjectCenterTeacher : ContentPage
     }
 
 
-    private async void OnMenuClicked(object sender, EventArgs e)
+
+    private async void BackClicked(object sender, EventArgs e)
     {
-        var action = await DisplayActionSheet("قائمة المادة", null, null, "اضف منشور", "أضف كتاب", "الأعدادات", "طلبات الانضمام");
-
-        switch (action)
-        {
-            case "اضف منشور":
-                await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null,null)); // Navigate to Add Post page
-                break;
-            case "أضف كتاب":
-                UploadBook(1); // Navigate to Add Book page
-                break;
-            case "طلبات الانضمام":
-                await Navigation.PushAsync(new RequestMangment(SSubId)); // Navigate to Requests page
-                break;
-            case "الأعدادات":
-                await Navigation.PushAsync(new SettingsForSub(SSubId)); // Navigate to Settings page
-                break;
-        }
+        await Navigation.PopAsync();
     }
-
+    private async void SettingsClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new SettingsForSub(SSubId)); // Navigate to Settings page
+    }
+    private void AddMenuClicked(object sender, EventArgs e)
+    {
+        MenuPopupWindow.IsVisible = true;
+    }
+    private void CloseMenuClicked(object sender, EventArgs e)
+    {
+        MenuPopupWindow.IsVisible = false;
+    }
+    private async void AddPostClicked(object sender, EventArgs e)
+    {
+                await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null,null)); // Navigate to Add Post page
+        MenuPopupWindow.IsVisible = false;
+    }
+    private void AddBookClicked(object sender, EventArgs e)
+    {
+                UploadBook(1); // Navigate to Add Book page
+                MenuPopupWindow.IsVisible = false;
+    }
+    private async void RequestsMangmentClicked(object sender, EventArgs e)
+    {
+                await Navigation.PushAsync(new RequestMangment(SSubId)); // Navigate to Requests page
+                MenuPopupWindow.IsVisible = false;
+    }
 
     private void PostsShowerClicked(object sender, EventArgs e)
     {
@@ -131,54 +146,83 @@ public partial class SubjectCenterTeacher : ContentPage
     {
         PageShowStatus(3);
     }
-    private void PageShowStatus(int status)
-    {
+    private void PageShowStatus(int status){
         // Reset all controls to the default state
         PostsShower.TextColor = Color.FromArgb("#1A1A1A");
+        if (PostsShower.ImageSource is FontImageSource postFontImageSource)
+        {
+            postFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
+        }
         PostsShower.BackgroundColor = Colors.Transparent;
         Postslistview.IsVisible = false;
 
         DegreesShower.TextColor = Color.FromArgb("#1A1A1A");
+        if (DegreesShower.ImageSource is FontImageSource degreesFontImageSource)
+        {
+            degreesFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
+        }
         DegreesShower.BackgroundColor = Colors.Transparent;
         DegreeTableDataGrid.IsVisible = false;
 
         BooksShower.TextColor = Color.FromArgb("#1A1A1A");
+        if (BooksShower.ImageSource is FontImageSource booksFontImageSource)
+        {
+            booksFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
+        }
         BooksShower.BackgroundColor = Colors.Transparent;
         PdfListView.IsVisible = false;
 
+        // Change styles based on the status
         switch (status)
         {
             case 1: // Show posts
-                PostsShower.TextColor = Color.FromArgb("#DCDCDC");
-                PostsShower.BackgroundColor = Color.FromArgb("#2374AB");
+                PostsShower.TextColor = Color.FromArgb("#D9D9D9");
+                if (PostsShower.ImageSource is FontImageSource postIconSource)
+                {
+                    postIconSource.Color = Color.FromArgb("#D9D9D9"); // Active icon color
+                }
+                PostsShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 Postslistview.IsVisible = true;
 
                 NoExistTitle.Text = "لا يوجد منشورات";
                 NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
                 EmptyMessage.IsVisible = Emptys[0];
+                //Add btn icon change
                 break;
 
             case 2: // Show degrees table
-                DegreesShower.TextColor = Color.FromArgb("#DCDCDC");
-                DegreesShower.BackgroundColor = Color.FromArgb("#2374AB");
+                DegreesShower.TextColor = Color.FromArgb("#D9D9D9");
+                if (DegreesShower.ImageSource is FontImageSource degreesIconSource)
+                {
+                    degreesIconSource.Color = Color.FromArgb("#D9D9D9"); // Active icon color
+                }
+                DegreesShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 DegreeTableDataGrid.IsVisible = true;
 
                 NoExistTitle.Text = "لا يوجد طالب مشترك";
                 NoExistSubTitle.Text = "تأكد من صفحة \"طلبات الانضمام\" الموجودة في القائمة";
                 EmptyMessage.IsVisible = Emptys[1];
+
+                //Add btn icon change
                 break;
 
             case 3: // Show books
-                BooksShower.TextColor = Color.FromArgb("#DCDCDC");
-                BooksShower.BackgroundColor = Color.FromArgb("#2374AB");
+                BooksShower.TextColor = Color.FromArgb("#D9D9D9");
+                if (BooksShower.ImageSource is FontImageSource booksIconSource)
+                {
+                    booksIconSource.Color = Color.FromArgb("#D9D9D9"); // Active icon color
+                }
+                BooksShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 PdfListView.IsVisible = true;
 
                 NoExistTitle.Text = "لا يوجد كتب";
                 NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
                 EmptyMessage.IsVisible = Emptys[2];
+                //Add btn icon change
                 break;
         }
     }
+
 
 
     public async void UploadBook(int step)
@@ -217,6 +261,7 @@ public partial class SubjectCenterTeacher : ContentPage
             PopupEditBookNameWindow.IsVisible = false;
             await LoadBooks();
             await LoadPosts();
+            PageShowStatus(3);
         }
     }
     private async void SaveBookClicked(object sender, EventArgs e)
@@ -272,7 +317,8 @@ public partial class SubjectCenterTeacher : ContentPage
         }
 
         var DataRow = DegreeTableDataGrid.SelectedRow;
-        StdNameEntry.Text = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
+        namevar = DataRow?.GetType().GetProperty("StdName")?.GetValue(DataRow)?.ToString();
+        StdNameEntry.Text = $"اسم: {namevar}";
         DegreeEntry.Text = DataRow?.GetType().GetProperty("Deg")?.GetValue(DataRow)?.ToString();
         MidDegreeEntry.Text = DataRow?.GetType().GetProperty("MiddelDeg")?.GetValue(DataRow)?.ToString();
 
@@ -291,7 +337,7 @@ public partial class SubjectCenterTeacher : ContentPage
             return;
         }
 
-        var deg = await _database.Table<DegreeTable>().FirstOrDefaultAsync(d => d.StdName == StdNameEntry.Text);
+        var deg = await _database.Table<DegreeTable>().FirstOrDefaultAsync(d => d.StdName == namevar);
 
         deg.Deg = float.Parse(DegreeEntry.Text);
         deg.MiddelDeg = float.Parse(MidDegreeEntry.Text);
@@ -308,8 +354,8 @@ public partial class SubjectCenterTeacher : ContentPage
     private async void DeleteDegreeClicked(object sender, EventArgs e) {
         bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
         if (!isConfirmed) { return; }
-        string StdNameFromLbl = StdNameEntry.Text;
-        var DelDeg = await _database.Table<DegreeTable>().Where(d => d.StdName == StdNameFromLbl).FirstOrDefaultAsync();
+        
+        var DelDeg = await _database.Table<DegreeTable>().Where(d => d.StdName == namevar).FirstOrDefaultAsync();
         await _database.DeleteAsync(DelDeg);
         PopupEditDegreeWindow.IsVisible = false;
         await LoadData();

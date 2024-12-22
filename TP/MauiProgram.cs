@@ -5,6 +5,7 @@ using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Controls.Xaml;
 using Syncfusion.Maui.Core.Hosting;
+using InputKit.Handlers;
 
 
 namespace TP
@@ -21,10 +22,22 @@ namespace TP
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("MaterialIcons-Regular.ttf", "GoogleIconsFont");
+                    fonts.AddFont("Cairo-Bold.ttf", "CairoB");
+                    fonts.AddFont("Cairo-Light.ttf", "CairoL");
                 });
 
+            builder
+                .UseMauiApp<App>()
+                .ConfigureMauiHandlers(handlers =>
+                {
+                    // Add following line:
+                    handlers.AddInputKitHandlers(); // 👈
+                });
+                
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
             builder.ConfigureSyncfusionCore();
             return builder.Build();

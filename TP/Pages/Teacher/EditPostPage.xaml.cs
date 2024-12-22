@@ -15,7 +15,9 @@ public partial class EditPostPage : ContentPage
     public EditPostPage(int subid , string postid , string posttitel , string postdes , string DLTime)
 	{
 		InitializeComponent();
-		SubId = subid;
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
+
+        SubId = subid;
 		_database = new SQLiteAsyncConnection(dbPath);
 		PostId = postid;
 		PostRadio.IsChecked = true;
@@ -32,6 +34,9 @@ public partial class EditPostPage : ContentPage
 		AssignmentRadio.IsChecked = true;
         
     }
+    private async void BackClicked(object sender, EventArgs e){
+		await Navigation.PopAsync();
+	}
 
     private void TitleEntryChanged(object sender, TextChangedEventArgs e)
 	{

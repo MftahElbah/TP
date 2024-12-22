@@ -15,6 +15,8 @@ public partial class SettingsForSub : ContentPage
     public SettingsForSub(int id)
     {
         InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
+
 
         _database = new SQLiteAsyncConnection(dbPath);
         SubId = id;
@@ -44,11 +46,16 @@ public partial class SettingsForSub : ContentPage
         PasswordPopup.IsVisible = true;
 
     }
-    private void CancelButtonClicked(object sender, EventArgs e)
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+
+    }
+    private void CancelDeleteClicked(object sender, EventArgs e)
     {
         PasswordPopup.IsVisible = false; // Hide the popup
     }
-    private async void AgreeButtonClicked(object sender, EventArgs e)
+    private async void AgreeDeleteClicked(object sender, EventArgs e)
     {
         string password = PasswordEntry.Text; // Retrieve entered password
         var agree = await _database.Table<UsersAccountTable>()

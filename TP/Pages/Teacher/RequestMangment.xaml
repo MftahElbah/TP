@@ -3,56 +3,92 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              x:Class="TP.Pages.Teacher.RequestMangment"
-             Title="RequestMangment">
-    <VerticalStackLayout>
+             Title="RequestMangment"
+             xmlns:icon="clr-namespace:TP"
+             BackgroundColor="#EFEFEF">
+
+    <Grid>
+        <!-- Define rows for the header, content, and footer -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Header -->
+            <RowDefinition Height="*" />
+            <!-- ListView -->
+            
+        </Grid.RowDefinitions>
+
+        <!-- Header with Back Button -->
+        <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween" Padding="20" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+            <!-- Spacer for Flexibility -->
+
+            <!-- Back Button -->
+            <Button CornerRadius="20" 
+                    BackgroundColor="Transparent" 
+                    Padding="0" 
+                    Clicked="BackClicked" 
+                    >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                                     Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                                     StyleId="{x:StaticResource GoogleFont}" 
+                                     Color="#1a1a1a"
+                                     Size="40"/>
+                </Button.ImageSource>
+            </Button>
+            <Label HorizontalOptions="FillAndExpand" />
+        </FlexLayout>
+
+        <!-- Syncfusion ListView -->
         <listview:SfListView x:Name="listview"
+                             Grid.Row="1"
                              ItemsSource="{Binding RequestsColl}"
-                             ItemSize="100"
+                             ItemSize="130"
                              AllowSwiping="True"
                              SwipeEnded="LVSwipEnd"
                              SwipeOffset="1000">
+            <!-- Swipe Templates -->
             <listview:SfListView.StartSwipeTemplate>
                 <DataTemplate>
-                    <Grid BackgroundColor="#D3B05F" >
+                    <Grid BackgroundColor="#D3B05F">
                         <Label Text="قبول" TextColor="#1A1A1A" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
                     </Grid>
                 </DataTemplate>
             </listview:SfListView.StartSwipeTemplate>
+
             <listview:SfListView.EndSwipeTemplate>
                 <DataTemplate>
                     <Grid BackgroundColor="#1A1A1A">
-                        <Label Text="رفض" TextColor="#E4E4E4" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
+                        <Label Text="رفض" TextColor="#EFEFEF" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
                     </Grid>
                 </DataTemplate>
             </listview:SfListView.EndSwipeTemplate>
+
+            <!-- Item Template -->
             <listview:SfListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid BackgroundColor="Gray" 
-                          x:Name="FrameWeight" 
-                          Margin="10" 
-                          Padding="10" 
-                          VerticalOptions="FillAndExpand" 
-                          HorizontalOptions="FillAndExpand">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" 
-                        Text="{Binding Name}" 
-                        HorizontalOptions="Start" 
-                        VerticalOptions="Center" 
-                        FontAttributes="Bold" 
-                        FontSize="16" />
-                        <Label Grid.Row="1" 
-                        Text="{Binding RequestDate, StringFormat='Request Date: {0:yyyy-MM-dd}'}" 
-                        HorizontalOptions="Center" 
-                        VerticalOptions="Center" 
-                        FontSize="14" />
-                    </Grid>
+                    <Border Stroke="#959595" StrokeThickness="2" Padding="10" BackgroundColor="#D9D9D9" Margin="10" FlowDirection="RightToLeft">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding Name, StringFormat='اسم : {0}'}" 
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="Center" 
+                                   FontFamily="CairoB"
+                                   FontSize="24" 
+                                   TextColor="#1a1a1a"/>
+                            <Label Text="{Binding RequestDate, StringFormat='تاريخ الانضمام: {0:yyyy-MM-dd}'}" 
+                                   HorizontalOptions="Start" 
+                                   VerticalOptions="Center" 
+                                   FontSize="16" 
+                                   FontFamily="CairoL"
+                                   TextColor="#1a1a1a"/>
+                        </VerticalStackLayout>
+                    </Border>
                 </DataTemplate>
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
-        <Label x:Name="uid" Text="uid"/>
-        <Label x:Name="sid" Text="SID"/>
-    </VerticalStackLayout>
+
+    </Grid>
+
 </ContentPage>

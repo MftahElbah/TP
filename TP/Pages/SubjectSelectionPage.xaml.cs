@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
+using TP.Pages.Others;
 
 
 
@@ -16,15 +17,19 @@ public partial class SubjectSelectionPage : ContentPage
     public SubjectSelectionPage()
 	{
 		InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
-        if(UserSession.UserType == 2){
-        AddBtn.IsVisible = true;
-        }
-       
         BindingContext = this;
+        if(UserSession.UserType == 1){
+        
+        return;
+        }
+        if(UserSession.UserType == 2){
+        return;
+        }
     }
     protected override async void OnAppearing()
     {
@@ -36,47 +41,55 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private async Task LoadSubjects()
     {
-            Subjects.Clear();
-        if (UserSession.UserType == 2)
+    Subjects.Clear();
+
+        switch (UserSession.UserType)
         {
-            NoSubExist.IsVisible = false;
-            var subjects = await _database.Table<SubTable>().Where(s => s.UserId == UserSession.UserId).ToListAsync();
-            if(subjects.Count == 0)
-            {
-                NoSubExist.IsVisible = true;
-                NoSubExistSubTitle.Text = " يمكنك اضافة مواد عن طريق علامة \"+\" ";
-            }
-            foreach (var subject in subjects)
-            {
-                Subjects.Add(subject);
-            }
-        }
-        if (UserSession.UserType == 3)
-        {
-            AddBtn.IsVisible = false;
-            var stdinsub = await _database.Table<DegreeTable>().Where(s => s.StdName == UserSession.Name).ToListAsync();
-            var subjects = await _database.Table<SubTable>().ToListAsync();
-            foreach (var Stdinsub in stdinsub)
-            {
-                foreach (var subject in subjects)
+            case 1: // Teacher
+                AddBtn.IsVisible = true;
+                NoSubExist.IsVisible = false;
+                var teacherSubjects = await _database.Table<SubTable>()
+                                                     .Where(s => s.UserId == UserSession.UserId)
+                                                     .ToListAsync();
+                if (teacherSubjects.Count == 0)
                 {
-                    if(Stdinsub.SubId == subject.SubId)
+                    NoSubExist.IsVisible = true;
+                    NoSubExistSubTitle.Text = " يمكنك اضافة مواد عن طريق الزر الموجود بالاعلى يمين";
+                    return;
+                }
+                foreach (var subject in teacherSubjects)
+                {
                     Subjects.Add(subject);
                 }
-            }
-            // Check if the Subjects collection is empty
-            if (Subjects.Count == 0)
-            {
-                // Show no-subjects message and update subtitle text
-                NoSubExist.IsVisible = true;
-                NoSubExistSubTitle.Text = "يمكنك اضافة مواد عن طريق \"انضمام لمادة جديدة\"";
-            }
-            else
-            {
-                // Hide the no-subjects message if subjects are available
-                NoSubExist.IsVisible = false;
-            }
+                break;
+
+            case 2: // Student
+                SearchBtn.IsVisible = true;
+                var stdInSub = await _database.Table<DegreeTable>()
+                                               .Where(s => s.StdName == UserSession.Name)
+                                               .ToListAsync();
+                var allSubjects = await _database.Table<SubTable>().ToListAsync();
+
+                foreach (var studentSubject in stdInSub)
+                {
+                    foreach (var subject in allSubjects)
+                    {
+                        if (studentSubject.SubId == subject.SubId)
+                        {
+                            Subjects.Add(subject);
+                        }
+                    }
+                }
+
+                if (Subjects.Count == 0)
+                {
+                    NoSubExist.IsVisible = true;
+                    NoSubExistSubTitle.Text = "يمكنك انضمام للمواد عن طريق الزر الموجود بالاعلى يمين";
+                }
+                
+                break;
         }
+
     }
     private async Task CheckSession()
     {
@@ -111,19 +124,23 @@ public partial class SubjectSelectionPage : ContentPage
 
         SaveSession.IsVisible = false;
     }
-    private void CancelClicked(object sender, EventArgs e)
+    private void CancelSessionClicked(object sender, EventArgs e)
     {
         SaveSession.IsVisible = false;
     }
-    private async void AddClicked(object sender, EventArgs e)
-    {
-        /*await Navigation.PushAsync(new EditSubject(null, null, null, null, null, 1));*/
+
+    private void AddClicked(object sender, EventArgs e){
         AddSubPopupWindow.IsVisible = true;
     }
-    private async void CancelSubClick(object sender, EventArgs e)
+    private async void SearchBtnClicked(object sender, EventArgs e){
+        await Navigation.PushAsync(new RequestSubjectPage());
+    }
+    private void LogoutClicked(object sender, EventArgs e)
     {
-        
-        AddSubPopupWindow.IsVisible = false;
+        if (Application.Current?.Windows.Count > 0)
+        {
+            Application.Current.Windows[0].Page = new NavigationPage(new LoginPage());
+        }
     }
 
     private async void CreateSubClick(object sender, EventArgs e)
@@ -136,6 +153,7 @@ public partial class SubjectSelectionPage : ContentPage
            var Sub = new SubTable{
                SubName = SubNameEntry.Text,
                UserId = UserSession.UserId,
+               SubTeacherName = UserSession.Name,
                ShowDeg = false,
                };
            await _database.InsertAsync(Sub);
@@ -147,6 +165,11 @@ public partial class SubjectSelectionPage : ContentPage
         AddSubPopupWindow.IsVisible = false;
         await LoadSubjects();
     }
+    private void CancelSubClick(object sender, EventArgs e)
+    {
+        
+        AddSubPopupWindow.IsVisible = false;
+    }
     private async void OnItemSelected(object sender, SelectionChangedEventArgs e)
     {
         // Get the selected item
@@ -154,7 +177,7 @@ public partial class SubjectSelectionPage : ContentPage
 
         if (selectedItem != null)
         {
-            if(UserSession.UserType == 2) {
+            if(UserSession.UserType == 1) {
                 // Navigate to the detail page, passing the selected item's ID
                 await Navigation.PushAsync(new SubjectCenterTeacher(selectedItem.SubId));
             }

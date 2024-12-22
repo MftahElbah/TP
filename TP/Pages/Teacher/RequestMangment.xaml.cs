@@ -13,6 +13,8 @@ public partial class RequestMangment : ContentPage
     public RequestMangment(int subid)
     {
         InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable nAavigation bar for this page
+
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
         SubIds = subid;
@@ -35,6 +37,11 @@ public partial class RequestMangment : ContentPage
         }
     }
 
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
+
     private async void LVSwipEnd(object sender, Syncfusion.Maui.ListView.SwipeEndedEventArgs e)
     {
         if (e.Offset < 200)
@@ -43,8 +50,7 @@ public partial class RequestMangment : ContentPage
         }
         
         var swipedItem = e.DataItem as RequestJoinSubject;
-        uid.Text = swipedItem.UserId.ToString();
-        sid.Text = SubIds.ToString();
+        
         
         listview.SwipeOffset = listview.Width;
 

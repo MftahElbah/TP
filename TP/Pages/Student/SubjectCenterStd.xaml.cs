@@ -12,10 +12,14 @@ public partial class SubjectCenterStd : ContentPage
     private System.Timers.Timer _countdownTimer;
     public int SubId;
     public readonly SQLiteAsyncConnection _database;
-    
+    public bool[] Emptys = new bool[2];
+
+
     public SubjectCenterStd(int subid,bool showdeg)
 	{
 		InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
+
         SubId = subid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
@@ -33,18 +37,6 @@ public partial class SubjectCenterStd : ContentPage
         PageShowStatus(1);
     }
 
-   private async Task LoadBooks()
-    {
-        var books = await _database.Table<SubjectBooks>()
-            .Where(b => b.SubId == SubId)
-            .OrderByDescending(b => b.UploadDate)
-            .ToListAsync();
-
-        Books.Clear();
-        foreach (var book in books) { 
-            Books.Add(book);
-        } 
-    }
     private async Task LoadPosts()
     {
         Posts.Clear();
@@ -52,10 +44,37 @@ public partial class SubjectCenterStd : ContentPage
             .Where(b => b.SubId == SubId)
             .OrderByDescending(b => b.PostDate)
             .ToListAsync();
-
-        foreach (var post in posts) {
+        if (posts.Count == 0)
+        {
+            Emptys[0] = true;
+            return;
+        }
+        foreach (var post in posts)
+        {
             Posts.Add(post);
-        } 
+        }
+        Emptys[0] = false;
+    }
+    private async Task LoadBooks()
+    {
+        var books = await _database.Table<SubjectBooks>()
+            .Where(b => b.SubId == SubId)
+            .OrderByDescending(b => b.UploadDate)
+            .ToListAsync();
+
+        Books.Clear();
+
+        //to check if its empty or not to load message
+        if (books.Count == 0)
+        {
+            Emptys[1] = true;
+            return;
+        }
+        foreach (var book in books)
+        {
+            Books.Add(book);
+        }
+        Emptys[1] = false;
     }
 
     private async void ShowDegreeClicked(object sender, EventArgs e) {
@@ -63,6 +82,10 @@ public partial class SubjectCenterStd : ContentPage
         await DisplayAlert("درجات", $"الأعمال:{deg.Deg}\n الجزئي:{deg.MiddelDeg} \n المجموع:{deg.Total}","حسنا");
     }
 
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
     private void PostsShowerClicked(object sender, EventArgs e)
     {
         PageShowStatus(1);
@@ -71,29 +94,56 @@ public partial class SubjectCenterStd : ContentPage
     {
         PageShowStatus(2);
     }
-    public void PageShowStatus(int Status)
+    public void PageShowStatus(int status)
     {
-        //to show posts
-        if(Status == 1) {
-            PostsShower.TextColor = Color.FromArgb("#DCDCDC");
-            PostsShower.Background = Color.FromArgb("#2374AB");
-            Postslistview.IsVisible = true;
-
-            BooksShower.TextColor= Color.FromArgb("#1A1A1A");
-            BooksShower.Background = Colors.Transparent;
-            PdfListView.IsVisible = false;
-        }
-
-        //to show To show books
-        if(Status == 2)
+        PostsShower.TextColor = Color.FromArgb("#1A1A1A");
+        if (PostsShower.ImageSource is FontImageSource postFontImageSource)
         {
-            PostsShower.TextColor = Color.FromArgb("#1A1A1A");
-            PostsShower.Background = Colors.Transparent;
-            Postslistview.IsVisible = false;
+            postFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
+        }
+        PostsShower.BackgroundColor = Colors.Transparent;
+        Postslistview.IsVisible = false;
 
-            BooksShower.TextColor = Color.FromArgb("#DCDCDC");
-            BooksShower.Background = Color.FromArgb("#2374AB");
-            PdfListView.IsVisible = true;
+        BooksShower.TextColor = Color.FromArgb("#1A1A1A");
+        if (BooksShower.ImageSource is FontImageSource booksFontImageSource)
+        {
+            booksFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
+        }
+        BooksShower.BackgroundColor = Colors.Transparent;
+        PdfListView.IsVisible = false;
+        //to show posts
+        switch (status)
+        {
+            case 1: // Show posts
+                PostsShower.TextColor = Color.FromArgb("#D9D9D9");
+                if (PostsShower.ImageSource is FontImageSource postIconSource)
+                {
+                    postIconSource.Color = Color.FromArgb("#D9D9D9"); // Active icon color
+                }
+                PostsShower.BackgroundColor = Color.FromArgb("#1A1A1A");
+                Postslistview.IsVisible = true;
+
+                NoExistTitle.Text = "لا يوجد منشورات";
+                NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+                EmptyMessage.IsVisible = Emptys[0];
+                //Add btn icon change
+                break;
+
+
+            case 2: // Show books
+                BooksShower.TextColor = Color.FromArgb("#D9D9D9");
+                if (BooksShower.ImageSource is FontImageSource booksIconSource)
+                {
+                    booksIconSource.Color = Color.FromArgb("#D9D9D9"); // Active icon color
+                }
+                BooksShower.BackgroundColor = Color.FromArgb("#1A1A1A");
+                PdfListView.IsVisible = true;
+
+                NoExistTitle.Text = "لا يوجد كتب";
+                NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
+                EmptyMessage.IsVisible = Emptys[1];
+                //Add btn icon change
+                break;
         }
     }
 

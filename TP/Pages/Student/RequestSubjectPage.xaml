@@ -4,50 +4,103 @@
              xmlns:refresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
              xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.Student.RequestSubjectPage"
+             xmlns:icon="clr-namespace:TP"
+             BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween" Padding="20">
+            <!-- Delete Button Stuck on Left -->
+            
+
+            <!-- Spacer for Flexibility -->
+            <Label HorizontalOptions="FillAndExpand" />
+
+            <!-- Back Arrow Button Stuck on Right -->
+            <Button CornerRadius="20" 
+                    BackgroundColor="Transparent" 
+                    Padding="0" 
+                    Clicked="BackClicked" 
+                    >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                     Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                     StyleId="{x:StaticResource GoogleFont}" 
+                     Color="#1a1a1a"
+                     Size="40"/>
+                </Button.ImageSource>
+            </Button>
+        </FlexLayout>
+
         <!-- SfPullToRefresh -->
         <refresh:SfPullToRefresh x:Name="pulltorefresh" 
                                  TransitionMode="SlideOnTop" 
                                  ProgressBackground="#dedede" 
                                  ProgressColor="#1a1a1a" 
-                                 Refreshing="OnPullToRefreshRefreshing">
+                                 Refreshing="OnPullToRefreshRefreshing"
+                                 Grid.Row="1">
             <refresh:SfPullToRefresh.PullableContent>
                 <StackLayout Padding="10">
-                    <entry:SfTextInputLayout Hint="بحث" ContainerType="Outlined" WidthRequest="300" IsHintAlwaysFloated="true" 
-                                             FlowDirection="RightToLeft"
-                                             HelperText="بحث بأسم المادة أو اسم الاستاذ" 
-                                             OutlineCornerRadius="20" HeightRequest="100">
-                        <Entry x:Name="SearchEntry" BackgroundColor="#dcdcdc" FontFamily="Cairo" TextChanged="SearchEntryChanged" />
-                        <entry:SfTextInputLayout.HintLabelStyle>
-                            <entry:LabelStyle FontSize="16" FontFamily="Cairo"/>
-                        </entry:SfTextInputLayout.HintLabelStyle>
-                        <entry:SfTextInputLayout.HelperLabelStyle>
-                            <entry:LabelStyle FontSize="12" FontFamily="Cairo"/>
-                        </entry:SfTextInputLayout.HelperLabelStyle>
-                    </entry:SfTextInputLayout>
-                    <ListView ItemsSource="{Binding Subjects}" HasUnevenRows="True">
-                        <ListView.ItemTemplate>
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <!-- Entry -->
+                            <Entry x:Name="SearchEntry"
+                                   FontFamily="CairoB" 
+                                   FontSize="16" 
+                                   TextColor="#1a1a1a"
+                                   Placeholder="بحث بأسم المادة أو اسم الاستاذ"
+                                   BackgroundColor="#dcdcdc"
+                                   Keyboard="Text"
+                                   TextChanged="SearchEntryChanged"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <ListView ItemsSource="{Binding Subjects}" HasUnevenRows="True" VerticalOptions="FillAndExpand" HorizontalOptions="Center">
+                        <ListView.ItemTemplate >
                             <DataTemplate>
                                 <ViewCell>
-                                    <StackLayout Orientation="Horizontal" Padding="5">
+                                    <FlexLayout JustifyContent="SpaceBetween" Padding="5" VerticalOptions="Center" HorizontalOptions="Center">
+                                        <VerticalStackLayout>
+                                            
                                         <Label Text="{Binding SubName}" 
                                                VerticalOptions="Center" 
                                                HorizontalOptions="StartAndExpand" 
-                                               FontFamily="Cairo"
-                                               FontAttributes="Bold" />
+                                               FontFamily="CairoB"
+                                               FontSize="24" 
+                                               TextColor="#1a1a1a"/>
                                         <Label x:Name="TeacherNameLabel"
-                                               Text="{Binding SubTeacher}" 
+                                               Text="{Binding SubTeacherName}" 
                                                VerticalOptions="Center" 
                                                HorizontalOptions="StartAndExpand" 
-                                               FontFamily="Cairo"/>
-                                        <Button Text="طلب أنضمام"
-                                                          x:Name="SendBtn"    
-                                                          Clicked="OnSendRequestClicked" 
-                                                          BindingContext="{Binding .}" 
-                                                          FontFamily="Cairo" />
-                                    </StackLayout>
+                                               FontFamily="Cairo"
+                                               FontSize="18"
+                                               TextColor="#1a1a1a"/>
+                                        </VerticalStackLayout>
+                                        <Button Text="أنضمام"
+                                                x:Name="SendBtn"    
+                                                Clicked="OnSendRequestClicked" 
+                                                BindingContext="{Binding .}" 
+                                                FontFamily="Cairo"
+                                                TextColor="#EFEFEF"
+                                                BackgroundColor="#1a1a1a"
+                                                VerticalOptions="Center" HorizontalOptions="Center">
+                                            <Button.ImageSource>
+                                                <FontImageSource FontFamily="GoogleIconsFont" 
+                                                                 Glyph="{x:Static icon:IconFont.Send}" 
+                                                                 StyleId="{x:StaticResource GoogleFont}" 
+                                                                 Color="#EFEFEF"
+                                                                 Size="24"/>
+                                            </Button.ImageSource>
+                                        </Button>
+                                    </FlexLayout>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -57,15 +110,15 @@
         </refresh:SfPullToRefresh>
 
         <!-- Empty Message -->
-        <ContentView x:Name="EmptyMessage" IsVisible="False">
+        <ContentView x:Name="EmptyMessage" IsVisible="False" Grid.Row="1">
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="غير متوفر" 
                        FontSize="Title" 
                        HorizontalTextAlignment="Center" 
                        VerticalTextAlignment="Center"
-                       FontFamily="Cairo"
-                       FontAttributes="Bold" 
-                       x:Name="NoExistTitle" />
+                       FontFamily="CairoB"
+                       x:Name="NoExistTitle"
+                       TextColor="#1a1a1a"/>
                 <Label Text='المادة او الاستاذ الذي تبحث عليه غير متوفر' 
                        FontSize="Subtitle" 
                        HorizontalTextAlignment="Center" 

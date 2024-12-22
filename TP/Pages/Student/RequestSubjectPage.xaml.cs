@@ -12,6 +12,9 @@ public partial class RequestSubjectPage : ContentPage
     public RequestSubjectPage()
 	{
 		InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable nAavigation bar for this page
+
+
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
@@ -69,7 +72,7 @@ public partial class RequestSubjectPage : ContentPage
         
         // Search for subjects with names matching the search text
         var filteredSubjects = await _database.Table<SubTable>()
-                                              .Where(s => s.SubName.Contains(searchText))
+                                              .Where(s => s.SubName.Contains(searchText) || s.SubTeacherName.Contains(searchText))
                                               .ToListAsync();
         Subjects.Clear();
         if (filteredSubjects.Count == 0) {
@@ -94,6 +97,10 @@ public partial class RequestSubjectPage : ContentPage
         
     }
 
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
     private async void OnSendRequestClicked(object sender, EventArgs e)
     {
         var button = sender as Button;

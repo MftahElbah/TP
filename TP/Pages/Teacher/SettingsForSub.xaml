@@ -4,38 +4,169 @@
              xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:icon="clr-namespace:TP"
              x:Class="TP.Pages.Teacher.SettingsForSub"
-             FlowDirection="RightToLeft"
-             >
+             BackgroundColor="#EFEFEF"
+             FlowDirection="RightToLeft">
+
+    <!-- Main Layout Container (Grid) -->
+    <Grid>
+        
     <Grid>
 
-        <StackLayout>
-            <entry:SfTextInputLayout Hint="اسم المادة" ContainerType="Outlined" WidthRequest="300">
-                <Entry x:Name="NameEntry" BackgroundColor="#dcdcdc"/>
-            </entry:SfTextInputLayout>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header Content with Buttons -->
+        <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween" Padding="20">
+            <!-- Delete Button -->
+            <Button IsVisible="True" 
+                    Clicked="DeleteButtonClicked"
+                    x:Name="DeleteBtn"
+                    BackgroundColor="#F02C2C" 
+                    FontFamily="CairoB" 
+                    CornerRadius="40" 
+                    Padding="15"
+                    HorizontalOptions="Start">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                                     Glyph="{x:Static icon:IconFont.Delete_forever}" 
+                                     StyleId="{x:StaticResource GoogleFont}" 
+                                     Color="#EFEFEF"
+                                     Size="24"/>
+                </Button.ImageSource>
+            </Button>
+
+            <!-- Spacer for Flexibility -->
+            <Label HorizontalOptions="FillAndExpand" />
+
+            <!-- Back Arrow Button -->
+            <Button CornerRadius="20" 
+                    BackgroundColor="Transparent" 
+                    Padding="0" 
+                    Clicked="BackClicked" 
+                    >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                                     Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                                     StyleId="{x:StaticResource GoogleFont}" 
+                                     Color="#1a1a1a"
+                                     Size="40"/>
+                </Button.ImageSource>
+            </Button>
+        </FlexLayout>
+
+        <!-- Main Content (Form) -->
+        <StackLayout VerticalOptions="Center" Grid.Row="1">
+                <Label Text="إعدادات" HorizontalOptions="Center" FontSize="40" FontFamily="CairoB" TextColor="#1a1a1a"/>
+            <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Entry x:Name="NameEntry"
+                       FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a"
+                       Placeholder="اسم المادة"
+                       BackgroundColor="#dcdcdc"/>
+            </Border>
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                <Label Text="عرض الدرجات على الطالب" VerticalTextAlignment="Center" FontSize="16"/>
-                <Switch x:Name="ShowDegSwitch"/>
+                    <Label Text="عرض الدرجات على الطالب" VerticalTextAlignment="Center" FontSize="16" TextColor="#1a1a1a" FontFamily="Cairo"/>
+                    <Switch x:Name="ShowDegSwitch" OnColor="#D3B05F" ThumbColor="#1a1a1a" />
             </HorizontalStackLayout>
-            <Button Text="حفظ" Clicked="OnSaveButtonClicked" x:Name="SaveBtn"/>
-            <Button Text="حذف" Clicked="DeleteButtonClicked" x:Name="DeleteBtn"/>
 
+            <Button CornerRadius="40" 
+                    BackgroundColor="#D3B05F"
+                    TextColor="#1a1a1a"
+                    Padding="15"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    FontFamily="CairoB"
+                    Text="حفظ"
+                    Clicked="OnSaveButtonClicked"
+                    x:Name="SaveBtn">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                                     Glyph="{x:Static icon:IconFont.Save}" 
+                                     StyleId="{x:StaticResource GoogleFont}" 
+                                     Color="#1A1A1A"
+                                     Size="24" />
+                </Button.ImageSource>
+            </Button>
         </StackLayout>
-        <ContentView x:Name="PasswordPopup" IsVisible="False" Padding="30" BackgroundColor="#80000000">
-            <Frame BackgroundColor="White" BorderColor="Gray" CornerRadius="10" Padding="20" VerticalOptions="Center">
-                <StackLayout Spacing="20">
-                    <Label Text="هل انت متأكد من الحذف ؟" HorizontalOptions="Center" FontSize="Medium"/>
-                    <entry:SfTextInputLayout Hint="أدخل كلمة السر للتأكيد" ContainerType="Filled" WidthRequest="300" EnablePasswordVisibilityToggle="True">
-                        <Entry x:Name="PasswordEntry" BackgroundColor="#dcdcdc"/>
-                    </entry:SfTextInputLayout>
-                    <FlexLayout AlignContent="Center" JustifyContent="SpaceAround">
-                        <Button Text="موافقة" Clicked="AgreeButtonClicked"  />
-                        <Button Text="إلغاء" Clicked="CancelButtonClicked"  />
-                    </FlexLayout>
-                </StackLayout>
-            </Frame>
+    </Grid>
+
+        <!-- Password Confirmation Popup (on top) -->
+        <ContentView x:Name="PasswordPopup" IsVisible="False" BackgroundColor="#80000000" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="1">
+            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
+
+                    <!-- Close Button -->
+                    <Button CornerRadius="40" 
+                            BackgroundColor="Transparent"
+                            Padding="0"
+                            FontFamily="Cairo"
+                            HorizontalOptions="End"
+                            Clicked="CancelDeleteClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Close}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#1a1a1a"
+                                             Size="40" />
+                        </Button.ImageSource>
+                    </Button>
+
+                    <!-- Title Label -->
+                    <Label Text="متأكد من الحذف ؟" 
+                           FontSize="32" 
+                           HorizontalOptions="Center" 
+                           FontAttributes="Bold" 
+                           FontFamily="CairoB"
+                           TextColor="#1a1a1a"/>
+
+                    <!-- Password Entry (for confirmation) -->
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Entry x:Name="PasswordEntry"
+                               FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a"
+                               Placeholder="أدخل كلمة السر للتأكيد"
+                               IsPassword="True"
+                               BackgroundColor="#dcdcdc"
+                               Keyboard="Text"/>
+                    </Border>
+
+                    <!-- Action Buttons -->
+                    <Button CornerRadius="40" 
+                            BackgroundColor="#D3B05F"
+                            TextColor="#1a1a1a"
+                            Padding="15"
+                            FontSize="16"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            FontFamily="CairoB"
+                            Text="موافقة"
+                            Clicked="AgreeDeleteClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Check}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#1A1A1A"
+                                             Size="24" />
+                        </Button.ImageSource>
+                    </Button>
+
+                </VerticalStackLayout>
+            </Border>
         </ContentView>
 
     </Grid>
+
 </ContentPage>

@@ -1,8 +1,5 @@
 ﻿using SQLite;
 using TP.Methods;
-using TP.Pages.Student;
-using TP.Pages.Teacher;
-
 namespace TP.Pages.Others;
 
 public partial class LoginPage : ContentPage
@@ -12,6 +9,7 @@ public partial class LoginPage : ContentPage
     public LoginPage()
 	{
 		InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
         _database = new SQLiteAsyncConnection(dbPath);
     }
 
@@ -50,30 +48,11 @@ public partial class LoginPage : ContentPage
         UserSession.Password = IfUserExist.Password;
         UserSession.UserType = IfUserExist.UserType;
         UserSession.sessionyn = false;
-        if (UserSession.UserType == 3)
-        {
-            /*await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new StudentShell()));
-            Application.Current.MainPage = new NavigationPage(new StudentShell());
-*/
-
-            if (Application.Current?.Windows.Count > 0)
-            {
-                Application.Current.Windows[0].Page = new NavigationPage(new StudentShell());
+        if (Application.Current?.Windows.Count > 0){
+            Application.Current.Windows[0].Page = new NavigationPage(new SubjectSelectionPage());
             }
-
-            return;
-        }
-        if (UserSession.UserType == 2)
-        {
-            /*await Application.Current.MainPage.Navigation.PushAsync(new NavigationPage(new TeacherAppShell()));*/
-
-            if (Application.Current?.Windows.Count > 0)
-            {
-                Application.Current.Windows[0].Page = new NavigationPage(new TeacherAppShell());
-            }
-            return;
-        }
-        await DisplayAlert("suc", "im dead", "حسنا");
     }
+
+
 
 }

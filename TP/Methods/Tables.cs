@@ -31,7 +31,8 @@ namespace TP
         public int SubId { get; set; }
         public string SubName { get; set; }
         public bool ShowDeg { get; set; }
-        public int UserId { get; set; }
+        public int UserId { get; set; } //FORIGN KEY ref to UserAccountTable
+        public string SubTeacherName { get; set; }
     }
     public class DegreeTable
     {

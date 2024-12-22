@@ -6,31 +6,161 @@
     xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
     x:Class="TP.Pages.Teacher.EditPostPage"
     FlowDirection="RightToLeft"
+    BackgroundColor="#EFEFEF"
+    xmlns:icon="clr-namespace:TP"
     Title="EditPostPage">
-    <VerticalStackLayout Spacing="10">
-        <Label 
-            Text="اضف منشور جديد"
-            FontSize="Title" FontFamily="Cairo"
-            VerticalOptions="Start" 
-            HorizontalOptions="Center" />
-        <entry:SfTextInputLayout Hint="عنوان" ContainerType="Outlined" WidthRequest="300" 
-           x:Name="TitleTxtInL">
-            <Entry x:Name="TitleEntry" BackgroundColor="#dcdcdc" TextChanged="TitleEntryChanged" FontSize="16" FontFamily="Cairo"/>
-        </entry:SfTextInputLayout>
-        <entry:SfTextInputLayout Hint="وصف" ContainerType="Outlined" WidthRequest="300" 
-           x:Name="DesTxtInL">
-            <Editor x:Name="DesEditor" BackgroundColor="#dcdcdc" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo"/>
-        </entry:SfTextInputLayout>
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-            <RadioButton x:Name="PostRadio" GroupName="PostType" Content="منشور" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
-            <RadioButton x:Name="AssignmentRadio" GroupName="PostType" Content="واجب" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
-        </HorizontalStackLayout>
-        <Button Text="اخر موعد" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" WidthRequest="100" FontSize="16" FontFamily="Cairo"/>
-        <Button Text="رفع ملف للتوضيح" x:Name="UploadDesBtn" Clicked="UploadDesBtnClicked" WidthRequest="100" FontSize="16" FontFamily="Cairo" IsVisible="False"/>
-        <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" SelectionChanged="TimeChanged"/>
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-            <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D9D9D9" TextColor="#1A1A1A" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
-        <Button x:Name="DeleteBtn" IsVisible="False" Clicked="DeleteClicked" Text="حذف" BackgroundColor="#F02C2C" FontSize="16" FontFamily="Cairo" WidthRequest="100"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Top FlexLayout -->
+        <StackLayout Grid.Row="0" Orientation="Horizontal" Padding="20" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+            <!-- Delete Button Stuck on Left -->
+            <Button x:Name="DeleteBtn" 
+            IsVisible="False" 
+            Clicked="DeleteClicked" 
+            BackgroundColor="#F02C2C" 
+            FontFamily="CairoB" 
+            CornerRadius="40" 
+            Padding="15" 
+            HorizontalOptions="Start">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                             Glyph="{x:Static icon:IconFont.Delete_forever}" 
+                             StyleId="{x:StaticResource GoogleFont}" 
+                             Color="#EFEFEF"
+                             Size="24"/>
+                </Button.ImageSource>
+            </Button>
+
+            <!-- Spacer for Flexibility -->
+            <Label HorizontalOptions="FillAndExpand" />
+
+            <!-- Back Arrow Button Stuck on Right -->
+            <Button CornerRadius="20" 
+            BackgroundColor="Transparent" 
+            Padding="0" 
+            Clicked="BackClicked" 
+            HorizontalOptions="End" 
+            VerticalOptions="Center">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                             Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                             StyleId="{x:StaticResource GoogleFont}" 
+                             Color="#1a1a1a"
+                             Size="40"/>
+                </Button.ImageSource>
+            </Button>
+        </StackLayout>
+
+
+
+        <!-- Main Content -->
+        
+            <VerticalStackLayout Grid.Row="1" VerticalOptions="CenterAndExpand" Padding="20" HorizontalOptions="Center" Spacing="10">
+                <Label 
+                    Text="اضف منشور جديد"
+                    FontSize="Title" FontFamily="CairoB"
+                    VerticalOptions="Start" 
+                    HorizontalOptions="Center" 
+                    TextColor="#1a1a1a"/>
+
+                <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Entry
+                        x:Name="TitleEntry"
+                        FontFamily="CairoB" FontSize="24" TextColor="#1a1a1a"
+                        Placeholder="عنوان"/>
+                </Border>
+
+                <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                <Editor Placeholder="وصف" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a"/>
+                </Border>
+
+                <entry:SfTextInputLayout Hint="وصف" ContainerType="Outlined" WidthRequest="300" 
+                   x:Name="DesTxtInL">
+                </entry:SfTextInputLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <RadioButton TextColor="#1a1a1a" x:Name="PostRadio" GroupName="PostType" Content="منشور" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
+                <RadioButton TextColor="#1a1a1a" x:Name="AssignmentRadio" GroupName="PostType" Content="واجب" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
+                <Button Text="اخر موعد" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="Cairo" TextColor="#efefef" BackgroundColor="#1a1a1a">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Watch_later}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#EFEFEF"
+                                             Size="24"/>
+                        </Button.ImageSource>
+                    </Button>
+                <Button Text="ملف للتوضيح" x:Name="UploadDesBtn" Clicked="UploadDesBtnClicked" Padding="10" FontSize="16" FontFamily="Cairo" IsVisible="False" TextColor="#efefef" BackgroundColor="#1a1a1a">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Upload_file}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#EFEFEF"
+                                             Size="24"/>
+                        </Button.ImageSource>
+                    </Button>
+                </HorizontalStackLayout>
+
+            <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" SelectionChanged="TimeChanged" FlowDirection="RightToLeft" BackgroundColor="#EFEFEF"  ColumnDividerColor="Transparent">
+               
+                <picker:SfDateTimePicker.HeaderView>
+                    <picker:DateTimePickerHeaderView Background="#1a1a1a">
+                        <picker:DateTimePickerHeaderView.TextStyle>
+                            <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="Cairo"/>
+                        </picker:DateTimePickerHeaderView.TextStyle>
+
+                        <picker:DateTimePickerHeaderView.SelectionTextStyle>
+                            <picker:PickerTextStyle FontSize="16" TextColor="#D3B05F" FontFamily="CairoB"/>
+                            <!-- Example with gold color -->
+                        </picker:DateTimePickerHeaderView.SelectionTextStyle>
+
+                    </picker:DateTimePickerHeaderView>
+                </picker:SfDateTimePicker.HeaderView>
+                
+                <picker:SfDateTimePicker.ColumnHeaderView>
+                    <picker:DateTimePickerColumnHeaderView Background="#EFEFEF"
+                         DayHeaderText="يوم" MonthHeaderText="شهر" YearHeaderText="عام"
+                         HourHeaderText="ساعة" MinuteHeaderText="دقيقة" SecondHeaderText="ثواني" 
+                         MeridiemHeaderText="توقيت">
+                        <picker:DateTimePickerColumnHeaderView.TextStyle>
+                            <picker:PickerTextStyle FontSize="16" TextColor="#1a1a1a" FontFamily="CairoB"/>
+                        </picker:DateTimePickerColumnHeaderView.TextStyle>
+                    </picker:DateTimePickerColumnHeaderView>
+                </picker:SfDateTimePicker.ColumnHeaderView>
+
+                <picker:SfDateTimePicker.SelectionView >
+                    <picker:PickerSelectionView CornerRadius="10" Stroke="#1a1a1a" Padding="10, 5, 10, 5" Background="#1a1a1a" />
+                </picker:SfDateTimePicker.SelectionView>
+                <picker:SfDateTimePicker.SelectedTextStyle >
+                    <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="CairoB"/>
+                </picker:SfDateTimePicker.SelectedTextStyle>
+            </picker:SfDateTimePicker>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D9D9D9" TextColor="#1A1A1A" FontSize="16" FontFamily="CairoB">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Save}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#1a1a1a"
+                                             Size="24"/>
+                    </Button.ImageSource>
+                </Button>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

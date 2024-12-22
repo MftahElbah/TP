@@ -3,46 +3,79 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              x:Class="TP.Pages.Teacher.AssignmentsPage"
+             xmlns:icon="clr-namespace:TP"
              FlowDirection="RightToLeft"
+             BackgroundColor="#efefef"
              Title="AssignmentsPage">
     <Grid>
-        
-    <listview:SfListView x:Name="AssignmentListView"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Grid.Row="0" Padding="20">
+
+            <Label/>
+            <Button CornerRadius="20" 
+                BackgroundColor="Transparent"
+                Padding="0"
+                Clicked="BackClicked"
+>
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                 Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                 StyleId="{x:StaticResource GoogleFont}" 
+                 Color="#1a1a1a"
+                 Size="40"
+                 />
+                </Button.ImageSource>
+            </Button>
+        </FlexLayout>
+        <listview:SfListView x:Name="AssignmentListView"
+                             Grid.Row="1"
                  ItemsSource="{Binding AssignmentsForListView}"
                  ItemSize="100"
                  IsScrollingEnabled="True"
                  ScrollBarVisibility="Default"
                  HorizontalOptions="FillAndExpand"
                  VerticalOptions="FillAndExpand"
+                             Margin="10,0"
                  SelectionBackground="Transparent"
                  >
         <listview:SfListView.ItemTemplate>
             <DataTemplate>
-                    <Border BackgroundColor="#D9D9D9" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Border BackgroundColor="#D9D9D9" HorizontalOptions="Center" VerticalOptions="Center" StrokeThickness="3" Stroke="#959595">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
                         
-                        <HorizontalStackLayout HorizontalOptions="Center" Padding="20" Spacing="200">
+                        <FlexLayout JustifyContent="SpaceBetween" HorizontalOptions="Center" Padding="20">
                             <Label  Text="{Binding StdName}"
                             Grid.Column="0"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"
-                            FontAttributes="Bold" 
-                            FontSize="16" 
-                            FontFamily="Cairo"
+                            FontSize="24" 
+                            FontFamily="CairoB"
                             TextColor="#1A1A1A"/>
                             <Button
-                            Grid.Column="0"
-                            HorizontalOptions="End"
-                            VerticalOptions="Center"
-                            Clicked="DownloadClicked"
-                            Text="تحميل"
-                            BindingContext="{Binding .}" 
-                            FontFamily="Cairo"
-                            FontSize="16"
-                        />
-                        </HorizontalStackLayout>
+                                    Grid.Column="0"
+                                    HorizontalOptions="End"
+                                    Clicked="DownloadClicked"
+                                    BindingContext="{Binding .}" 
+                                    FontFamily="Cairo"
+                                    FontSize="16"
+                                    BackgroundColor="#1A1A1A"
+                                    CornerRadius="40"
+                                    Padding="15">
+                                <Button.ImageSource>
+                                    <FontImageSource 
+                                    FontFamily="GoogleIconsFont" 
+                                    Glyph="{x:Static icon:IconFont.Download}" 
+                                    Color="#EFEFEF" 
+                                    Size="24" />
+                                </Button.ImageSource>
+                            </Button>
+
+                        </FlexLayout>
                     </Border>
             </DataTemplate>
         </listview:SfListView.ItemTemplate>

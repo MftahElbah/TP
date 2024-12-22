@@ -45,8 +45,8 @@ namespace TP.Methods
             if(teacher.Count == 0){
                 var initialTeacher = new List<UsersAccountTable>
                 {
-                    new UsersAccountTable {UserId=111,Name= "test",Username = "t" , Password="1" , UserType=2 },
-                    new UsersAccountTable {UserId=123,Name= "stest",Username = "s" , Password="1" , UserType=3 }
+                    new UsersAccountTable {UserId=111,Name= "test",Username = "t" , Password="1" , UserType=1 },
+                    new UsersAccountTable {UserId=123,Name= "stest",Username = "s" , Password="1" , UserType=2 }
                 };
                 await _database.InsertAllAsync(initialTeacher); // Inserts the initial Teacher Account into the database.
             }

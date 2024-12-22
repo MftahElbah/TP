@@ -1,8 +1,7 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Pages;
 using TP.Pages.Others;
-using TP.Pages.Student;
-using TP.Pages.Teacher;
 
 namespace TP
 {
@@ -12,7 +11,6 @@ namespace TP
         public readonly SQLiteAsyncConnection _database;
         public App(){
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
-            
             InitializeComponent();
             _database=new SQLiteAsyncConnection(dbPath);
         }
@@ -21,19 +19,36 @@ namespace TP
         {
             return new Window(new ContentPage());
         }
-        protected override async void OnStart(){
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-            var dbHelper = new DatabaseHelper(dbPath);
-            await dbHelper.InitializeDatabaseAsync();
-            await InitializeApp();
+        protected override async void OnStart()
+        {
+            try
+            {
+                var dbHelper = new DatabaseHelper(dbPath);
+                await dbHelper.InitializeDatabaseAsync();
+                await InitializeApp();
             }
+            catch (Exception ex)
+            {
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = new ContentPage
+                    {
+                        Content = new Label
+                        {
+                            Text = $"Critical Error: {ex.Message}",
+                            TextColor = Colors.Red,
+                            HorizontalOptions = LayoutOptions.Center,
+                            VerticalOptions = LayoutOptions.Center
+                        }
+                    };
+                }
+            }
+        }
         private async Task InitializeApp()
         {
             try
             {
-                
                 var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
-
                 if (session == null)
                 {
                     if (Application.Current?.Windows.Count > 0)
@@ -54,26 +69,17 @@ namespace TP
                     }
                     return;
                 }
+
                 UserSession.UserId = user.UserId;
                 UserSession.Name = user.Name;
                 UserSession.UserType = user.UserType;
                 UserSession.Password = user.Password;
 
-                if (UserSession.UserType == 2)
+                if (Application.Current?.Windows.Count > 0)
                 {
-                    if (Application.Current?.Windows.Count > 0)
-                    {
-                        Application.Current.Windows[0].Page = new NavigationPage(new TeacherAppShell());
-                    }
+                    Application.Current.Windows[0].Page = new NavigationPage(new SubjectSelectionPage());
                 }
-                else
-                {
-                    if (Application.Current?.Windows.Count > 0)
-                    {
-                        Application.Current.Windows[0].Page = new NavigationPage(new StudentShell());
-                    }
-                }
-                
+
             }
             catch (Exception ex)
             {

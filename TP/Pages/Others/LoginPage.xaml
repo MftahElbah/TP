@@ -2,20 +2,62 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+             xmlns:input="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
              x:Class="TP.Pages.Others.LoginPage"
+             xmlns:icon="clr-namespace:TP"
+             BackgroundColor="#EFEFEF"
              >
-    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="تسجيل دخول" FontSize="Title" VerticalOptions="Center" HorizontalOptions="Center"/>
-        <entry:SfTextInputLayout Hint="اسم المستخدم" ContainerType="Outlined" WidthRequest="300"
-                   HelperText="ادخل اسم المستخدم" x:Name="UsernameTxtInL">
-            <Entry x:Name="UsernameEntry" BackgroundColor="#dcdcdc"/>
-        </entry:SfTextInputLayout>
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+        <Label Text="اهلا بك" VerticalOptions="Center" HorizontalOptions="Center" FontFamily="CairoB" TextColor="#1a1a1a"
+               FontAttributes="Bold" FontSize="36"/>
+        <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20"/>
+            </Border.StrokeShape>
+            <Entry
+        x:Name="UsernameEntry"
+        FontFamily="CairoB"
+        FontSize="16"
+        TextColor="#1a1a1a"
+        Placeholder="اسم المستخدم"
+        FlowDirection="RightToLeft"
+        PlaceholderColor="#959595" />
+        </Border>
 
-        <entry:SfTextInputLayout Hint="كلمة السر" ContainerType="Outlined" WidthRequest="300"
-                   HelperText="ادخل كلمة السر" EnablePasswordVisibilityToggle="True" x:Name="PasswordTxtInL" >
-            <Entry x:Name="PasswordEntry"/>
-        </entry:SfTextInputLayout>
-        <Button Text="دخول" WidthRequest="120" HeightRequest="40" x:Name="LoginBtn" Clicked="LoginBtnClicked"/>
+        <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20"/>
+            </Border.StrokeShape>
+            <Entry
+        x:Name="PasswordEntry"
+        FontFamily="CairoB"
+        FontSize="16"
+        TextColor="#1a1a1a"
+        Placeholder="كلمة السر"
+        FlowDirection="RightToLeft"
+        PlaceholderColor="#959595"
+        IsPassword="True" />
+        </Border>
+
+
+
+        <Button Text="دخول"
+                HorizontalOptions="Center" 
+                BackgroundColor="#D3B05F"
+                TextColor="#1a1a1a"
+                FontFamily="CairoB"
+                FontSize="16"
+                x:Name="LoginBtn"
+                CornerRadius="30"
+                Clicked="LoginBtnClicked">
+            <Button.ImageSource>
+                <FontImageSource FontFamily="GoogleIconsFont" 
+                                 Glyph="{x:Static icon:IconFont.Login}" 
+                                 StyleId="{x:StaticResource GoogleFont}" 
+                                 Color="#1a1a1a"
+                                 />
+            </Button.ImageSource>
+        </Button>
 
 
     </VerticalStackLayout>

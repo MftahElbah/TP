@@ -59,6 +59,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="InputKit.Maui" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -66,18 +67,18 @@
 	<!-- pdf -->
 	
 	 <ItemGroup>
-                <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-                <PackageReference Include="Syncfusion.Licensing" Version="28.1.33" />
-                <PackageReference Include="Syncfusion.Maui.Data" Version="28.1.33" />
-	<PackageReference Include="Syncfusion.Maui.Inputs" Version="28.1.33" />
-    <PackageReference Include="Syncfusion.Maui.DataSource" Version="28.1.33" />
-	<PackageReference Include="Syncfusion.Maui.DataGrid" Version="28.1.33" />
-	<PackageReference Include="Syncfusion.Maui.GridCommon" Version="28.1.33" />
-	<PackageReference Include="Syncfusion.Maui.ListView" Version="28.1.33" />
-    <PackageReference Include="Syncfusion.Maui.Core" Version="28.1.33" />
-    <PackageReference Include="Syncfusion.Maui.Picker" Version="28.1.33" />
-	<PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="28.1.33" />
-         </ItemGroup>
+         <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+         <PackageReference Include="Syncfusion.Licensing" Version="28.1.35" />
+         <PackageReference Include="Syncfusion.Maui.Core" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.Data" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.Inputs" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.DataGrid" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.GridCommon" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.ListView" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.DataSource" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.Picker" Version="28.1.35" />
+		 <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="28.1.35" />
+     </ItemGroup>
 	
 	 <ItemGroup>
 	   <Compile Update="Pages\Student\SubjectCenterStd.xaml.cs">
@@ -116,9 +117,6 @@
 	   <MauiXaml Update="Pages\Student\RequestSubjectPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Student\StudentShell.xaml">
-	     <Generator>MSBuild:Compile</Generator>
-	   </MauiXaml>
 	   <MauiXaml Update="Pages\Teacher\AssignmentsPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
@@ -132,9 +130,6 @@
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Teacher\SettingsForSub.xaml">
-	     <Generator>MSBuild:Compile</Generator>
-	   </MauiXaml>
-	   <MauiXaml Update="Pages\Teacher\TeacherAppShell.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	 </ItemGroup>

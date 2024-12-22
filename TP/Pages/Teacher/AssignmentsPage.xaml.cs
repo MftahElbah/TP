@@ -12,6 +12,8 @@ public partial class AssignmentsPage : ContentPage
     public AssignmentsPage(int pid)
 	{
         InitializeComponent();
+        NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
+
         postid = pid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
@@ -25,6 +27,11 @@ public partial class AssignmentsPage : ContentPage
 
         // Fetch all subjects from the SubTable
         await LoadAvailableAssignments();
+    }
+
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
     }
 
     private async Task LoadAvailableAssignments()
