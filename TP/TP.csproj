@@ -59,7 +59,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="InputKit.Maui" Version="4.5.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -71,7 +70,6 @@
          <PackageReference Include="Syncfusion.Licensing" Version="28.1.35" />
          <PackageReference Include="Syncfusion.Maui.Core" Version="28.1.35" />
 		 <PackageReference Include="Syncfusion.Maui.Data" Version="28.1.35" />
-		 <PackageReference Include="Syncfusion.Maui.Inputs" Version="28.1.35" />
 		 <PackageReference Include="Syncfusion.Maui.DataGrid" Version="28.1.35" />
 		 <PackageReference Include="Syncfusion.Maui.GridCommon" Version="28.1.35" />
 		 <PackageReference Include="Syncfusion.Maui.ListView" Version="28.1.35" />

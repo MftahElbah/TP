@@ -5,7 +5,6 @@ using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Controls.Xaml;
 using Syncfusion.Maui.Core.Hosting;
-using InputKit.Handlers;
 
 
 namespace TP
@@ -27,13 +26,6 @@ namespace TP
                     fonts.AddFont("Cairo-Light.ttf", "CairoL");
                 });
 
-            builder
-                .UseMauiApp<App>()
-                .ConfigureMauiHandlers(handlers =>
-                {
-                    // Add following line:
-                    handlers.AddInputKitHandlers(); // 👈
-                });
                 
 
 #if DEBUG
