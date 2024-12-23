@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.Pages.SubjectSelectionPage"
              xmlns:icon="clr-namespace:TP"
+             xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
     <Grid>
@@ -74,6 +75,7 @@
                         HorizontalOptions="Center"
                         SelectionMode="Single"
                         Grid.Row="1"
+                        
                         >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -84,7 +86,6 @@
                            WidthRequest="300"
                             HeightRequest="85"
                                 Stroke="Transparent"
-                            
                           >
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20" />
@@ -132,6 +133,10 @@
 
         <!-- Popups -->
         <ContentView x:Name="SaveSession" IsVisible="False" BackgroundColor="#80000000">
+            <!--<ContentView.GestureRecognizers>
+                --><!-- Tap gesture to capture clicks on the black background --><!--
+                <TapGestureRecognizer Tapped="BackgroundTapped" />
+            </ContentView.GestureRecognizers>-->
             <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="200">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
@@ -209,6 +214,7 @@
                                 TextColor="#1a1a1a"
                                 Placeholder="اسم المادة"
                                 FlowDirection="RightToLeft"
+                                IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
                                 PlaceholderColor="#959595" />
                     </Border>
 

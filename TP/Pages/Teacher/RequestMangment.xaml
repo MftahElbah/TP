@@ -35,7 +35,7 @@
                                      Size="40"/>
                 </Button.ImageSource>
             </Button>
-            <Label HorizontalOptions="FillAndExpand" />
+            <Label HorizontalOptions="Fill" />
         </FlexLayout>
 
         <!-- Syncfusion ListView -->
@@ -50,7 +50,7 @@
             <listview:SfListView.StartSwipeTemplate>
                 <DataTemplate>
                     <Grid BackgroundColor="#D3B05F">
-                        <Label Text="قبول" TextColor="#1A1A1A" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
+                        <Label Text="قبول" TextColor="#1A1A1A" HorizontalOptions="Center" VerticalOptions="Center"  FontSize="22" FontFamily="CairoB"/>
                     </Grid>
                 </DataTemplate>
             </listview:SfListView.StartSwipeTemplate>
@@ -58,7 +58,7 @@
             <listview:SfListView.EndSwipeTemplate>
                 <DataTemplate>
                     <Grid BackgroundColor="#1A1A1A">
-                        <Label Text="رفض" TextColor="#EFEFEF" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="22"/>
+                        <Label Text="رفض" TextColor="#EFEFEF" HorizontalOptions="Center" VerticalOptions="Center" FontFamily="CairoB" FontSize="22"/>
                     </Grid>
                 </DataTemplate>
             </listview:SfListView.EndSwipeTemplate>

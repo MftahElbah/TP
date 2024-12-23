@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using TP.Methods;
 
 namespace TP.Pages.Teacher;
 
@@ -89,17 +90,7 @@ public partial class EditPostPage : ContentPage
 	private void DeadLineBtnClicked(object sender, EventArgs e)
 	{
 		DeadLinePicker.IsOpen = true;
-	}
-	private async void TimeChanged(object sender, Syncfusion.Maui.Picker.DateTimePickerSelectionChangedEventArgs e)
-	{
-		if(DeadLinePicker.SelectedDate < DateTime.Now)
-		{
-			await Task.Delay(500);
-			await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
-            DeadLinePicker.SelectedDate = DateTime.Now.AddMinutes(1).Date;// + minute
-
-            return;
-		}
+		DeadLinePicker.SelectionView.Background = Color.FromRgba("#1a1a1a");
 	}
     private async void UploadDesBtnClicked(object sender, EventArgs e){
         result = await FilePicker.Default.PickAsync(new PickOptions{
@@ -109,6 +100,7 @@ public partial class EditPostPage : ContentPage
     }
 	private async void SaveClicked(object sender, EventArgs e)
 	{
+
         DateTime? STime = null;
 		if (PTNum == 2) {
 			STime = DeadLinePicker?.SelectedDate.Value;
@@ -120,7 +112,16 @@ public partial class EditPostPage : ContentPage
 		}
 
             if (string.IsNullOrEmpty(PostId)){
-			var post = new SubjectPosts
+
+            if (DeadLinePicker.SelectedDate < DateTime.Now && AssignmentRadio.IsChecked)
+            {
+                await Task.Delay(500);
+                await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
+                DeadLinePicker.SelectedDate = DateTime.Now.AddMinutes(1).Date;// + minute
+
+                return;
+            }
+            var post = new SubjectPosts
 			{
 				PostTitle = TitleEntry.Text,
 				PostDes = DesEditor.Text,

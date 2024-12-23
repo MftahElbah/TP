@@ -18,6 +18,8 @@ public partial class LoginPage : ContentPage
         await DeleteSession();
     }
     //delete session if user logout from the account
+
+
     private async Task DeleteSession()
     {
         var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();

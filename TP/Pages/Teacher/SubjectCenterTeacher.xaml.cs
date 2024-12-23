@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using System.Collections.ObjectModel;
+using TP.Methods;
 
 namespace TP.Pages.Teacher;
 
@@ -36,6 +37,12 @@ public partial class SubjectCenterTeacher : ContentPage
         Posts = new ObservableCollection<SubjectPosts>();
         DegreeTableGetter = new ObservableCollection<DegreeTable>();
         BindingContext = this;
+
+
+        HideContentViewMethod.HideContentView(PopupEditDegreeWindow);
+        HideContentViewMethod.HideContentView(PopupEditBookNameWindow);
+        HideContentViewMethod.HideContentView(EditPostPopupWindow);
+        HideContentViewMethod.HideContentView(MenuPopupWindow);
     }
 
 
@@ -111,6 +118,7 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async void AddPostClicked(object sender, EventArgs e){
         await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null,null)); // Navigate to Add Post page
+        EditPostPopupWindow.IsVisible = false;
     }
     private void AddBookClicked(object sender, EventArgs e){
         UploadBook(1); // Navigate to Add Book page

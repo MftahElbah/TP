@@ -45,6 +45,36 @@ public partial class AssignmentsPage : ContentPage
         }
     }
 
+
+    private async Task<bool> CheckAndRequestWritePermissionAsync()
+    {
+#if ANDROID
+        var context = Android.App.Application.Context;
+
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Q)
+        {
+            // On Android 10 (API 29) and above, write permission is not needed for MediaStore.
+            return true;
+        }
+
+        if (AndroidX.Core.Content.ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.WriteExternalStorage) != Android.Content.PM.Permission.Granted)
+        {
+            // Request permission
+            var activity = Platform.CurrentActivity;
+            AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, new[] { Android.Manifest.Permission.WriteExternalStorage }, 1);
+
+            // Wait for the user to grant or deny permission
+            await Task.Delay(1000);
+
+            // Recheck permission
+            return AndroidX.Core.Content.ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.WriteExternalStorage) == Android.Content.PM.Permission.Granted;
+        }
+#endif
+        return true; // Assume permission is granted for other platforms
+    }
+
+
+
     private async void DownloadClicked(object sender, EventArgs e)
     {
         var button = sender as Button;
@@ -52,22 +82,35 @@ public partial class AssignmentsPage : ContentPage
         {
             try
             {
-                // Assuming AssignmentFile contains the file content in binary or a path to the file
-                byte[] fileData = assignment.AssignmentFile; // Replace with actual logic to get file content
-                string fileName = $"Assignment_{assignment.StdName}{assignment.FileType}"; // Adjust extension as needed
+                // Check and request write permission
+                var hasPermission = await CheckAndRequestWritePermissionAsync();
+                if (!hasPermission)
+                {
+                    await DisplayAlert("Permission Denied", "Write permission is required to download the file.", "OK");
+                    return;
+                }
 
-                // Use FilePicker or local storage to save the file
+                // Get file content
+                byte[] fileData = assignment.AssignmentFile; // Replace with actual file content retrieval
+                string fileName = $"Assignment_{assignment.StdName}{assignment.FileType}"; // Adjust as needed
+
+                // Get the download path
                 string localPath = PlatformFileHelper.GetDownloadsPath(fileName);
+
                 // Save the file
                 File.WriteAllBytes(localPath, fileData);
 
                 await DisplayAlert("Download Complete", $"File saved at {localPath}", "OK");
 
-                // Optionally, open the file after saving
+                // Open the file after saving
                 await Launcher.OpenAsync(new OpenFileRequest
                 {
                     File = new ReadOnlyFile(localPath)
                 });
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                await DisplayAlert("Permission Denied", uaEx.Message, "OK");
             }
             catch (Exception ex)
             {
@@ -75,4 +118,64 @@ public partial class AssignmentsPage : ContentPage
             }
         }
     }
+
+
+
+
+    /*
+        [RelayCommand]
+        async Task RequestReadAndRight
+        private async void DownloadClicked(object sender, EventArgs e) {
+            var button = sender as Button;
+
+            bool[] ch = new bool[2];
+            var status1 = PermissionStatus.Unknown;
+            var status2 = PermissionStatus.Unknown;
+            status1 = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+            status2 = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+
+            if (status1 == PermissionStatus.Granted) {
+                ch[0] = true;
+            }
+            else
+            {
+                ch[0] = false;
+            }
+            if (status2 == PermissionStatus.Granted) {
+                ch[1] = true;
+            }
+            else
+            {
+                ch[1] = false;
+            }
+            await DisplayAlert("yes", $"Status1:{ch[0]}\n Status2:{ch[1]}", "yes");
+
+            if (button?.BindingContext is SubjectAssignments assignment)
+            {
+                try
+                {
+                    // Assuming AssignmentFile contains the file content in binary or a path to the file
+                    byte[] fileData = assignment.AssignmentFile; // Replace with actual logic to get file content
+                    string fileName = $"Assignment_{assignment.StdName}{assignment.FileType}"; // Adjust extension as needed
+
+                    // Use FilePicker or local storage to save the file
+                    string localPath = PlatformFileHelper.GetDownloadsPath(fileName);
+                    // Save the file
+                    File.WriteAllBytes(localPath, fileData);
+
+                    await DisplayAlert("Download Complete", $"File saved at {localPath}", "OK");
+
+                    // Optionally, open the file after saving
+                    await Launcher.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(localPath)
+                    });
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", $"Failed to download file: {ex.Message}", "OK");
+                }
+            }
+        }
+    */
 }

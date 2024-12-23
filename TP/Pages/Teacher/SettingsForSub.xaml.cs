@@ -6,12 +6,16 @@ public partial class SettingsForSub : ContentPage{
     public int SubId;
     public readonly SQLiteAsyncConnection _database;
     string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+    
 
     public SettingsForSub(int id){
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
         _database = new SQLiteAsyncConnection(dbPath);
         SubId = id;
+
+
+        HideContentViewMethod.HideContentView(PasswordPopup);
     }
     protected override async void OnAppearing()
     {

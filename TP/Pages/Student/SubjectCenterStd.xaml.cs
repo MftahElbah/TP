@@ -27,6 +27,7 @@ public partial class SubjectCenterStd : ContentPage
         if (!showdeg)
         { ShowDegree.IsVisible = false; }
         BindingContext = this;
+        HideContentViewMethod.HideContentView(PostPopupWindow);
     }
     protected override async void OnAppearing(){
         base.OnAppearing();
@@ -204,7 +205,7 @@ public partial class SubjectCenterStd : ContentPage
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    CountdownLabel.Text = "00:00:00";
+                    CountdownLabel.Text = "00:00:00:00";
                     ShowAssignments.IsEnabled = false;
                     ShowAssignments.Text = "غير متوفر";
                     ShowAssignments.BackgroundColor = Colors.Gray;
@@ -217,7 +218,7 @@ public partial class SubjectCenterStd : ContentPage
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                CountdownLabel.Text = $"{remainingTime.Hours:D2}:{remainingTime.Minutes:D2}:{remainingTime.Seconds:D2}";
+                CountdownLabel.Text = $"{remainingTime.Days:D2}:{remainingTime.Hours:D2}:{remainingTime.Minutes:D2}:{remainingTime.Seconds:D2}";
             });
         };
 

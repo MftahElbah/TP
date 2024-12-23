@@ -58,7 +58,7 @@
 
 
         <!-- Main Content -->
-        
+            
             <VerticalStackLayout Grid.Row="1" VerticalOptions="CenterAndExpand" Padding="20" HorizontalOptions="Center" Spacing="10">
                 <Label 
                     Text="اضف منشور جديد"
@@ -74,14 +74,15 @@
                     <Entry
                         x:Name="TitleEntry"
                         FontFamily="CairoB" FontSize="24" TextColor="#1a1a1a"
-                        Placeholder="عنوان"/>
+                        Placeholder="عنوان"
+                        IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
                 </Border>
 
             <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
-                <Editor Placeholder="وصف" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a"/>
+                <Editor Placeholder="وصف" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
             </Border>
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
@@ -110,7 +111,7 @@
                     </Button>
                 </HorizontalStackLayout>
 
-            <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" SelectionChanged="TimeChanged" FlowDirection="RightToLeft" BackgroundColor="#EFEFEF"  ColumnDividerColor="Transparent">
+            <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" FlowDirection="RightToLeft" BackgroundColor="#EFEFEF"  ColumnDividerColor="Transparent">
                
                 <picker:SfDateTimePicker.HeaderView>
                     <picker:DateTimePickerHeaderView Background="#1a1a1a">
@@ -138,7 +139,7 @@
                 </picker:SfDateTimePicker.ColumnHeaderView>
 
                 <picker:SfDateTimePicker.SelectionView >
-                    <picker:PickerSelectionView CornerRadius="10" Stroke="#1a1a1a" Padding="10, 5, 10, 5" Background="#1a1a1a" />
+                    <picker:PickerSelectionView CornerRadius="10" Stroke="#1a1a1a" Padding="10, 5, 10, 5"  />
                 </picker:SfDateTimePicker.SelectionView>
                 <picker:SfDateTimePicker.SelectedTextStyle >
                     <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="CairoB"/>

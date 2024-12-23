@@ -20,6 +20,8 @@ public partial class SubjectSelectionPage : ContentPage
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
+        HideContentViewMethod.HideContentView(SaveSession);
+        HideContentViewMethod.HideContentView(AddSubPopupWindow);
         BindingContext = this;
     }
     protected override async void OnAppearing()
@@ -110,6 +112,10 @@ public partial class SubjectSelectionPage : ContentPage
     {
         SaveSession.IsVisible = false;
     }
+/*    private void BackgroundTapped(object sender, EventArgs e)
+    {
+        SaveSession.IsVisible = false; // Hide the modal
+    }*/
 
     private void AddClicked(object sender, EventArgs e){
         AddSubPopupWindow.IsVisible = true;
@@ -145,6 +151,7 @@ public partial class SubjectSelectionPage : ContentPage
         catch (Exception ex){
             await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
+        SubNameEntry.Text = "";
         AddSubPopupWindow.IsVisible = false;
         await LoadSubjects();
     }
@@ -167,4 +174,5 @@ public partial class SubjectSelectionPage : ContentPage
                 break;
             }
     }
+
 }

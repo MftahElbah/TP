@@ -18,6 +18,7 @@ namespace TP
         {
             return new Window(new ContentPage());
         }
+
         protected override async void OnStart()
         {
             try

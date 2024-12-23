@@ -45,7 +45,7 @@
                                  Grid.Row="1">
             <refresh:SfPullToRefresh.PullableContent>
                 <StackLayout Padding="10">
-                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="280" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -58,6 +58,7 @@
                                    Placeholder="بحث بأسم المادة أو اسم الاستاذ"
                                    BackgroundColor="#dcdcdc"
                                    Keyboard="Text"
+                                   IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
                                    TextChanged="SearchEntryChanged"/>
                         </VerticalStackLayout>
                     </Border>
@@ -74,6 +75,7 @@
                                                HorizontalOptions="StartAndExpand" 
                                                FontFamily="CairoB"
                                                FontSize="24" 
+                                               LineBreakMode="TailTruncation"
                                                TextColor="#1a1a1a"/>
                                         <Label x:Name="TeacherNameLabel"
                                                Text="{Binding SubTeacherName}" 

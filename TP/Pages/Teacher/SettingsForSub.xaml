@@ -64,7 +64,7 @@
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
                 <Entry x:Name="NameEntry"
-                       FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a"
+                       FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" 
                        Placeholder="اسم المادة"
                        BackgroundColor="#dcdcdc"/>
             </Border>
@@ -134,7 +134,7 @@
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
                         <Entry x:Name="PasswordEntry"
-                               FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a"
+                               FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
                                Placeholder="أدخل كلمة السر للتأكيد"
                                IsPassword="True"
                                BackgroundColor="#dcdcdc"
