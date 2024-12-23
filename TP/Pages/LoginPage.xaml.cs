@@ -1,6 +1,6 @@
 ﻿using SQLite;
 using TP.Methods;
-namespace TP.Pages.Others;
+namespace TP.Pages;
 
 public partial class LoginPage : ContentPage
 {
@@ -12,20 +12,16 @@ public partial class LoginPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
         _database = new SQLiteAsyncConnection(dbPath);
     }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await DeleteSession();
     }
-
+    //delete session if user logout from the account
     private async Task DeleteSession()
     {
         var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
-        if (session != null)
-        {
-            await _database.DeleteAsync(session);
-        }
+        if (session != null){await _database.DeleteAsync(session);}
     }
 
     private async void LoginBtnClicked(object sender, EventArgs e)
@@ -47,12 +43,9 @@ public partial class LoginPage : ContentPage
         UserSession.Name = IfUserExist.Name;
         UserSession.Password = IfUserExist.Password;
         UserSession.UserType = IfUserExist.UserType;
-        UserSession.sessionyn = false;
+        UserSession.SessionYesNo = false;
         if (Application.Current?.Windows.Count > 0){
             Application.Current.Windows[0].Page = new NavigationPage(new SubjectSelectionPage());
             }
     }
-
-
-
 }

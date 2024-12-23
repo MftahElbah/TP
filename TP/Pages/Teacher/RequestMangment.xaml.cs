@@ -5,8 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace TP.Pages.Teacher;
 
-public partial class RequestMangment : ContentPage
-{
+public partial class RequestMangment : ContentPage{
     private readonly SQLiteAsyncConnection _database;
     public ObservableCollection<RequestJoinSubject> RequestsColl { get; set; }
     public int SubIds;
@@ -27,21 +26,17 @@ public partial class RequestMangment : ContentPage
         base.OnAppearing();
         await LoadRequests();
     }
-    private async Task LoadRequests()
-    {
-        var requests = await _database.Table<RequestJoinSubject>().Where(d => d.SubId == SubIds).ToListAsync();
+    private async void BackClicked(object sender, EventArgs e){
+        await Navigation.PopAsync();
+    }
+    private async Task LoadRequests(){
         RequestsColl.Clear();
+        var requests = await _database.Table<RequestJoinSubject>().Where(d => d.SubId == SubIds).ToListAsync();
         foreach (var req in requests)
         {
             RequestsColl.Add(req);
         }
     }
-
-    private async void BackClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopAsync();
-    }
-
     private async void LVSwipEnd(object sender, Syncfusion.Maui.ListView.SwipeEndedEventArgs e)
     {
         if (e.Offset < 200)
@@ -66,7 +61,7 @@ public partial class RequestMangment : ContentPage
             await _database.InsertAsync(std);
         }
         
-        await Task.Delay(2000);
+        await Task.Delay(500);
 
         var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
         await _database.DeleteAsync(req);

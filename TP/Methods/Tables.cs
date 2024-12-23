@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace TP
 {
+    //to save Session to not resignup everytime - Offline
     public class UserSessionTable
     {
         [PrimaryKey]
         public int UserId { get; set; }
         public string Password { get; set; }
     }
+    //Online
     public class UsersAccountTable
     {
         [PrimaryKey]
@@ -25,6 +27,7 @@ namespace TP
         public bool IsActive { get; set; }
     }
     
+    //Online
     public class SubTable
     {
         [PrimaryKey, AutoIncrement]
@@ -34,6 +37,7 @@ namespace TP
         public int UserId { get; set; } //FORIGN KEY ref to UserAccountTable
         public string SubTeacherName { get; set; }
     }
+    //Online
     public class DegreeTable
     {
         [PrimaryKey, AutoIncrement]
@@ -47,6 +51,7 @@ namespace TP
             get { return Deg + MiddelDeg; }
         }
     }
+    //Online
     public class RequestJoinSubject
     {
         [PrimaryKey, AutoIncrement]
@@ -56,6 +61,7 @@ namespace TP
         public int SubId { get; set; }
         public DateTime RequestDate { get; set; }
     }
+    //Online
     public class SubjectBooks
     {
         [PrimaryKey, AutoIncrement]
@@ -65,6 +71,7 @@ namespace TP
         public Byte[] BookFile { get; set; }
         public DateTime UploadDate { get; set; }
     }
+    //Online
     public class SubjectPosts
     {
         [PrimaryKey, AutoIncrement]
@@ -77,6 +84,7 @@ namespace TP
         public Byte[] PostDesFile { get; set; }
         
     }
+    //Online
     public class SubjectAssignments{
         public int PostId { get; set; }
         public int StdId { get; set; }
@@ -85,4 +93,5 @@ namespace TP
         public string FileType { get; set; }
 
     }
+    
 }

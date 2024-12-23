@@ -12,8 +12,7 @@ public partial class EditPostPage : ContentPage
 	public string PostId;
     private FileResult result;
 
-    public EditPostPage(int subid , string postid , string posttitel , string postdes , string DLTime)
-	{
+    public EditPostPage(int subid , string postid , string posttitel , string postdes , string DLTime){
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
@@ -37,6 +36,20 @@ public partial class EditPostPage : ContentPage
     private async void BackClicked(object sender, EventArgs e){
 		await Navigation.PopAsync();
 	}
+    private async void DeleteClicked(object sender, EventArgs e)
+    {
+        int pid = int.Parse(PostId);
+        bool confirm = await DisplayAlert("تأكيد الحذف", "هل أنت متأكد أنك تريد حذف هذا المنشور؟", "نعم", "لا");
+        if (!confirm)
+        {
+			return;
+        }
+            // Perform delete operation
+        var postToDelete = await _database.Table<SubjectPosts>().FirstOrDefaultAsync(p => p.PostId == pid);
+        await _database.DeleteAsync(postToDelete);
+        await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
+        await Navigation.PopAsync();
+    }
 
     private void TitleEntryChanged(object sender, TextChangedEventArgs e)
 	{
@@ -58,6 +71,7 @@ public partial class EditPostPage : ContentPage
             SaveBtn.BackgroundColor = Color.FromArgb("#D3B05F");
         }
 	}
+
     private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
         var selectedRadioButton = sender as RadioButton;
 
@@ -136,18 +150,4 @@ public partial class EditPostPage : ContentPage
 		
 			await Navigation.PopAsync();
 	}
-    private async void DeleteClicked(object sender, EventArgs e)
-    {
-        int pid = int.Parse(PostId);
-        bool confirm = await DisplayAlert("تأكيد الحذف", "هل أنت متأكد أنك تريد حذف هذا المنشور؟", "نعم", "لا");
-        if (!confirm)
-        {
-			return;
-        }
-            // Perform delete operation
-        var postToDelete = await _database.Table<SubjectPosts>().FirstOrDefaultAsync(p => p.PostId == pid);
-        await _database.DeleteAsync(postToDelete);
-        await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
-        await Navigation.PopAsync();
-    }
 }

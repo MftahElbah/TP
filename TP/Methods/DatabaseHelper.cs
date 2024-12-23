@@ -1,15 +1,14 @@
 ﻿
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+//this page should made in cloud server
 
 namespace TP.Methods
 {
     public class DatabaseHelper
     {
+
+
         public readonly SQLiteAsyncConnection _database;
         // Defines the path to the SQLite database in the local application data directory.
 
@@ -19,6 +18,7 @@ namespace TP.Methods
             // Initializes the SQLiteAsyncConnection with the provided database path.
         }
 
+        //this called in App.xaml.cs
         public async Task InitializeDatabaseAsync()
         {
             await _database.CreateTableAsync<SubTable>();
@@ -33,12 +33,7 @@ namespace TP.Methods
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
         }
-                
-        public async Task InitializeAsync()
-        {
-            await SeedDatabase(); // Calls the SeedDatabase method to populate initial data asynchronously.
-        }
-
+        //this called in App.xaml.cs
         private async Task SeedDatabase()
         {                      
             var teacher = await _database.Table<UsersAccountTable>().ToListAsync();

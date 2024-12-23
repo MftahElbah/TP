@@ -1,7 +1,6 @@
 ﻿using SQLite;
 using TP.Methods;
 using TP.Pages;
-using TP.Pages.Others;
 
 namespace TP
 {
@@ -23,6 +22,7 @@ namespace TP
         {
             try
             {
+                //to preinsert data
                 var dbHelper = new DatabaseHelper(dbPath);
                 await dbHelper.InitializeDatabaseAsync();
                 await InitializeApp();
@@ -74,6 +74,7 @@ namespace TP
                 UserSession.Name = user.Name;
                 UserSession.UserType = user.UserType;
                 UserSession.Password = user.Password;
+                UserSession.SessionYesNo = true;
 
                 if (Application.Current?.Windows.Count > 0)
                 {

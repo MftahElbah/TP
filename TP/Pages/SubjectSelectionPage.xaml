@@ -13,6 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
     
+        <!-- NavBar -->
         <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Grid.Row="0" Padding="20">
             <Button CornerRadius="40" 
                     Padding="15"
@@ -66,7 +67,8 @@
                 </Button.ImageSource>
             </Button>
         </FlexLayout>
-        <!-- Main content -->
+        
+            <!-- Main -->
         <CollectionView ItemsSource="{Binding Subjects}" 
                         SelectionChanged="OnItemSelected"
                         HorizontalOptions="Center"
@@ -98,7 +100,10 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        
         </Grid>
+        
+        <!-- EmptyMassage -->
         <ContentView 
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
@@ -125,6 +130,7 @@
             </VerticalStackLayout>
         </ContentView>
 
+        <!-- Popups -->
         <ContentView x:Name="SaveSession" IsVisible="False" BackgroundColor="#80000000">
             <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="200">
                 <Border.StrokeShape>
@@ -156,9 +162,8 @@
                     </HorizontalStackLayout>
 
                 </FlexLayout>
-        </Border>
-    </ContentView>
-
+            </Border>
+        </ContentView>
         <ContentView x:Name="AddSubPopupWindow" IsVisible="False" BackgroundColor="#90000000">
 
             <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">

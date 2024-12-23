@@ -13,7 +13,6 @@ public partial class AssignmentsPage : ContentPage
 	{
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
-
         postid = pid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
         _database = new SQLiteAsyncConnection(dbPath);
@@ -29,8 +28,7 @@ public partial class AssignmentsPage : ContentPage
         await LoadAvailableAssignments();
     }
 
-    private async void BackClicked(object sender, EventArgs e)
-    {
+    private async void BackClicked(object sender, EventArgs e){
         await Navigation.PopAsync();
     }
 

@@ -42,6 +42,11 @@ public partial class RequestSubjectPage : ContentPage
             }
         }
     }
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
+    
     private async void SearchEntryChanged(object sender, TextChangedEventArgs e)
     {
         string searchText = e.NewTextValue?.Trim().ToLower();
@@ -97,10 +102,6 @@ public partial class RequestSubjectPage : ContentPage
         
     }
 
-    private async void BackClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopAsync();
-    }
     private async void OnSendRequestClicked(object sender, EventArgs e)
     {
         var button = sender as Button;

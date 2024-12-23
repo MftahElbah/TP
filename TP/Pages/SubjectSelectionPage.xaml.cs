@@ -3,17 +3,15 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
-using TP.Pages.Others;
-
-
-
 
 namespace TP.Pages;
 
 public partial class SubjectSelectionPage : ContentPage
 {
+
     private readonly SQLiteAsyncConnection _database;
     public ObservableCollection<SubTable> Subjects { get; set; }
+   
     public SubjectSelectionPage()
 	{
 		InitializeComponent();
@@ -23,25 +21,21 @@ public partial class SubjectSelectionPage : ContentPage
         _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
         BindingContext = this;
-        if(UserSession.UserType == 1){
-        
-        return;
-        }
-        if(UserSession.UserType == 2){
-        return;
-        }
     }
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await LoadSubjects();
         await Task.Delay(1000);
-        await CheckSession();
+        CheckSession();
 
     }
+
+    //load data depends on UserType if he's Teacher or Student
     private async Task LoadSubjects()
     {
-    Subjects.Clear();
+
+        Subjects.Clear();
 
         switch (UserSession.UserType)
         {
@@ -91,36 +85,24 @@ public partial class SubjectSelectionPage : ContentPage
         }
 
     }
-    private async Task CheckSession()
+    private void CheckSession()
     {
-        if (UserSession.sessionyn) { 
+        //Check if it's already saved session
+        if (UserSession.SessionYesNo) { 
             return;
         }
-        SaveSession.IsVisible = false;
-        var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
-
-        /*SaveSession.IsVisible = session == null;*/
-        if (session == null)
-        {
-            SaveSession.IsVisible = true;
-            UserSession.sessionyn = true;
-            return;
-        }
+        //if he clicked Yes or No the message well not popup again
+        SaveSession.IsVisible = true;
+        UserSession.SessionYesNo = true;
     }
     private async void SaveSessionClicked(object sender, EventArgs e)
     {
-        var existingSession = await _database.Table<UserSessionTable>()
-            .FirstOrDefaultAsync(s => s.UserId == UserSession.UserId);
-
-        if (existingSession == null)
-        {
             var session = new UserSessionTable
             {
                 UserId = UserSession.UserId,
                 Password = UserSession.Password,
             };
             await _database.InsertAsync(session);
-        }
 
         SaveSession.IsVisible = false;
     }
@@ -137,6 +119,7 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private void LogoutClicked(object sender, EventArgs e)
     {
+        //to not show navigation bar
         if (Application.Current?.Windows.Count > 0)
         {
             Application.Current.Windows[0].Page = new NavigationPage(new LoginPage());
@@ -146,7 +129,7 @@ public partial class SubjectSelectionPage : ContentPage
     private async void CreateSubClick(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(SubNameEntry.Text)){
-            await DisplayAlert("Error", "All fields are required.", "OK");
+            await DisplayAlert("خطا", "يجب وضع اسم للمادة", "حسنا");
             return;
         }
         try{
@@ -167,30 +150,21 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private void CancelSubClick(object sender, EventArgs e)
     {
-        
         AddSubPopupWindow.IsVisible = false;
     }
+
     private async void OnItemSelected(object sender, SelectionChangedEventArgs e)
     {
         // Get the selected item
         var selectedItem = e.CurrentSelection.FirstOrDefault() as SubTable;
-
-        if (selectedItem != null)
-        {
-            if(UserSession.UserType == 1) {
-                // Navigate to the detail page, passing the selected item's ID
+            switch (UserSession.UserType){
+                case 1:
                 await Navigation.PushAsync(new SubjectCenterTeacher(selectedItem.SubId));
-            }
-            else { 
-                await Navigation.PushAsync(new SubjectCenterStd(selectedItem.SubId, selectedItem.ShowDeg));
-            }
-            // Clear the selection (optional)
-            var collectionView = sender as CollectionView;
-            if (collectionView != null)
-            {
-                collectionView.SelectedItem = null;
-            }
-        }
-    }
+                break;
 
+                case 2:
+                await Navigation.PushAsync(new SubjectCenterStd(selectedItem.SubId, selectedItem.ShowDeg));
+                break;
+            }
+    }
 }

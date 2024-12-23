@@ -6,9 +6,8 @@ namespace TP.Pages.Student;
 
 public partial class SubjectCenterStd : ContentPage
 {
-    private DatabaseHelper _databaseHelper;
-    public ObservableCollection<SubjectBooks> Books { get; set; }
     public ObservableCollection<SubjectPosts> Posts { get; set; }
+    public ObservableCollection<SubjectBooks> Books { get; set; }
     private System.Timers.Timer _countdownTimer;
     public int SubId;
     public readonly SQLiteAsyncConnection _database;
@@ -22,7 +21,6 @@ public partial class SubjectCenterStd : ContentPage
 
         SubId = subid;
         string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        _databaseHelper = new DatabaseHelper(dbPath); // Pass your database path
         _database = new SQLiteAsyncConnection(dbPath);
         Books = new ObservableCollection<SubjectBooks>();
         Posts = new ObservableCollection<SubjectPosts>();
@@ -36,7 +34,7 @@ public partial class SubjectCenterStd : ContentPage
         await LoadPosts();
         PageShowStatus(1);
     }
-
+    //LoadDataSection
     private async Task LoadPosts()
     {
         Posts.Clear();
@@ -76,7 +74,7 @@ public partial class SubjectCenterStd : ContentPage
         }
         Emptys[1] = false;
     }
-
+    //Nav Bar
     private async void ShowDegreeClicked(object sender, EventArgs e) {
         var deg = await _database.Table<DegreeTable>().Where(s => s.SubId == SubId && s.StdName == UserSession.Name).FirstOrDefaultAsync();
         await DisplayAlert("درجات", $"الأعمال:{deg.Deg}\n الجزئي:{deg.MiddelDeg} \n المجموع:{deg.Total}","حسنا");
@@ -86,6 +84,7 @@ public partial class SubjectCenterStd : ContentPage
     {
         await Navigation.PopAsync();
     }
+    //Selection View Bar
     private void PostsShowerClicked(object sender, EventArgs e)
     {
         PageShowStatus(1);
@@ -146,15 +145,9 @@ public partial class SubjectCenterStd : ContentPage
                 break;
         }
     }
-
-
-
+    //Post Section
     private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
     {
-        if (Postslistview.SelectedItem == null)
-        {
-            return;
-        }
         ShowAssignments.IsVisible = false;
         ShowDesFileBtn.IsVisible = false;
         CountdownLabel.IsVisible = false;
@@ -307,6 +300,7 @@ public partial class SubjectCenterStd : ContentPage
         PostPopupWindow.IsVisible = false;
     }
     
+    //Book Section
     private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
     {
         if (e.DataItem is SubjectBooks selectedPdf)

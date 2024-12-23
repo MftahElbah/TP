@@ -109,7 +109,7 @@
 	   <MauiXaml Update="Pages\Old\StdManger.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
-	   <MauiXaml Update="Pages\Others\LoginPage.xaml">
+	   <MauiXaml Update="Pages\LoginPage.xaml">
 	     <Generator>MSBuild:Compile</Generator>
 	   </MauiXaml>
 	   <MauiXaml Update="Pages\Student\RequestSubjectPage.xaml">
