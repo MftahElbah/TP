@@ -377,6 +377,7 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async void EditPostClicked(object sender, EventArgs e) {   
         await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text,DeadLineTimeLblPopup.Text)); // i want here to take data from selected list view
+        EditPostPopupWindow.IsVisible = false;
     }
     private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
         int pid = int.Parse(IdLblPopup.Text);

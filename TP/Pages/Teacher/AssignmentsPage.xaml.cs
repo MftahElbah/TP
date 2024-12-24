@@ -49,29 +49,20 @@ public partial class AssignmentsPage : ContentPage
     private async Task<bool> CheckAndRequestWritePermissionAsync()
     {
 #if ANDROID
-        var context = Android.App.Application.Context;
-
-        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Q)
+        if (Android.OS.Build.VERSION.SdkInt < Android.OS.BuildVersionCodes.Q) // Before Android 10
         {
-            // On Android 10 (API 29) and above, write permission is not needed for MediaStore.
-            return true;
+            var permissionStatus = AndroidX.Core.Content.ContextCompat.CheckSelfPermission(Android.App.Application.Context, Android.Manifest.Permission.WriteExternalStorage);
+            if (permissionStatus != Android.Content.PM.Permission.Granted)
+            {
+                AndroidX.Core.App.ActivityCompat.RequestPermissions(MainActivity.Instance, new[] { Android.Manifest.Permission.WriteExternalStorage }, 1);
+                return await Task.FromResult(false); // Assume not granted for simplicity
+            }
         }
-
-        if (AndroidX.Core.Content.ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.WriteExternalStorage) != Android.Content.PM.Permission.Granted)
-        {
-            // Request permission
-            var activity = Platform.CurrentActivity;
-            AndroidX.Core.App.ActivityCompat.RequestPermissions(activity, new[] { Android.Manifest.Permission.WriteExternalStorage }, 1);
-
-            // Wait for the user to grant or deny permission
-            await Task.Delay(1000);
-
-            // Recheck permission
-            return AndroidX.Core.Content.ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.WriteExternalStorage) == Android.Content.PM.Permission.Granted;
-        }
+        return true;
+#else
+        return await Task.FromResult(true);
 #endif
-        return true; // Assume permission is granted for other platforms
-    }
+    } 
 
 
 
@@ -90,19 +81,23 @@ public partial class AssignmentsPage : ContentPage
                     return;
                 }
 
-                // Get file content
-                byte[] fileData = assignment.AssignmentFile; // Replace with actual file content retrieval
-                string fileName = $"Assignment_{assignment.StdName}{assignment.FileType}"; // Adjust as needed
+                // File content and name
+                byte[] fileData = assignment.AssignmentFile; // Ensure this contains the file's byte[] content
+                if (fileData == null || fileData.Length == 0)
+                {
+                    await DisplayAlert("Error", "No file data found to download.", "OK");
+                    return;
+                }
 
-                // Get the download path
-                string localPath = PlatformFileHelper.GetDownloadsPath(fileName);
+                string fileName = $"Assignment_{assignment.StdName}{assignment.FileType}"; // File name format
+                string localPath = PlatformFileHelper.GetPublicDownloadsPath(fileName);
 
                 // Save the file
                 File.WriteAllBytes(localPath, fileData);
 
                 await DisplayAlert("Download Complete", $"File saved at {localPath}", "OK");
 
-                // Open the file after saving
+                // Open the file
                 await Launcher.OpenAsync(new OpenFileRequest
                 {
                     File = new ReadOnlyFile(localPath)
@@ -118,6 +113,7 @@ public partial class AssignmentsPage : ContentPage
             }
         }
     }
+
 
 
 

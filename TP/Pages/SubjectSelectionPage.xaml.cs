@@ -160,19 +160,21 @@ public partial class SubjectSelectionPage : ContentPage
         AddSubPopupWindow.IsVisible = false;
     }
 
-    private async void OnItemSelected(object sender, SelectionChangedEventArgs e)
+    private async void OnItemTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
     {
         // Get the selected item
-        var selectedItem = e.CurrentSelection.FirstOrDefault() as SubTable;
+        if (e.DataItem is SubTable subtapped)
+        {
             switch (UserSession.UserType){
                 case 1:
-                await Navigation.PushAsync(new SubjectCenterTeacher(selectedItem.SubId));
+                await Navigation.PushAsync(new SubjectCenterTeacher(subtapped.SubId));
                 break;
 
                 case 2:
-                await Navigation.PushAsync(new SubjectCenterStd(selectedItem.SubId, selectedItem.ShowDeg));
+                await Navigation.PushAsync(new SubjectCenterStd(subtapped.SubId, subtapped.ShowDeg));
                 break;
             }
+        }
     }
 
 }

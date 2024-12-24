@@ -70,38 +70,40 @@
         </FlexLayout>
         
             <!-- Main -->
-        <CollectionView ItemsSource="{Binding Subjects}" 
-                        SelectionChanged="OnItemSelected"
-                        HorizontalOptions="Center"
-                        SelectionMode="Single"
-                        Grid.Row="1"
-                        
-                        >
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
+            <listview:SfListView ItemsSource="{Binding Subjects}"
+                     ItemTapped="OnItemTapped"
+                     SelectionMode="Single"
+                     HorizontalOptions="Center"
+                     Grid.Row="1"
+                     ItemSize="85"
+                     ItemSpacing="5"
+                     SelectionBackground="Transparent"
+                     >
+                <listview:SfListView.ItemTemplate>
+                    <DataTemplate>
                         <Border BackgroundColor="#D3B05F" 
-                            Margin="10" 
-                            VerticalOptions="Center" 
-                            HorizontalOptions="Center"
-                           WidthRequest="300"
-                            HeightRequest="85"
-                                Stroke="Transparent"
-                          >
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20" />
-                        </Border.StrokeShape>
-                        <Label Text="{Binding SubName}" 
-                               HorizontalOptions="Center" 
-                               VerticalOptions="Center" 
-                               FontFamily="CairoB"
-                               FontAttributes="Bold" 
-                               FontSize="24"
-                               TextColor="#1a1a1a"/>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        
+                    Margin="10" 
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center"
+                    WidthRequest="300"
+                    HeightRequest="85"
+                    Stroke="Transparent">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+                            <Label Text="{Binding SubName}" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" 
+                       FontFamily="CairoB"
+                       FontAttributes="Bold" 
+                       FontSize="24"
+                       TextColor="#1a1a1a"/>
+                        </Border>
+                    </DataTemplate>
+                </listview:SfListView.ItemTemplate>
+            </listview:SfListView>
+
+
         </Grid>
         
         <!-- EmptyMassage -->
