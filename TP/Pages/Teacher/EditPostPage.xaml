@@ -56,10 +56,11 @@
         </StackLayout>
 
 
-
+        <ScrollView HorizontalOptions="Center" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Never" Grid.Row="1">
+            
         <!-- Main Content -->
             
-            <VerticalStackLayout Grid.Row="1" VerticalOptions="CenterAndExpand" Padding="20" HorizontalOptions="Center" Spacing="10">
+            <VerticalStackLayout VerticalOptions="CenterAndExpand" Padding="20" HorizontalOptions="Center" Spacing="10">
                 <Label 
                     Text="اضف منشور جديد"
                     FontSize="Title" FontFamily="CairoB"
@@ -158,5 +159,6 @@
                 </Button>
             </HorizontalStackLayout>
         </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>

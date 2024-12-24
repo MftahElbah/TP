@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:TP"
 			 xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-             android:Application.WindowSoftInputModeAdjust="Pan"
+             android:Application.WindowSoftInputModeAdjust="Resize"
              x:Class="TP.App" UserAppTheme="Unspecified" >
     <Application.Resources>
         <ResourceDictionary>

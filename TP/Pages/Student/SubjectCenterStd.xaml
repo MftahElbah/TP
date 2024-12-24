@@ -208,7 +208,7 @@
 
 
         <ContentView x:Name="PostPopupWindow" IsVisible="False" BackgroundColor="#80000000">
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350" HeightRequest="550">
+            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350" MaximumHeightRequest="550">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
@@ -227,7 +227,7 @@
                             </Button.ImageSource>
                         </Button>
                     </FlexLayout>
-                    <ScrollView Grid.Row="1">
+                    <ScrollView Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
                         
                     <VerticalStackLayout Spacing="20">
                     <!-- Close Button -->
