@@ -143,6 +143,13 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                            Opacity="0.5"
+                            Radius="05"
+                            Offset="0,10" />
+                </Border.Shadow>
                 <FlexLayout JustifyContent="SpaceAround" Direction="Column" AlignContent="Center" AlignItems="Center">
                     <Label Text="هل تريد الاحتفاظ بالجلسة ؟" HorizontalOptions="Center" FontSize="Title" FontFamily="CairoB" TextColor="#1a1a1a"/>
                     <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
@@ -178,6 +185,13 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                            Opacity="0.5"
+                            Radius="05"
+                            Offset="0,10" />
+                </Border.Shadow>
+                
 
                 <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
                     <Button

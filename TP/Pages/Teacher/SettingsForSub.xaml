@@ -102,6 +102,12 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                                    Opacity="0.5"
+                                    Radius="05"
+                                    Offset="0,10" />
+                </Border.Shadow>
                 <VerticalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
 
                     <!-- Close Button -->

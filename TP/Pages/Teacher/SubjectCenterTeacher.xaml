@@ -316,6 +316,12 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                                Opacity="0.5"
+                                Radius="05"
+                                Offset="0,10" />
+                </Border.Shadow>
                 <VerticalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
                     <!-- Title -->
 
@@ -409,6 +415,12 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                                    Opacity="0.5"
+                                    Radius="05"
+                                    Offset="0,10" />
+                </Border.Shadow>
                 <VerticalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
 
                     <Button CornerRadius="40" 
@@ -469,6 +481,12 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                                    Opacity="0.5"
+                                    Radius="05"
+                                    Offset="0,10" />
+                </Border.Shadow>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -520,6 +538,12 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                                    Opacity="0.5"
+                                    Radius="05"
+                                    Offset="0,10" />
+                </Border.Shadow>
                 <VerticalStackLayout Spacing="20">
                     <!-- Cancel Button at the Top -->
                     <Button FontFamily="Cairo"  HorizontalOptions="End" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="0" BackgroundColor="Transparent" Clicked="CloseMenuClicked">
