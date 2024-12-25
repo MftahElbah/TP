@@ -140,7 +140,7 @@ public partial class SubjectSelectionPage : ContentPage
         }
         try{
            var Sub = new SubTable{
-               SubName = SubNameEntry.Text,
+               SubName = SubNameEntry.Text.ToLower(),
                UserId = UserSession.UserId,
                SubTeacherName = UserSession.Name,
                ShowDeg = false,
