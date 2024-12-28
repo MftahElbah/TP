@@ -1,16 +1,15 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Methods.actions;
 namespace TP.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-    public readonly SQLiteAsyncConnection _database;
+    private MineSQLite _sqlite = new MineSQLite();
     public LoginPage()
 	{
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
-        _database = new SQLiteAsyncConnection(dbPath);
     }
     protected override async void OnAppearing()
     {
@@ -22,8 +21,7 @@ public partial class LoginPage : ContentPage
 
     private async Task DeleteSession()
     {
-        var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
-        if (session != null){await _database.DeleteAsync(session);}
+        _sqlite.deleteSession();
     }
 
     private async void LoginBtnClicked(object sender, EventArgs e)
@@ -35,7 +33,7 @@ public partial class LoginPage : ContentPage
         }
         string username = UsernameEntry.Text.ToLower();
         string password = PasswordEntry.Text;
-        var IfUserExist = await _database.Table<UsersAccountTable>().FirstOrDefaultAsync(d => d.Username == username && d.Password == password);
+        var IfUserExist = _sqlite.UserLoginChecker(username, password).Result;
         if (IfUserExist == null)
         {
             await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");

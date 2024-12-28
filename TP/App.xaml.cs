@@ -1,17 +1,17 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Methods.actions;
 using TP.Pages;
 
 namespace TP
 {
     public partial class App : Application
     {
-        public string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        public readonly SQLiteAsyncConnection _database;
+        private MineSQLite _sqlite = new MineSQLite();
+
         public App(){
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
             InitializeComponent();
-            _database=new SQLiteAsyncConnection(dbPath);
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
@@ -24,7 +24,7 @@ namespace TP
             try
             {
                 //to preinsert data
-                var dbHelper = new DatabaseHelper(dbPath);
+                var dbHelper = new DatabaseHelper(_sqlite.dbPath);
                 await dbHelper.InitializeDatabaseAsync();
                 await InitializeApp();
             }
@@ -49,7 +49,7 @@ namespace TP
         {
             try
             {
-                var session = await _database.Table<UserSessionTable>().FirstOrDefaultAsync();
+                var session = await _sqlite.UserSessionChecker();
                 if (session == null)
                 {
                     if (Application.Current?.Windows.Count > 0)
@@ -59,8 +59,8 @@ namespace TP
                     return;
                 }
 
-                var user = await _database.Table<UsersAccountTable>()
-                                           .FirstOrDefaultAsync(u => u.UserId == session.UserId && u.Password == session.Password);
+                var user = await _sqlite.loginSecction(session.Password, session.UserId);
+                                
 
                 if (user == null)
                 {

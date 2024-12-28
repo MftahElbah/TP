@@ -1,17 +1,16 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Methods.actions;
 namespace TP.Pages.Teacher;
 
 public partial class SettingsForSub : ContentPage{
     public int SubId;
-    public readonly SQLiteAsyncConnection _database;
-    string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-    
+    private MineSQLite _sqlite = new MineSQLite();
+
 
     public SettingsForSub(int id){
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
-        _database = new SQLiteAsyncConnection(dbPath);
         SubId = id;
 
 
@@ -24,9 +23,7 @@ public partial class SettingsForSub : ContentPage{
     }
     
     private async Task LoadSelectedSub(){
-        var sub = await _database.Table<SubTable>()
-                                           .Where(b => b.SubId == SubId)
-                                           .FirstOrDefaultAsync();
+        var sub = _sqlite.getSubBySubId(SubId).Result;
             NameEntry.Text = sub.SubName;
             ShowDegSwitch.IsToggled = sub.ShowDeg;
     }
@@ -47,11 +44,11 @@ public partial class SettingsForSub : ContentPage{
         }        
         try
         {
-            var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
+            var Sub = _sqlite.getSubBySubId(SubId).Result;
             if (Sub != null){
                 Sub.SubName = Name;
                 Sub.ShowDeg = ShowDegSwitch.IsToggled;
-                await _database.UpdateAsync(Sub);
+                await _sqlite.updateSubBySubId(Sub);
             }
             await DisplayAlert("تم التعديل", "تم التعديل بنجاح", "حسنا");
 
@@ -73,29 +70,33 @@ public partial class SettingsForSub : ContentPage{
     private async void AgreeDeleteClicked(object sender, EventArgs e)
     {
         string password = PasswordEntry.Text; // Retrieve entered password
-        var agree = await _database.Table<UsersAccountTable>()
-                                           .Where(b => b.UserId == UserSession.UserId && b.Password == password)
-                                           .FirstOrDefaultAsync();
+        var agree = _sqlite.getUserAccountById(UserSession.UserId).Result;
         if (agree == null || string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
 
         // Deletes all branches associated with the department.
-        var SubStdToDelete = await _database.Table<DegreeTable>().Where(b => b.SubId == SubId).ToListAsync();
-        var booksToDelete = await _database.Table<SubjectBooks>().Where(b => b.SubId == SubId).ToListAsync();
-        var postsToDelete = await _database.Table<SubjectPosts>().Where(b => b.SubId == SubId).ToListAsync();
-        var Sub = await _database.Table<SubTable>().FirstOrDefaultAsync(d => d.SubId == SubId);
+       
+        var SubStdToDelete = _sqlite.getDegreeTablesBySubId(SubId).Result;
+        var booksToDelete = _sqlite.getSubjectBooksBySubId(SubId).Result;
+        var postsToDelete = _sqlite.getSubjectPostsBySubId(SubId).Result;
+        var Sub = _sqlite.getSubBySubId(SubId).Result;
         foreach (var delete in SubStdToDelete)
         {
-            await _database.DeleteAsync(delete); // Deletes the branches from the database.
+            await _sqlite.deleteDegree(delete); // Deletes the branches from the
+                                                //
+                                                //
+                                                //
+                                                // .
         }
         foreach (var book in booksToDelete)
         {
-            await _database.DeleteAsync(book); // Deletes the branches from the database.
+            await _sqlite.deleteSubjectBook(book); // Deletes the branches from the
+                                                   // .
         }
         foreach (var post in postsToDelete)
         {
-            await _database.DeleteAsync(post); // Deletes the branches from the database.
+            await _sqlite.deletePost(post); // Deletes the branches from the database.
         }
-        await _database.DeleteAsync(Sub);
+        await _sqlite.deleteSub(Sub); // Deletes the department from the database.
         await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
 
         if (Navigation?.NavigationStack?.Count > 2)

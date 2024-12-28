@@ -3,13 +3,15 @@ using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
+using TP.Methods.actions;
 
 namespace TP.Pages;
 
 public partial class SubjectSelectionPage : ContentPage
 {
 
-    private readonly SQLiteAsyncConnection _database;
+    private MineSQLite _sqlite = new MineSQLite();
+
     public ObservableCollection<SubTable> Subjects { get; set; }
    
     public SubjectSelectionPage()
@@ -17,8 +19,6 @@ public partial class SubjectSelectionPage : ContentPage
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
         HideContentViewMethod.HideContentView(SaveSession);
         HideContentViewMethod.HideContentView(AddSubPopupWindow);
@@ -44,9 +44,7 @@ public partial class SubjectSelectionPage : ContentPage
             case 1: // Teacher
                 AddBtn.IsVisible = true;
                 NoSubExist.IsVisible = false;
-                var teacherSubjects = await _database.Table<SubTable>()
-                                                     .Where(s => s.UserId == UserSession.UserId)
-                                                     .ToListAsync();
+                var teacherSubjects = _sqlite.getSubByUser().Result;
                 if (teacherSubjects.Count == 0)
                 {
                     NoSubExist.IsVisible = true;
@@ -61,10 +59,8 @@ public partial class SubjectSelectionPage : ContentPage
 
             case 2: // Student
                 SearchBtn.IsVisible = true;
-                var stdInSub = await _database.Table<DegreeTable>()
-                                               .Where(s => s.StdName == UserSession.Name)
-                                               .ToListAsync();
-                var allSubjects = await _database.Table<SubTable>().ToListAsync();
+                var stdInSub = _sqlite.getDegreeBySessionName().Result;
+                var allSubjects = _sqlite.getSubTable().Result;
 
                 foreach (var studentSubject in stdInSub)
                 {
@@ -104,7 +100,7 @@ public partial class SubjectSelectionPage : ContentPage
                 UserId = UserSession.UserId,
                 Password = UserSession.Password,
             };
-            await _database.InsertAsync(session);
+            await _sqlite.insertSession(session);
 
         SaveSession.IsVisible = false;
     }
@@ -145,7 +141,7 @@ public partial class SubjectSelectionPage : ContentPage
                SubTeacherName = UserSession.Name,
                ShowDeg = false,
                };
-           await _database.InsertAsync(Sub);
+           await _sqlite.insertSub(Sub);
            await DisplayAlert("تمت", "تم انشاء المادة بنجاح", "حسنا"); 
         }
         catch (Exception ex){

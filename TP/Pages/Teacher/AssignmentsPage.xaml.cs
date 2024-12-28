@@ -1,21 +1,20 @@
 ﻿using SQLite;
 using System.Collections.ObjectModel;
 using TP.Methods;
+using TP.Methods.actions;
 
 namespace TP.Pages.Teacher;
 
 public partial class AssignmentsPage : ContentPage
 {
+    private MineSQLite _sqlite = new MineSQLite();
     public ObservableCollection<SubjectAssignments> AssignmentsForListView { get; set; }
-    private readonly SQLiteAsyncConnection _database;
     public int postid;
     public AssignmentsPage(int pid)
 	{
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
         postid = pid;
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        _database = new SQLiteAsyncConnection(dbPath);
         AssignmentsForListView = new ObservableCollection<SubjectAssignments>();
         BindingContext = this;
     }
@@ -34,9 +33,7 @@ public partial class AssignmentsPage : ContentPage
 
     private async Task LoadAvailableAssignments()
     {
-        var assignments = await _database.Table<SubjectAssignments>()
-            .Where(a=> a.PostId == postid)
-            .ToListAsync();
+        var assignments =  _sqlite.getSubjectAssignmentsByPost(postid).Result;
 
         AssignmentsForListView.Clear();
         foreach (var assignment in assignments)
@@ -61,6 +58,7 @@ public partial class AssignmentsPage : ContentPage
         return true;
 #else
         return await Task.FromResult(true);
+
 #endif
     } 
 

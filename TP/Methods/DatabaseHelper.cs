@@ -45,6 +45,6 @@ namespace TP.Methods
                 };
                 await _database.InsertAllAsync(initialTeacher); // Inserts the initial Teacher Account into the database.
             }
-        }                
+        }
     }
 }

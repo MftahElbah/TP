@@ -2,21 +2,21 @@
 using Syncfusion.Maui.PullToRefresh;
 using System.Collections.ObjectModel;
 using TP.Methods;
+using TP.Methods.actions;
 
 namespace TP.Pages.Student;
 
 public partial class RequestSubjectPage : ContentPage
 {
+    private MineSQLite _sqlite = new MineSQLite();
+
     public ObservableCollection<SubTable> Subjects { get; set; }
-    private readonly SQLiteAsyncConnection _database;
     public RequestSubjectPage()
 	{
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable nAavigation bar for this page
 
 
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        _database = new SQLiteAsyncConnection(dbPath);
         Subjects = new ObservableCollection<SubTable>();
         BindingContext = this;
     }
@@ -30,13 +30,13 @@ public partial class RequestSubjectPage : ContentPage
 
     private async Task LoadAvailableSubjects()
     {
-        var subjects = await _database.Table<SubTable>().ToListAsync();
+        var subjects = await _sqlite.getSubTable();
         
         Subjects.Clear();
         foreach (var subject in subjects)
         { 
-            var SubInReq = await _database.Table<RequestJoinSubject>().Where(s => s.SubId == subject.SubId && s.UserId == UserSession.UserId).ToListAsync();
-            var StdInTable = await _database.Table<DegreeTable>().Where(s => s.SubId == subject.SubId && s.StdName == UserSession.Name).ToListAsync();
+            var SubInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
+            var StdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);
             if (SubInReq.Count == 0 && StdInTable.Count == 0) {
                 Subjects.Add(subject);
             }
@@ -54,17 +54,13 @@ public partial class RequestSubjectPage : ContentPage
         if (string.IsNullOrEmpty(searchText))
         {
             // Load all subjects with filtering logic
-            var subjects = await _database.Table<SubTable>().ToListAsync();
+            var subjects = await _sqlite.getSubTable();
             Subjects.Clear();
 
-            foreach (var subject in subjects)
+            foreach (var subject in subjects)       
             {
-                var subInReq = await _database.Table<RequestJoinSubject>()
-                                              .Where(s => s.SubId == subject.SubId && s.UserId == UserSession.UserId)
-                                              .ToListAsync();
-                var stdInTable = await _database.Table<DegreeTable>()
-                                                .Where(s => s.SubId == subject.SubId && s.StdName == UserSession.Name)
-                                                .ToListAsync();
+                var subInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
+                var stdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);  
 
                 if (subInReq.Count == 0 && stdInTable.Count == 0)
                 {
@@ -74,11 +70,9 @@ public partial class RequestSubjectPage : ContentPage
             EmptyMessage.IsVisible = false;
             return;
         }
-        
+
         // Search for subjects with names matching the search text
-        var filteredSubjects = await _database.Table<SubTable>()
-                                              .Where(s => s.SubName.Contains(searchText) || s.SubTeacherName.Contains(searchText))
-                                              .ToListAsync();
+        var filteredSubjects = await _sqlite.searchSubTable(searchText);
         Subjects.Clear();
         if (filteredSubjects.Count == 0) {
             EmptyMessage.IsVisible = true;
@@ -87,12 +81,9 @@ public partial class RequestSubjectPage : ContentPage
         EmptyMessage.IsVisible = false;
         foreach (var subject in filteredSubjects)
         {
-            var subInReq = await _database.Table<RequestJoinSubject>()
-                                              .Where(s => s.SubId == subject.SubId && s.UserId == UserSession.UserId)
-                                              .ToListAsync();
-            var stdInTable = await _database.Table<DegreeTable>()
-                                            .Where(s => s.SubId == subject.SubId && s.StdName == UserSession.Name)
-                                            .ToListAsync();
+            var subInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
+            var stdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);
+
 
             if (subInReq.Count == 0 && stdInTable.Count == 0)
             {
@@ -112,7 +103,12 @@ public partial class RequestSubjectPage : ContentPage
         }
         if (subject != null)
         {
-            // Create a new request and insert it into the database
+            // Create a new request and insert it into the
+            // 
+
+
+
+
             var request = new RequestJoinSubject
             {
                 UserId = UserSession.UserId, // Assuming UserSession.UserId is set
@@ -120,7 +116,7 @@ public partial class RequestSubjectPage : ContentPage
                 Name = UserSession.Name,
                 RequestDate = DateTime.Now,
             };
-            await _database.InsertAsync(request);
+            await _sqlite.insertRequestJoin(request);
             button.Text = "تم الأرسال";
             button.BackgroundColor = Colors.Gray;
         }
