@@ -1,15 +1,15 @@
 ﻿using SQLite;
 using TP.Methods;
+using TP.Methods.actions;
 
 namespace TP.Pages.Teacher;
 
 public partial class EditPostPage : ContentPage
 {
-    public readonly SQLiteAsyncConnection _database;
-    string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
+    private MineSQLite _sqlite = new MineSQLite();
 
-	public int SubId;//Subject Id
-	public int PTNum; //Post Type Number
+    public int SubId; // Subject Id
+	public int PTNum;   // Post Type Number
 	public string PostId;
     private FileResult result;
 
@@ -18,7 +18,6 @@ public partial class EditPostPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SubId = subid;
-		_database = new SQLiteAsyncConnection(dbPath);
 		PostId = postid;
 		PostRadio.IsChecked = true;
 		if(PostId == null) {return;}
@@ -46,8 +45,7 @@ public partial class EditPostPage : ContentPage
 			return;
         }
             // Perform delete operation
-        var postToDelete = await _database.Table<SubjectPosts>().FirstOrDefaultAsync(p => p.PostId == pid);
-        await _database.DeleteAsync(postToDelete);
+        await _sqlite.deleteSubjectPost(pid);
         await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
         await Navigation.PopAsync();
     }
@@ -130,13 +128,13 @@ public partial class EditPostPage : ContentPage
 				DeadLineTime = STime,
 				PostDesFile = fileContent
 			};
-			await _database.InsertAsync(post);
+			await _sqlite.insertSubjectPost(post);
 			await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
 		}
 		else
 		{
 			int pid = int.Parse(PostId);
-            var existingPost = await _database.Table<SubjectPosts>().FirstOrDefaultAsync(p => p.PostId == pid);
+            var existingPost = await _sqlite.getSubjectPost(pid);
 			if (existingPost != null){
 				existingPost.PostTitle = TitleEntry.Text;
 				existingPost.PostDes = DesEditor.Text;
@@ -144,7 +142,7 @@ public partial class EditPostPage : ContentPage
 				if(fileContent != null){
 				existingPost.PostDesFile = fileContent;
 			}
-				await _database.UpdateAsync(existingPost);
+				await _sqlite.updateSubjectPost(existingPost);
 				await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
 			}
 		}

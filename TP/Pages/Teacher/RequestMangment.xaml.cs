@@ -2,11 +2,13 @@
 using Syncfusion.Maui.Data;
 using System;
 using System.Collections.ObjectModel;
+using TP.Methods.actions;
 
 namespace TP.Pages.Teacher;
 
 public partial class RequestMangment : ContentPage{
-    private readonly SQLiteAsyncConnection _database;
+    private MineSQLite _sqlite = new MineSQLite();
+
     public ObservableCollection<RequestJoinSubject> RequestsColl { get; set; }
     public int SubIds;
     public RequestMangment(int subid)
@@ -14,8 +16,7 @@ public partial class RequestMangment : ContentPage{
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable nAavigation bar for this page
 
-        string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-        _database = new SQLiteAsyncConnection(dbPath);
+
         SubIds = subid;
         
         RequestsColl = new ObservableCollection<RequestJoinSubject>();
@@ -31,7 +32,7 @@ public partial class RequestMangment : ContentPage{
     }
     private async Task LoadRequests(){
         RequestsColl.Clear();
-        var requests = await _database.Table<RequestJoinSubject>().Where(d => d.SubId == SubIds).ToListAsync();
+        var requests =  await _sqlite.getRequestJoinSubjectsBySubId(SubIds);
         foreach (var req in requests)
         {
             RequestsColl.Add(req);
@@ -58,13 +59,12 @@ public partial class RequestMangment : ContentPage{
                 Deg = 0,
                 MiddelDeg = 0,
             };
-            await _database.InsertAsync(std);
+            await _sqlite.insertDegree(std);
         }
         
         await Task.Delay(500);
 
-        var req = await _database.Table<RequestJoinSubject>().FirstOrDefaultAsync(d => d.ReqId == swipedItem.ReqId);
-        await _database.DeleteAsync(req);
+        await _sqlite.deleteRequestJoin(swipedItem.ReqId);
         RequestsColl.Remove(swipedItem);
       
 

@@ -1,15 +1,17 @@
 ﻿using SQLite;
+using SQLitePCL;
 using System.Collections.ObjectModel;
 using TP.Methods;
+using TP.Methods.actions;
 
 namespace TP.Pages.Teacher;
 
 public partial class SubjectCenterTeacher : ContentPage
 {
-    string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YourDatabaseName.db");
-    public readonly SQLiteAsyncConnection _database;
     public ObservableCollection<SubjectPosts> Posts { get; set; }
     private ObservableCollection<DegreeTable> DegreeTableGetter;
+    private MineSQLite _sqlite = new MineSQLite();
+
     public ObservableCollection<DegreeTable> DegreeTableSetter
     {
         get => DegreeTableGetter;
@@ -32,7 +34,6 @@ public partial class SubjectCenterTeacher : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SSubId = subid;
-        _database = new SQLiteAsyncConnection(dbPath);
         Books = new ObservableCollection<SubjectBooks>();
         Posts = new ObservableCollection<SubjectPosts>();
         DegreeTableGetter = new ObservableCollection<DegreeTable>();
@@ -56,12 +57,10 @@ public partial class SubjectCenterTeacher : ContentPage
         MenuPopupWindow.IsVisible = false;
     }
     private async Task LoadPosts(){
+        var data = await _sqlite.getSubjectPostsBySubId(SSubId);
+        var posts = data.OrderByDescending(p => p.PostDate).ToList();
         Posts.Clear();
-        var posts = await _database.Table<SubjectPosts>()
-            .Where(b => b.SubId == SSubId)
-            .OrderByDescending(b => b.PostDate)
-            .ToListAsync();
-        if (posts.Count == 0) {
+            if (posts.Count == 0) {
             Emptys[0] = true;
             return;
         }
@@ -71,8 +70,8 @@ public partial class SubjectCenterTeacher : ContentPage
         Emptys[0] = false;
     }
     private async Task LoadData(){
-        var degreeTableData = await _database.Table<DegreeTable>().Where(s => s.SubId == SSubId).ToListAsync();
-            DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
+        var degreeTableData = await _sqlite.getDegreeTablesBySubId(SSubId);
+        DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
         if (degreeTableData.Count == 0)
         {
             Emptys[1] = true;
@@ -81,10 +80,7 @@ public partial class SubjectCenterTeacher : ContentPage
         Emptys[1] = false;
     }
     private async Task LoadBooks(){
-        var books = await _database.Table<SubjectBooks>()
-            .Where(b => b.SubId == SSubId)
-            .OrderByDescending(b => b.UploadDate)
-            .ToListAsync();
+        var books = await _sqlite.getSubjectBooksBySubId(SSubId);
 
         Books.Clear();
         
@@ -243,7 +239,7 @@ public partial class SubjectCenterTeacher : ContentPage
                     UploadDate = DateTime.Now,
                 };
 
-                await _database.InsertAsync(pdfFile);
+                await _sqlite.insertSubjectBook(pdfFile);
 
                 //auto post if new book add
                 var pdfPost = new SubjectPosts
@@ -254,7 +250,7 @@ public partial class SubjectCenterTeacher : ContentPage
                     PostDate = DateTime.Now,
                     DeadLineTime = null,
                 };
-                await _database.InsertAsync(pdfPost);
+                await _sqlite.insertSubjectPost(pdfPost);
                 PopupEditBookNameWindow.IsVisible = false;
                 BookNameEntry.Text = "";
                 //to reload data
@@ -300,8 +296,8 @@ public partial class SubjectCenterTeacher : ContentPage
             bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {delbook.BookName}؟", "نعم", "لا");
             if (!confirm){return;}
 
-            await _database.DeleteAsync(delbook);
-            Books.Remove(delbook);
+            await _sqlite.deleteSubjectBook(delbook);
+        Books.Remove(delbook);
             await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
     }
 
@@ -330,10 +326,10 @@ public partial class SubjectCenterTeacher : ContentPage
             return;
         }
 
-        var deg = await _database.Table<DegreeTable>().FirstOrDefaultAsync(d => d.StdName == namevar && d.SubId == SSubId);
+        var deg = await _sqlite.getDegreeByStdNameAndSubId(namevar, SSubId);
         deg.Deg = float.Parse(DegreeEntry.Text);
         deg.MiddelDeg = float.Parse(MidDegreeEntry.Text);
-        await _database.UpdateAsync(deg);
+        await _sqlite.updateDegree(deg);
         PopupEditDegreeWindow.IsVisible = false;
         await LoadData();
     }
@@ -346,8 +342,8 @@ public partial class SubjectCenterTeacher : ContentPage
         bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
         if (!isConfirmed) { return; }
         
-        var DelDeg = await _database.Table<DegreeTable>().FirstOrDefaultAsync(d => d.StdName == namevar && d.SubId == SSubId);
-        await _database.DeleteAsync(DelDeg);
+        var DelDeg = await _sqlite.getDegreeByStdNameAndSubId(namevar, SSubId);
+        await _sqlite.deleteDegree(DelDeg);
         PopupEditDegreeWindow.IsVisible = false;
         await LoadData();
     }
@@ -381,8 +377,7 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
         int pid = int.Parse(IdLblPopup.Text);
-        var desFile = await _database.Table<SubjectPosts>()
-           .FirstOrDefaultAsync(a => a.PostId == pid);
+        var desFile = await _sqlite.getSubjectPost(pid);
 
 
         // Write the file to the temporary directory
