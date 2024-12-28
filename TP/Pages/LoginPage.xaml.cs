@@ -33,7 +33,7 @@ public partial class LoginPage : ContentPage
         }
         string username = UsernameEntry.Text.ToLower();
         string password = PasswordEntry.Text;
-        var IfUserExist = _sqlite.UserLoginChecker(username, password).Result;
+        var IfUserExist = await _sqlite.UserLoginChecker(username, password);
         if (IfUserExist == null)
         {
             await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");

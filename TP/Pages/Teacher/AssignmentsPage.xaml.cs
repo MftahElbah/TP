@@ -33,7 +33,7 @@ public partial class AssignmentsPage : ContentPage
 
     private async Task LoadAvailableAssignments()
     {
-        var assignments =  _sqlite.getSubjectAssignmentsByPost(postid).Result;
+        var assignments =  await _sqlite.getSubjectAssignmentsByPost(postid);
 
         AssignmentsForListView.Clear();
         foreach (var assignment in assignments)

@@ -44,7 +44,7 @@ public partial class SubjectSelectionPage : ContentPage
             case 1: // Teacher
                 AddBtn.IsVisible = true;
                 NoSubExist.IsVisible = false;
-                var teacherSubjects = _sqlite.getSubByUser().Result;
+                var teacherSubjects = await _sqlite.getSubByUser();
                 if (teacherSubjects.Count == 0)
                 {
                     NoSubExist.IsVisible = true;
@@ -59,8 +59,8 @@ public partial class SubjectSelectionPage : ContentPage
 
             case 2: // Student
                 SearchBtn.IsVisible = true;
-                var stdInSub = _sqlite.getDegreeBySessionName().Result;
-                var allSubjects = _sqlite.getSubTable().Result;
+                var stdInSub = await _sqlite.getDegreeBySessionName();
+                var allSubjects = await _sqlite.getSubTable();
 
                 foreach (var studentSubject in stdInSub)
                 {

@@ -162,7 +162,7 @@ namespace TP.Methods.actions
 
         public async Task<int> deleteSubjectPost(int postId)
         {
-            var post = getSubjectPost(postId).Result;
+            var post = await getSubjectPost(postId);
             int rows = await _database.DeleteAsync(post);
             return rows;
         }

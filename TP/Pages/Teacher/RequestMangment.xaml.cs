@@ -32,7 +32,7 @@ public partial class RequestMangment : ContentPage{
     }
     private async Task LoadRequests(){
         RequestsColl.Clear();
-        var requests =  _sqlite.getRequestJoinSubjectsBySubId(SubIds).Result;
+        var requests =  await _sqlite.getRequestJoinSubjectsBySubId(SubIds);
         foreach (var req in requests)
         {
             RequestsColl.Add(req);

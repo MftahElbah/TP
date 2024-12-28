@@ -134,7 +134,7 @@ public partial class EditPostPage : ContentPage
 		else
 		{
 			int pid = int.Parse(PostId);
-            var existingPost = _sqlite.getSubjectPost(pid).Result;
+            var existingPost = await _sqlite.getSubjectPost(pid);
 			if (existingPost != null){
 				existingPost.PostTitle = TitleEntry.Text;
 				existingPost.PostDes = DesEditor.Text;

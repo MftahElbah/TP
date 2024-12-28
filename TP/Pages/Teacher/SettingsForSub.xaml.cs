@@ -23,7 +23,7 @@ public partial class SettingsForSub : ContentPage{
     }
     
     private async Task LoadSelectedSub(){
-        var sub = _sqlite.getSubBySubId(SubId).Result;
+        var sub = await _sqlite.getSubBySubId(SubId);
             NameEntry.Text = sub.SubName;
             ShowDegSwitch.IsToggled = sub.ShowDeg;
     }
@@ -44,7 +44,7 @@ public partial class SettingsForSub : ContentPage{
         }        
         try
         {
-            var Sub = _sqlite.getSubBySubId(SubId).Result;
+            var Sub = await _sqlite.getSubBySubId(SubId);
             if (Sub != null){
                 Sub.SubName = Name;
                 Sub.ShowDeg = ShowDegSwitch.IsToggled;
@@ -70,15 +70,15 @@ public partial class SettingsForSub : ContentPage{
     private async void AgreeDeleteClicked(object sender, EventArgs e)
     {
         string password = PasswordEntry.Text; // Retrieve entered password
-        var agree = _sqlite.getUserAccountById(UserSession.UserId).Result;
+        var agree = await _sqlite.getUserAccountById(UserSession.UserId);
         if (agree == null || string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
 
         // Deletes all branches associated with the department.
        
-        var SubStdToDelete = _sqlite.getDegreeTablesBySubId(SubId).Result;
-        var booksToDelete = _sqlite.getSubjectBooksBySubId(SubId).Result;
-        var postsToDelete = _sqlite.getSubjectPostsBySubId(SubId).Result;
-        var Sub = _sqlite.getSubBySubId(SubId).Result;
+        var SubStdToDelete = await _sqlite.getDegreeTablesBySubId(SubId);
+        var booksToDelete = await _sqlite.getSubjectBooksBySubId(SubId);
+        var postsToDelete = await _sqlite.getSubjectPostsBySubId(SubId);
+        var Sub = await _sqlite.getSubBySubId(SubId);
         foreach (var delete in SubStdToDelete)
         {
             await _sqlite.deleteDegree(delete); // Deletes the branches from the
