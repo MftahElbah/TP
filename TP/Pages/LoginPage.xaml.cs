@@ -5,7 +5,8 @@ namespace TP.Pages;
 
 public partial class LoginPage : ContentPage
 {
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
+
     public LoginPage()
 	{
 		InitializeComponent();
@@ -21,7 +22,7 @@ public partial class LoginPage : ContentPage
 
     private async Task DeleteSession()
     {
-        _sqlite.deleteSession();
+        database.deleteSession();
     }
 
     private async void LoginBtnClicked(object sender, EventArgs e)
@@ -33,7 +34,7 @@ public partial class LoginPage : ContentPage
         }
         string username = UsernameEntry.Text.ToLower();
         string password = PasswordEntry.Text;
-        var IfUserExist = await _sqlite.UserLoginChecker(username, password);
+        var IfUserExist = await database.UserLoginChecker(username, password);
         if (IfUserExist == null)
         {
             await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");

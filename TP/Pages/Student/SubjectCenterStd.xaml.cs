@@ -7,7 +7,7 @@ namespace TP.Pages.Student;
 
 public partial class SubjectCenterStd : ContentPage
 {
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public ObservableCollection<SubjectPosts> Posts { get; set; }
     public ObservableCollection<SubjectBooks> Books { get; set; }
@@ -39,7 +39,7 @@ public partial class SubjectCenterStd : ContentPage
     private async Task LoadPosts()
     {
         Posts.Clear();
-        var data = await _sqlite.getSubjectPostsBySubId(SubId);
+        var data = await database.getSubjectPostsBySubId(SubId);
         var posts = data
             .OrderByDescending(b => b.PostDate)
             .ToList();
@@ -56,7 +56,7 @@ public partial class SubjectCenterStd : ContentPage
     }
     private async Task LoadBooks()
     {
-        var data = await _sqlite.getSubjectBooksBySubId(SubId);
+        var data = await database.getSubjectBooksBySubId(SubId);
        var books = data     
             .OrderByDescending(b => b.UploadDate)
             .ToList();
@@ -77,7 +77,7 @@ public partial class SubjectCenterStd : ContentPage
     }
     //Nav Bar
     private async void ShowDegreeClicked(object sender, EventArgs e) {
-        var data = await _sqlite.getDegreeTableBySubIdAndStdName(SubId);
+        var data = await database.getDegreeTableBySubIdAndStdName(SubId);
         var deg = data.FirstOrDefault();
         await DisplayAlert("درجات", $"الأعمال:{deg.Deg}\n الجزئي:{deg.MiddelDeg} \n المجموع:{deg.Total}","حسنا");
     }
@@ -179,7 +179,7 @@ public partial class SubjectCenterStd : ContentPage
         ShowAssignments.BackgroundColor = Colors.Gray;
             return ;
         }
-        var isUploaded = await _sqlite.getSubjectASsignmentByPostIdAndStdId(SelectedPost.PostId);
+        var isUploaded = await database.getSubjectASsignmentByPostIdAndStdId(SelectedPost.PostId);
             
         if (isUploaded != null) { 
         ShowAssignments.IsEnabled = false;
@@ -228,7 +228,7 @@ public partial class SubjectCenterStd : ContentPage
     private async void ShowDesFileBtnClicked(object sender, EventArgs e)
     {
         int pid = int.Parse(IdLblPopup.Text);
-        var desFile = await _sqlite.getSubjectPost(pid);
+        var desFile = await database.getSubjectPost(pid);
           
 
 
@@ -292,7 +292,7 @@ public partial class SubjectCenterStd : ContentPage
 
                 };
 
-                await _sqlite.insertSubjectAssignment(assignment);
+                await database.insertSubjectAssignment(assignment);
 
                 await DisplayAlert("تمت", "تم رفع العملية بنجاح", "حسنا");
             PostPopupWindow.IsVisible = false;

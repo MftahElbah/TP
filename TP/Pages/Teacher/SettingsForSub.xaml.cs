@@ -5,7 +5,7 @@ namespace TP.Pages.Teacher;
 
 public partial class SettingsForSub : ContentPage{
     public int SubId;
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
 
     public SettingsForSub(int id){
@@ -23,7 +23,7 @@ public partial class SettingsForSub : ContentPage{
     }
     
     private async Task LoadSelectedSub(){
-        var sub = await _sqlite.getSubBySubId(SubId);
+        var sub = await database.getSubBySubId(SubId);
             NameEntry.Text = sub.SubName;
             ShowDegSwitch.IsToggled = sub.ShowDeg;
     }
@@ -44,11 +44,11 @@ public partial class SettingsForSub : ContentPage{
         }        
         try
         {
-            var Sub = await _sqlite.getSubBySubId(SubId);
+            var Sub = await database.getSubBySubId(SubId);
             if (Sub != null){
                 Sub.SubName = Name;
                 Sub.ShowDeg = ShowDegSwitch.IsToggled;
-                await _sqlite.updateSubBySubId(Sub);
+                await database.updateSubBySubId(Sub);
             }
             await DisplayAlert("تم التعديل", "تم التعديل بنجاح", "حسنا");
 
@@ -70,18 +70,18 @@ public partial class SettingsForSub : ContentPage{
     private async void AgreeDeleteClicked(object sender, EventArgs e)
     {
         string password = PasswordEntry.Text; // Retrieve entered password
-        var agree = await _sqlite.getUserAccountById(UserSession.UserId);
+        var agree = await database.getUserAccountById(UserSession.UserId);
         if (agree == null || string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
 
         // Deletes all branches associated with the department.
        
-        var SubStdToDelete = await _sqlite.getDegreeTablesBySubId(SubId);
-        var booksToDelete = await _sqlite.getSubjectBooksBySubId(SubId);
-        var postsToDelete = await _sqlite.getSubjectPostsBySubId(SubId);
-        var Sub = await _sqlite.getSubBySubId(SubId);
+        var SubStdToDelete = await database.getDegreeTablesBySubId(SubId);
+        var booksToDelete = await database.getSubjectBooksBySubId(SubId);
+        var postsToDelete = await database.getSubjectPostsBySubId(SubId);
+        var Sub = await database.getSubBySubId(SubId);
         foreach (var delete in SubStdToDelete)
         {
-            await _sqlite.deleteDegree(delete); // Deletes the branches from the
+            await database.deleteDegree(delete); // Deletes the branches from the
                                                 //
                                                 //
                                                 //
@@ -89,14 +89,14 @@ public partial class SettingsForSub : ContentPage{
         }
         foreach (var book in booksToDelete)
         {
-            await _sqlite.deleteSubjectBook(book); // Deletes the branches from the
+            await database.deleteSubjectBook(book); // Deletes the branches from the
                                                    // .
         }
         foreach (var post in postsToDelete)
         {
-            await _sqlite.deletePost(post); // Deletes the branches from the database.
+            await database.deletePost(post); // Deletes the branches from the database.
         }
-        await _sqlite.deleteSub(Sub); // Deletes the department from the database.
+        await database.deleteSub(Sub); // Deletes the department from the database.
         await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
 
         if (Navigation?.NavigationStack?.Count > 2)

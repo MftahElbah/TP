@@ -10,7 +10,7 @@ namespace TP.Pages;
 public partial class SubjectSelectionPage : ContentPage
 {
 
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public ObservableCollection<SubTable> Subjects { get; set; }
    
@@ -44,7 +44,7 @@ public partial class SubjectSelectionPage : ContentPage
             case 1: // Teacher
                 AddBtn.IsVisible = true;
                 NoSubExist.IsVisible = false;
-                var teacherSubjects = await _sqlite.getSubByUser();
+                var teacherSubjects = await database.getSubByUser();
                 if (teacherSubjects.Count == 0)
                 {
                     NoSubExist.IsVisible = true;
@@ -59,8 +59,8 @@ public partial class SubjectSelectionPage : ContentPage
 
             case 2: // Student
                 SearchBtn.IsVisible = true;
-                var stdInSub = await _sqlite.getDegreeBySessionName();
-                var allSubjects = await _sqlite.getSubTable();
+                var stdInSub = await database.getDegreeBySessionName();
+                var allSubjects = await database.getSubTable();
 
                 foreach (var studentSubject in stdInSub)
                 {
@@ -100,7 +100,7 @@ public partial class SubjectSelectionPage : ContentPage
                 UserId = UserSession.UserId,
                 Password = UserSession.Password,
             };
-            await _sqlite.insertSession(session);
+            await database.insertSession(session);
 
         SaveSession.IsVisible = false;
     }
@@ -141,7 +141,7 @@ public partial class SubjectSelectionPage : ContentPage
                SubTeacherName = UserSession.Name,
                ShowDeg = false,
                };
-           await _sqlite.insertSub(Sub);
+           await database.insertSub(Sub);
            await DisplayAlert("تمت", "تم انشاء المادة بنجاح", "حسنا"); 
         }
         catch (Exception ex){
