@@ -10,7 +10,7 @@ public partial class SubjectCenterTeacher : ContentPage
 {
     public ObservableCollection<SubjectPosts> Posts { get; set; }
     private ObservableCollection<DegreeTable> DegreeTableGetter;
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public ObservableCollection<DegreeTable> DegreeTableSetter
     {
@@ -57,7 +57,7 @@ public partial class SubjectCenterTeacher : ContentPage
         MenuPopupWindow.IsVisible = false;
     }
     private async Task LoadPosts(){
-        var data = await _sqlite.getSubjectPostsBySubId(SSubId);
+        var data = await database.getSubjectPostsBySubId(SSubId);
         var posts = data.OrderByDescending(p => p.PostDate).ToList();
         Posts.Clear();
             if (posts.Count == 0) {
@@ -70,7 +70,7 @@ public partial class SubjectCenterTeacher : ContentPage
         Emptys[0] = false;
     }
     private async Task LoadData(){
-        var degreeTableData = await _sqlite.getDegreeTablesBySubId(SSubId);
+        var degreeTableData = await database.getDegreeTablesBySubId(SSubId);
         DegreeTableSetter = new ObservableCollection<DegreeTable>(degreeTableData);
         if (degreeTableData.Count == 0)
         {
@@ -80,7 +80,7 @@ public partial class SubjectCenterTeacher : ContentPage
         Emptys[1] = false;
     }
     private async Task LoadBooks(){
-        var books = await _sqlite.getSubjectBooksBySubId(SSubId);
+        var books = await database.getSubjectBooksBySubId(SSubId);
 
         Books.Clear();
         
@@ -239,7 +239,7 @@ public partial class SubjectCenterTeacher : ContentPage
                     UploadDate = DateTime.Now,
                 };
 
-                await _sqlite.insertSubjectBook(pdfFile);
+                await database.insertSubjectBook(pdfFile);
 
                 //auto post if new book add
                 var pdfPost = new SubjectPosts
@@ -250,7 +250,7 @@ public partial class SubjectCenterTeacher : ContentPage
                     PostDate = DateTime.Now,
                     DeadLineTime = null,
                 };
-                await _sqlite.insertSubjectPost(pdfPost);
+                await database.insertSubjectPost(pdfPost);
                 PopupEditBookNameWindow.IsVisible = false;
                 BookNameEntry.Text = "";
                 //to reload data
@@ -296,7 +296,7 @@ public partial class SubjectCenterTeacher : ContentPage
             bool confirm = await DisplayAlert("تأكيد الحذف", $"هل تريد حذف الكتاب: {delbook.BookName}؟", "نعم", "لا");
             if (!confirm){return;}
 
-            await _sqlite.deleteSubjectBook(delbook);
+            await database.deleteSubjectBook(delbook);
         Books.Remove(delbook);
             await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
     }
@@ -326,10 +326,10 @@ public partial class SubjectCenterTeacher : ContentPage
             return;
         }
 
-        var deg = await _sqlite.getDegreeByStdNameAndSubId(namevar, SSubId);
+        var deg = await database.getDegreeByStdNameAndSubId(namevar, SSubId);
         deg.Deg = float.Parse(DegreeEntry.Text);
         deg.MiddelDeg = float.Parse(MidDegreeEntry.Text);
-        await _sqlite.updateDegree(deg);
+        await database.updateDegree(deg);
         PopupEditDegreeWindow.IsVisible = false;
         await LoadData();
     }
@@ -342,8 +342,8 @@ public partial class SubjectCenterTeacher : ContentPage
         bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
         if (!isConfirmed) { return; }
         
-        var DelDeg = await _sqlite.getDegreeByStdNameAndSubId(namevar, SSubId);
-        await _sqlite.deleteDegree(DelDeg);
+        var DelDeg = await database.getDegreeByStdNameAndSubId(namevar, SSubId);
+        await database.deleteDegree(DelDeg);
         PopupEditDegreeWindow.IsVisible = false;
         await LoadData();
     }
@@ -377,7 +377,7 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
         int pid = int.Parse(IdLblPopup.Text);
-        var desFile = await _sqlite.getSubjectPost(pid);
+        var desFile = await database.getSubjectPost(pid);
 
 
         // Write the file to the temporary directory

@@ -6,7 +6,7 @@ namespace TP.Pages.Teacher;
 
 public partial class EditPostPage : ContentPage
 {
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public int SubId; // Subject Id
 	public int PTNum;   // Post Type Number
@@ -45,7 +45,7 @@ public partial class EditPostPage : ContentPage
 			return;
         }
             // Perform delete operation
-        await _sqlite.deleteSubjectPost(pid);
+        await database.deleteSubjectPost(pid);
         await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
         await Navigation.PopAsync();
     }
@@ -128,13 +128,13 @@ public partial class EditPostPage : ContentPage
 				DeadLineTime = STime,
 				PostDesFile = fileContent
 			};
-			await _sqlite.insertSubjectPost(post);
+			await database.insertSubjectPost(post);
 			await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
 		}
 		else
 		{
 			int pid = int.Parse(PostId);
-            var existingPost = await _sqlite.getSubjectPost(pid);
+            var existingPost = await database.getSubjectPost(pid);
 			if (existingPost != null){
 				existingPost.PostTitle = TitleEntry.Text;
 				existingPost.PostDes = DesEditor.Text;
@@ -142,7 +142,7 @@ public partial class EditPostPage : ContentPage
 				if(fileContent != null){
 				existingPost.PostDesFile = fileContent;
 			}
-				await _sqlite.updateSubjectPost(existingPost);
+				await database.updateSubjectPost(existingPost);
 				await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
 			}
 		}

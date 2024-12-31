@@ -8,7 +8,7 @@ namespace TP.Pages.Student;
 
 public partial class RequestSubjectPage : ContentPage
 {
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public ObservableCollection<SubTable> Subjects { get; set; }
     public RequestSubjectPage()
@@ -30,13 +30,13 @@ public partial class RequestSubjectPage : ContentPage
 
     private async Task LoadAvailableSubjects()
     {
-        var subjects = await _sqlite.getSubTable();
+        var subjects = await database.getSubTable();
         
         Subjects.Clear();
         foreach (var subject in subjects)
         { 
-            var SubInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
-            var StdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);
+            var SubInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
+            var StdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);
             if (SubInReq.Count == 0 && StdInTable.Count == 0) {
                 Subjects.Add(subject);
             }
@@ -54,13 +54,13 @@ public partial class RequestSubjectPage : ContentPage
         if (string.IsNullOrEmpty(searchText))
         {
             // Load all subjects with filtering logic
-            var subjects = await _sqlite.getSubTable();
+            var subjects = await database.getSubTable();
             Subjects.Clear();
 
             foreach (var subject in subjects)       
             {
-                var subInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
-                var stdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);  
+                var subInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
+                var stdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);  
 
                 if (subInReq.Count == 0 && stdInTable.Count == 0)
                 {
@@ -72,7 +72,7 @@ public partial class RequestSubjectPage : ContentPage
         }
 
         // Search for subjects with names matching the search text
-        var filteredSubjects = await _sqlite.searchSubTable(searchText);
+        var filteredSubjects = await database.searchSubTable(searchText);
         Subjects.Clear();
         if (filteredSubjects.Count == 0) {
             EmptyMessage.IsVisible = true;
@@ -81,8 +81,8 @@ public partial class RequestSubjectPage : ContentPage
         EmptyMessage.IsVisible = false;
         foreach (var subject in filteredSubjects)
         {
-            var subInReq = await _sqlite.getRequestJoinBySubIdAndUserId(subject.SubId);
-            var stdInTable = await _sqlite.getDegreeTableBySubIdAndStdName(subject.SubId);
+            var subInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
+            var stdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);
 
 
             if (subInReq.Count == 0 && stdInTable.Count == 0)
@@ -116,7 +116,7 @@ public partial class RequestSubjectPage : ContentPage
                 Name = UserSession.Name,
                 RequestDate = DateTime.Now,
             };
-            await _sqlite.insertRequestJoin(request);
+            await database.insertRequestJoin(request);
             button.Text = "تم الأرسال";
             button.BackgroundColor = Colors.Gray;
         }

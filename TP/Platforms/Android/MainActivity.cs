@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Firebase;
 
 namespace TP
 {
@@ -12,6 +13,7 @@ namespace TP
         {
             base.OnCreate(savedInstanceState);
             Instance = this;
+            FirebaseApp.InitializeApp(ApplicationContext);
             // Change the status bar color
             Window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#1a1a1a")); // Replace with your color
         }

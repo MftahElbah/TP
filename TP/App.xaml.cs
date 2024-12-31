@@ -7,7 +7,7 @@ namespace TP
 {
     public partial class App : Application
     {
-        private MineSQLite _sqlite = new MineSQLite();
+                Database database = Database.SelectedDatabase;
 
         public App(){
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
@@ -23,9 +23,14 @@ namespace TP
         {
             try
             {
+                Database.SelectedDatabase = new firebaseDB(); // new SQLiteDB(); if you want to use SQLite
+                database = Database.SelectedDatabase;
+
+              
+                database.DatabaseStarted();
+                
                 //to preinsert data
-                var dbHelper = new DatabaseHelper(_sqlite.dbPath);
-                await dbHelper.InitializeDatabaseAsync();
+                
                 await InitializeApp();
             }
             catch (Exception ex)
@@ -49,7 +54,7 @@ namespace TP
         {
             try
             {
-                var session = await _sqlite.UserSessionChecker();
+                var session = await database.UserSessionChecker();
                 if (session == null)
                 {
                     if (Application.Current?.Windows.Count > 0)
@@ -59,7 +64,7 @@ namespace TP
                     return;
                 }
 
-                var user = await _sqlite.loginSecction(session.Password, session.UserId);
+                var user = await database.loginSecction(session.Password, session.UserId);
                                 
 
                 if (user == null)

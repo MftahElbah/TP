@@ -7,7 +7,7 @@ using TP.Methods.actions;
 namespace TP.Pages.Teacher;
 
 public partial class RequestMangment : ContentPage{
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
 
     public ObservableCollection<RequestJoinSubject> RequestsColl { get; set; }
     public int SubIds;
@@ -32,7 +32,7 @@ public partial class RequestMangment : ContentPage{
     }
     private async Task LoadRequests(){
         RequestsColl.Clear();
-        var requests =  await _sqlite.getRequestJoinSubjectsBySubId(SubIds);
+        var requests =  await database.getRequestJoinSubjectsBySubId(SubIds);
         foreach (var req in requests)
         {
             RequestsColl.Add(req);
@@ -59,12 +59,12 @@ public partial class RequestMangment : ContentPage{
                 Deg = 0,
                 MiddelDeg = 0,
             };
-            await _sqlite.insertDegree(std);
+            await database.insertDegree(std);
         }
         
         await Task.Delay(500);
 
-        await _sqlite.deleteRequestJoin(swipedItem.ReqId);
+        await database.deleteRequestJoin(swipedItem.ReqId);
         RequestsColl.Remove(swipedItem);
       
 

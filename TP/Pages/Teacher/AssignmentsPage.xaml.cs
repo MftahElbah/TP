@@ -7,7 +7,7 @@ namespace TP.Pages.Teacher;
 
 public partial class AssignmentsPage : ContentPage
 {
-    private MineSQLite _sqlite = new MineSQLite();
+    Database database = Database.SelectedDatabase;
     public ObservableCollection<SubjectAssignments> AssignmentsForListView { get; set; }
     public int postid;
     public AssignmentsPage(int pid)
@@ -33,7 +33,7 @@ public partial class AssignmentsPage : ContentPage
 
     private async Task LoadAvailableAssignments()
     {
-        var assignments =  await _sqlite.getSubjectAssignmentsByPost(postid);
+        var assignments =  await database.getSubjectAssignmentsByPost(postid);
 
         AssignmentsForListView.Clear();
         foreach (var assignment in assignments)
