@@ -16,7 +16,7 @@ namespace TP.Methods.actions
 {
     internal class firebaseDB : Database
     {
-        public  IFirebaseConfig fc = new FirebaseConfig()
+        public IFirebaseConfig fc = new FirebaseConfig
         {
             AuthSecret = "7gviqqKuDYSHOM6kjHznZjS5u1VTgjAx3D1uq7X9",
             BasePath = "https://ctsapp-9de50-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -511,10 +511,25 @@ namespace TP.Methods.actions
             
             try
             {
-                FirebaseResponse al =  client.Get("User/Account");
+                /*
+                Old Code:
+
+                FirebaseResponse al = client.Get("User/Account");
                 List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(al.Body.ToString());
-                UsersAccountTable result = LUS.FirstOrDefault(e => e.Password == password && username == e.Username);
-                return result; 
+                UsersAccountTable result = LUS.FirstOrDefault(e => e.Username == username && e.Password == password);
+                return result;
+                */
+
+                //New Code:
+                FirebaseResponse response = client.Get("User/Account");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                var usersDict = JsonConvert.DeserializeObject<Dictionary<string, UsersAccountTable>>(response.Body);
+                var user = usersDict?.Values.FirstOrDefault(u => u.Username == username && u.Password == password);
+                return user;
             }
             catch(Exception error)
             {

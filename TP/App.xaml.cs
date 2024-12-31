@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLitePCL;
 using TP.Methods;
 using TP.Methods.actions;
 using TP.Pages;
@@ -24,6 +25,7 @@ namespace TP
             try
             {
                 Database.SelectedDatabase = new firebaseDB(); // new SQLiteDB(); if you want to use SQLite
+                //Database.SelectedDatabase = new MineSQLite(); // new SQLiteDB(); if you want to use SQLite
                 database = Database.SelectedDatabase;
 
               
