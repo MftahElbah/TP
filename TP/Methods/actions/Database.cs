@@ -89,6 +89,22 @@ namespace TP.Methods.actions
         {
             return new List<SubjectAssignments>();
         }
+        public virtual async Task<List<DegreeTable>> getDegree()
+        {
+            return new List<DegreeTable>();
+        }
+        public virtual async Task<List<RequestJoinSubject>> GetRequests()
+        {
+            return new List<RequestJoinSubject>();
+        }
+        public virtual async Task<List<SubjectBooks>> getsubjectBooks()
+        {
+            return new List<SubjectBooks>();
+        }
+        public virtual async Task<List<SubjectPosts>> GetSubjectPosts()
+        {
+            return new List<SubjectPosts>();
+        }
         public virtual async Task<List<SubjectPosts>> getSubjectPosts()
         {
             return new List<SubjectPosts>();
