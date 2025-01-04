@@ -1,16 +1,8 @@
-﻿using Android.Net.Wifi.Aware;
+﻿using Android.App;
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
-using Java.Security;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Android.Net.Http.SslCertificate;
-using static Java.Util.Jar.Attributes;
 
 namespace TP.Methods.actions
 {
@@ -57,6 +49,7 @@ namespace TP.Methods.actions
                     Password = session.Password
                 };
                 var SetData = await client.SetAsync("User/UserSession/" + set.UserId, set);
+                await SecureStorage.SetAsync("userid", set.UserId.ToString());
                 return 1;
             } 
             catch (Exception e) {
@@ -69,6 +62,7 @@ namespace TP.Methods.actions
         {
             try
             {
+                SecureStorage.Remove("userid");
                 var SetData = await client.DeleteAsync("User/UserSession/" + UserSession.UserId);
                 return 1;
             }
@@ -83,15 +77,26 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("User/UserSession");
+                FirebaseResponse response;
+                string userid = await SecureStorage.GetAsync("userid");
+                if (userid != null)
+                { 
+                    response = await client.GetAsync("User/UserSession/" + userid);
+                }
+                else
+                {
+                    return null;
+                }
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<UserSessionTable> LUS = JsonConvert.DeserializeObject<List<UserSessionTable>>(response.Body.ToString());
-                UserSessionTable result = LUS.FirstOrDefault(x => x.UserId == UserSession.UserId);
-                return result;
+                UserSessionTable LUS = JsonConvert.DeserializeObject<UserSessionTable>(response.Body.ToString());
+
+                UserSessionTable result = LUS;
+                    return result; 
+                
             } catch (Exception error)
             {
                 Console.WriteLine(error.Message);
@@ -714,14 +719,18 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("User/Account");
+                FirebaseResponse response = await client.GetAsync("User/Account/" + userid);
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
-                UsersAccountTable result = LUS.FirstOrDefault(e => e.Password == password && userid == e.UserId);
+                UsersAccountTable LUS = JsonConvert.DeserializeObject<UsersAccountTable>(response.Body.ToString());
+                if ( LUS.Password != password)
+                {
+                    return null;
+                }
+                UsersAccountTable result = LUS;
                 return result;
             }
             catch
