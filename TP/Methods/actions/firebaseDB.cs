@@ -83,8 +83,13 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("User/UserSession");
-                List<UserSessionTable> LUS = JsonConvert.DeserializeObject<List<UserSessionTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("User/UserSession");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<UserSessionTable> LUS = JsonConvert.DeserializeObject<List<UserSessionTable>>(response.Body.ToString());
                 UserSessionTable result = LUS.FirstOrDefault(x => x.UserId == UserSession.UserId);
                 return result;
             } catch (Exception error)
@@ -176,8 +181,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("degree");
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("degree");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                if (LUS == null) return new List<DegreeTable>();
+
                 List<DegreeTable> result = LUS.Where(x => x.StdName == UserSession.Name).ToList();
                 return result;
             }
@@ -190,8 +202,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("degree");
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("degree");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                if (LUS == null) return null;
+
                 DegreeTable result = LUS.FirstOrDefault(x => x.StdName == stdName && x.SubId == subId);
                 return result;
             }
@@ -204,8 +223,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("degree");
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("degree");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                if (LUS == null) return new List<DegreeTable>();
+
                 List<DegreeTable> result = LUS.Where(s => s.SubId == SubId && s.StdName == UserSession.Name).ToList();
                 return result;
             }
@@ -218,8 +244,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("degree");
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("degree");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                if (LUS == null) return new List<DegreeTable>();
+
                 List<DegreeTable> result = LUS.Where(s => s.SubId == SubId ).ToList();
                 return result;
             }
@@ -232,8 +265,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("request");
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("request");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                if (LUS == null) return new List<RequestJoinSubject>();
+
                 List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId ).ToList();
                 return result;
             }
@@ -246,8 +286,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("request");
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("request");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                if (LUS == null) return new List<RequestJoinSubject>();
+
                 List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
                 return result;
             }
@@ -260,8 +307,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("request");
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("request");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                if (LUS == null) return new List<RequestJoinSubject>();
+
                 List<RequestJoinSubject> result = LUS.Where(s => s.SubId == subId ).ToList();
                 return result;
             }
@@ -274,8 +328,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("sub");
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("sub");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                if (LUS == null) return null;
+
                 SubTable result = LUS.FirstOrDefault(s => s.SubId == subId);
                 return result;
             }
@@ -288,8 +349,14 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("sub");
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("sub");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                if (LUS == null) return new List<SubTable>();
                 List<SubTable> result = LUS.Where(s => s.UserId == UserSession.UserId).ToList();
                 return result;
             }
@@ -302,8 +369,13 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("assignment");
-                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("assignment");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
                 SubjectAssignments result = LUS.FirstOrDefault(s => s.PostId == postId && s.StdId == UserSession.UserId);
                 return result;
             }
@@ -316,8 +388,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("assignment");
-                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("assignment");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
+                if (LUS == null) return new List<SubjectAssignments>();
+
                 List<SubjectAssignments> result = LUS.Where(s => s.PostId == postId ).ToList();
                 return result;
             }
@@ -330,8 +409,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("Book");
-                List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("Book");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
+                if (LUS == null) return new List<SubjectBooks>();
+
                 List<SubjectBooks> result = LUS.Where(s => s.SubId == subId).ToList();
                 return result;
             }
@@ -344,8 +430,13 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("post");
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("post");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
                 SubjectPosts result = LUS.FirstOrDefault(s => s.PostId == postId);
                 return result;
             }
@@ -358,8 +449,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("post");
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("post");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                if (LUS == null) return new List<SubjectPosts>();
+
                 List<SubjectPosts> result = LUS.ToList();
                 return result;
             }
@@ -372,8 +470,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("post");
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("post");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                if (LUS == null) return new List<SubjectPosts>();
+
                 List<SubjectPosts> result = LUS.Where(e => e.SubId ==  subId).ToList();
                 return result;
             }
@@ -386,8 +491,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("sub");
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("sub");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                if (LUS == null) return new List<SubTable>();
+
                 List<SubTable> result = LUS.ToList();
                 return result;
             }
@@ -400,8 +512,13 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("User/Account");
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("User/Account");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
                 UsersAccountTable result = LUS.FirstOrDefault(e => e.UserId == userId);
                 return result;
             }
@@ -481,8 +598,13 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await client.GetAsync("User/Account");
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(al.Body.ToString());
+                FirebaseResponse response = await client.GetAsync("User/Account");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
                 UsersAccountTable result = LUS.FirstOrDefault(e => e.Password == password && userid == e.UserId);
                 return result;
             }
@@ -495,8 +617,15 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse al = await  client.GetAsync("sub");
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(al.Body.ToString());
+                FirebaseResponse response = await  client.GetAsync("sub");
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                if (LUS == null) return new List<SubTable>();
+
                 List<SubTable> result = LUS.Where(s => s.SubName.Contains(searchText) || s.SubTeacherName.Contains(searchText)).ToList();
                 return result;
 
@@ -514,14 +643,14 @@ namespace TP.Methods.actions
                 /*
                 Old Code:
 
-                FirebaseResponse al = client.Get("User/Account");
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(al.Body.ToString());
+                FirebaseResponse response = client.Get("User/Account");
+                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
                 UsersAccountTable result = LUS.FirstOrDefault(e => e.Username == username && e.Password == password);
                 return result;
                 */
 
                 //New Code:
-                FirebaseResponse response = client.Get("User/Account");
+                FirebaseResponse response = await client.GetAsync("User/Account");
                 if (response == null || response.Body == "null")
                 {
                     return null;

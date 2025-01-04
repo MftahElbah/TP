@@ -45,7 +45,7 @@ public partial class SubjectSelectionPage : ContentPage
                 AddBtn.IsVisible = true;
                 NoSubExist.IsVisible = false;
                 var teacherSubjects = await database.getSubByUser();
-                if (teacherSubjects.Count == 0)
+                if (teacherSubjects.Count == 0 )
                 {
                     NoSubExist.IsVisible = true;
                     NoSubExistSubTitle.Text = " يمكنك اضافة مواد عن طريق الزر الموجود بالاعلى يمين";
