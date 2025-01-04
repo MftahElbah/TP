@@ -189,7 +189,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("degree");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<DegreeTable>();
                 }
 
                 List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
@@ -201,7 +201,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<DegreeTable>();
             }
         }
         public override async Task<DegreeTable> getDegreeByStdNameAndSubId(string stdName, int subId)
@@ -232,7 +232,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("degree");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<DegreeTable>() ;
                 }
 
                 List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
@@ -244,7 +244,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<DegreeTable>();
             }
         }
         public override async Task<List<DegreeTable>> getDegreeTablesBySubId(int SubId)
@@ -254,7 +254,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("degree");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<DegreeTable>();
                 }
 
                 List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
@@ -266,7 +266,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<DegreeTable>();
             }
         }
         public override async Task<List<RequestJoinSubject>> getRequestJoinBySubIdAndUserId(int SubId)
@@ -276,7 +276,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("request");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<RequestJoinSubject>();
                 }
 
                 List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
@@ -288,7 +288,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<RequestJoinSubject>();
             }
         }
         public override async Task<List<RequestJoinSubject>> getREquestJoinSubjectBySubIdAndUserId(int SubId)
@@ -298,7 +298,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("request");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<RequestJoinSubject>();
                 }
 
                 List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
@@ -310,7 +310,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<RequestJoinSubject>();
             }
         }
         public override async Task<List<RequestJoinSubject>> getRequestJoinSubjectsBySubId(int subId)
@@ -320,7 +320,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("request");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<RequestJoinSubject>();
                 }
 
                 List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
@@ -332,23 +332,23 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<RequestJoinSubject>();
             }
         }
         public override async Task<SubTable> getSubBySubId(int subId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("sub");
+                FirebaseResponse response = await client.GetAsync("sub/" + subId);
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                SubTable LUS = JsonConvert.DeserializeObject<SubTable>(response.Body.ToString());
                 if (LUS == null) return null;
 
-                SubTable result = LUS.FirstOrDefault(s => s.SubId == subId);
+                SubTable result = LUS;
                 return result;
             }
             catch
@@ -363,7 +363,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("sub");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubTable>();
                 }
 
                 List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
@@ -375,21 +375,21 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubTable>();
             }
         }
         public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("assignment");
+                FirebaseResponse response = await client.GetAsync("assignment/" + postId);
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
-                SubjectAssignments result = LUS.FirstOrDefault(s => s.PostId == postId && s.StdId == UserSession.UserId);
+                SubjectAssignments LUS = JsonConvert.DeserializeObject<SubjectAssignments>(response.Body.ToString());
+                SubjectAssignments result = LUS;
                 return result;
             }
             catch
@@ -404,7 +404,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("assignment");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectAssignments>();
                 }
 
                 List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
@@ -416,7 +416,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectAssignments>();
             }
         }
         public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
@@ -426,7 +426,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("Book");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectBooks>();
                 }
 
                 List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
@@ -438,21 +438,21 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectBooks>();
             }
         }
         public override async Task<SubjectPosts> getSubjectPost(int postId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("post");
+                FirebaseResponse response = await client.GetAsync("post/" + postId);
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
-                SubjectPosts result = LUS.FirstOrDefault(s => s.PostId == postId);
+                SubjectPosts LUS = JsonConvert.DeserializeObject<SubjectPosts>(response.Body.ToString());
+                SubjectPosts result = LUS;
                 return result;
             }
             catch
@@ -467,7 +467,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("post");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectPosts>();
                 }
 
                 List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
@@ -479,7 +479,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectPosts>();
             }
         }
         public override async Task<List<SubjectPosts>> getSubjectPostsBySubId(int subId)
@@ -489,7 +489,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("post");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectPosts>();
                 }
 
                 List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
@@ -501,7 +501,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectPosts>();
             }
         }
         public override async Task<List<SubTable>> getSubTable()
@@ -511,7 +511,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("sub");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubTable>();
                 }
 
                 List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
@@ -523,21 +523,21 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubTable>();
             }
         }
         public override async Task<UsersAccountTable> getUserAccountById(int userId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("User/Account");
+                FirebaseResponse response = await client.GetAsync("User/Account/" + userId);
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
-                UsersAccountTable result = LUS.FirstOrDefault(e => e.UserId == userId);
+                UsersAccountTable LUS = JsonConvert.DeserializeObject<UsersAccountTable>(response.Body.ToString());
+                UsersAccountTable result = LUS;
                 return result;
             }
             catch
@@ -569,7 +569,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("degree");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<DegreeTable>();
                 }
 
                 List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
@@ -581,7 +581,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<DegreeTable>();
             }
         }
 
@@ -604,7 +604,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("request");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<RequestJoinSubject>();
                 }
 
                 List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
@@ -616,7 +616,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<RequestJoinSubject>();
             }
         }
         public override async Task<int> insertSub(SubTable subTable)
@@ -650,7 +650,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("book");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectBooks>();
                 }
 
                 List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
@@ -662,7 +662,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectBooks>();
             }
         }
         public override async Task<int> insertSubjectBook(SubjectBooks book)
@@ -686,7 +686,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("post");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubjectPosts>();
                 }
 
                 List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
@@ -698,7 +698,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubjectPosts>();
             }
         }
         public override async Task<int> insertSubjectPost(SubjectPosts subjectPosts)
@@ -745,7 +745,7 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await  client.GetAsync("sub");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return new List<SubTable>();
                 }
 
                 List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
@@ -758,7 +758,7 @@ namespace TP.Methods.actions
             }
             catch
             {
-                return null;
+                return new List<SubTable>();
             }
         }
         public override async Task<UsersAccountTable> UserLoginChecker(string username, string password)
