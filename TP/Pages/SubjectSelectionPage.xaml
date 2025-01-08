@@ -16,6 +16,8 @@
     
         <!-- NavBar -->
         <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Grid.Row="0" Padding="20">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                    
             <Button CornerRadius="40" 
                     Padding="15"
                     VerticalOptions="Center"
@@ -25,16 +27,34 @@
                     Clicked="AddClicked"
                     IsVisible="False"
                     >
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="GoogleIconsFont" 
+                     Glyph="{x:Static icon:IconFont.Post_add}" 
+                     StyleId="{x:StaticResource GoogleFont}" 
+                     Color="#1a1a1a"
+                     Size="24"
+                     />
+                    </Button.ImageSource>
+                </Button>
+            <Button CornerRadius="40" 
+                    Padding="15"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    BackgroundColor="#D3B05F"
+                    x:Name="CalenderBtn"
+                    Clicked="CalenderClicked"
+                    IsVisible="False"
+                    >
                 <Button.ImageSource>
                     <FontImageSource FontFamily="GoogleIconsFont" 
-                     Glyph="{x:Static icon:IconFont.Post_add}" 
+                     Glyph="{x:Static icon:IconFont.Calendar_month}" 
                      StyleId="{x:StaticResource GoogleFont}" 
                      Color="#1a1a1a"
                      Size="24"
                      />
                 </Button.ImageSource>
             </Button>
-                <Button CornerRadius="40" 
+            <Button CornerRadius="40" 
                     Padding="15"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
@@ -52,7 +72,9 @@
                      />
                 </Button.ImageSource>
             </Button>
-                <Button CornerRadius="40" 
+                </HorizontalStackLayout>    
+            
+            <Button CornerRadius="40" 
                     Padding="15"
                     VerticalOptions="Center"
                     HorizontalOptions="Center" 
@@ -67,18 +89,19 @@
                         />
                 </Button.ImageSource>
             </Button>
+               
         </FlexLayout>
         
             <!-- Main -->
-            <listview:SfListView ItemsSource="{Binding Subjects}"
-                     ItemTapped="OnItemTapped"
-                     SelectionMode="Single"
-                     HorizontalOptions="Center"
-                     Grid.Row="1"
-                     ItemSize="85"
-                     ItemSpacing="5"
-                     SelectionBackground="Transparent"
-                     >
+            <listview:SfListView x:Name="SubList"
+                                 ItemTapped="OnItemTapped"
+                                 SelectionMode="Single"
+                                 HorizontalOptions="Center"
+                                 Grid.Row="1"
+                                 ItemSize="85"
+                                 ItemSpacing="5"
+                                 SelectionBackground="Transparent"
+                                 >
                 <listview:SfListView.ItemTemplate>
                     <DataTemplate>
                         <Border BackgroundColor="#D3B05F" 

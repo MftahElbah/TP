@@ -4,6 +4,7 @@ using TP.Methods;
 using TP.Pages.Teacher;
 using TP.Pages.Student;
 using TP.Methods.actions;
+using SQLitePCL;
 
 namespace TP.Pages;
 
@@ -11,6 +12,7 @@ public partial class SubjectSelectionPage : ContentPage
 {
 
     Database database = Database.SelectedDatabase;
+    //private MineSQLite _sqlite = new MineSQLite();
 
     public ObservableCollection<SubTable> Subjects { get; set; }
    
@@ -44,6 +46,7 @@ public partial class SubjectSelectionPage : ContentPage
             case 1: // Teacher
                 AddBtn.IsVisible = true;
                 NoSubExist.IsVisible = false;
+                CalenderBtn.IsVisible = true;
                 var teacherSubjects = await database.getSubByUser();
                 if (teacherSubjects.Count == 0 )
                 {
@@ -55,16 +58,21 @@ public partial class SubjectSelectionPage : ContentPage
                 {
                     Subjects.Add(subject);
                 }
+                SubList.ItemsSource = Subjects;
                 break;
 
             case 2: // Student
                 SearchBtn.IsVisible = true;
-                var stdInSub = await database.getDegreeBySessionName();
-                var allSubjects = await database.getSubTable();
+                CalenderBtn.IsVisible = false;
 
-                foreach (var studentSubject in stdInSub)
+                // Fetch data from the database
+                var stdInSub = await database.getDegreeBySessionName() ?? new List<DegreeTable>();
+                var allSubjects = await database.getSubTable() ?? new List<SubTable>();
+
+                // Loop through and find matching subjects
+                foreach (var studentSubject in stdInSub.Where(s => s != null)) // Ensure no null entries
                 {
-                    foreach (var subject in allSubjects)
+                    foreach (var subject in allSubjects.Where(s => s != null)) // Ensure no null entries
                     {
                         if (studentSubject.SubId == subject.SubId)
                         {
@@ -73,13 +81,18 @@ public partial class SubjectSelectionPage : ContentPage
                     }
                 }
 
+                // Handle case where no subjects are found
                 if (Subjects.Count == 0)
                 {
                     NoSubExist.IsVisible = true;
                     NoSubExistSubTitle.Text = "يمكنك انضمام للمواد عن طريق الزر الموجود بالاعلى يمين";
+                    return;
                 }
-                
+
+                // Bind the subjects list to the UI
+                SubList.ItemsSource = Subjects;
                 break;
+
         }
 
     }
@@ -108,16 +121,16 @@ public partial class SubjectSelectionPage : ContentPage
     {
         SaveSession.IsVisible = false;
     }
-/*    private void BackgroundTapped(object sender, EventArgs e)
-    {
-        SaveSession.IsVisible = false; // Hide the modal
-    }*/
-
     private void AddClicked(object sender, EventArgs e){
         AddSubPopupWindow.IsVisible = true;
     }
     private async void SearchBtnClicked(object sender, EventArgs e){
         await Navigation.PushAsync(new RequestSubjectPage());
+    }
+    private async void CalenderClicked(object sender, EventArgs e)
+    {
+        //await _sqlite.CheckSchedulerExist();
+        await Navigation.PushAsync(new CalenderPage());
     }
     private void LogoutClicked(object sender, EventArgs e)
     {

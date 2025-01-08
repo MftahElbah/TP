@@ -21,10 +21,11 @@ public partial class SubjectCenterTeacher : ContentPage
             OnPropertyChanged(); // Notify that SubTableView property has changed.
         }
     }
-    public ObservableCollection<SubjectBooks> Books { get; set; }
+    //public ObservableCollection<SubjectBooks> Books { get; set; }
     public int SSubId;
     private FileResult result;
     public string namevar;
+    public string LinkUrl;
     public bool[] Emptys = new bool[3];//used to show empty massage
 
 
@@ -34,14 +35,14 @@ public partial class SubjectCenterTeacher : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SSubId = subid;
-        Books = new ObservableCollection<SubjectBooks>();
+        //Books = new ObservableCollection<SubjectBooks>();
         Posts = new ObservableCollection<SubjectPosts>();
         DegreeTableGetter = new ObservableCollection<DegreeTable>();
         BindingContext = this;
 
 
         HideContentViewMethod.HideContentView(PopupEditDegreeWindow);
-        HideContentViewMethod.HideContentView(PopupEditBookNameWindow);
+        //HideContentViewMethod.HideContentView(PopupEditBookNameWindow);
         HideContentViewMethod.HideContentView(EditPostPopupWindow);
         HideContentViewMethod.HideContentView(MenuPopupWindow);
     }
@@ -52,7 +53,7 @@ public partial class SubjectCenterTeacher : ContentPage
         base.OnAppearing();
         await LoadPosts();
         await LoadData();
-        await LoadBooks();
+        //await LoadBooks();
         PageShowStatus(1);
         MenuPopupWindow.IsVisible = false;
     }
@@ -79,7 +80,7 @@ public partial class SubjectCenterTeacher : ContentPage
         }
         Emptys[1] = false;
     }
-    private async Task LoadBooks(){
+    /*private async Task LoadBooks(){
         var books = await database.getSubjectBooksBySubId(SSubId);
 
         Books.Clear();
@@ -93,7 +94,7 @@ public partial class SubjectCenterTeacher : ContentPage
             Books.Add(book);
         }
         Emptys[2] = false;
-    }
+    }*/
     //NavBar
     private async void BackClicked(object sender, EventArgs e)
     {
@@ -116,10 +117,10 @@ public partial class SubjectCenterTeacher : ContentPage
         await Navigation.PushAsync(new EditPostPage(SSubId, null , null , null,null)); // Navigate to Add Post page
         EditPostPopupWindow.IsVisible = false;
     }
-    private void AddBookClicked(object sender, EventArgs e){
+    /*private void AddBookClicked(object sender, EventArgs e){
         UploadBook(1); // Navigate to Add Book page
         MenuPopupWindow.IsVisible = false;
-    }
+    }*/
     private async void RequestsMangmentClicked(object sender, EventArgs e){
         await Navigation.PushAsync(new RequestMangment(SSubId)); // Navigate to Requests page
     }
@@ -132,10 +133,10 @@ public partial class SubjectCenterTeacher : ContentPage
     {
         PageShowStatus(2);
     }
-    private void BooksShowerClicked(object sender, EventArgs e)
+    /*private void BooksShowerClicked(object sender, EventArgs e)
     {
         PageShowStatus(3);
-    }
+    }*/
     private void PageShowStatus(int status){
         // Reset all controls to the default state
         PostsShower.TextColor = Color.FromArgb("#1A1A1A");
@@ -154,13 +155,13 @@ public partial class SubjectCenterTeacher : ContentPage
         DegreesShower.BackgroundColor = Colors.Transparent;
         DegreeTableDataGrid.IsVisible = false;
 
-        BooksShower.TextColor = Color.FromArgb("#1A1A1A");
+        /*BooksShower.TextColor = Color.FromArgb("#1A1A1A");
         if (BooksShower.ImageSource is FontImageSource booksFontImageSource)
         {
             booksFontImageSource.Color = Color.FromArgb("#1A1A1A"); // Reset icon color
         }
         BooksShower.BackgroundColor = Colors.Transparent;
-        PdfListView.IsVisible = false;
+        PdfListView.IsVisible = false;*/
 
         // Change styles based on the status
         switch (status)
@@ -195,7 +196,7 @@ public partial class SubjectCenterTeacher : ContentPage
 
                 //Add btn icon change
                 break;
-
+                /*
             case 3: // Show books
                 BooksShower.TextColor = Color.FromArgb("#D9D9D9");
                 if (BooksShower.ImageSource is FontImageSource booksIconSource){
@@ -207,11 +208,11 @@ public partial class SubjectCenterTeacher : ContentPage
                 NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
                 EmptyMessage.IsVisible = Emptys[2];
                 //Add btn icon change
-                break;
+                break;*/
         }
     }
 
-   
+   /*
     //Books Section
     public async void UploadBook(int step){
         switch (step){
@@ -259,12 +260,12 @@ public partial class SubjectCenterTeacher : ContentPage
                 PageShowStatus(3);
                 break;
         }
-        /*if (step == 1) {
+        *//*if (step == 1) {
             
         }
         if (step == 2) { 
             
-        }*/
+        }*//*
     }
     private async void SaveBookClicked(object sender, EventArgs e){
         if(BookNameEntry == null)
@@ -300,7 +301,7 @@ public partial class SubjectCenterTeacher : ContentPage
         Books.Remove(delbook);
             await DisplayAlert("تم الحذف", "تم حذف الكتاب بنجاح", "حسنا");
     }
-
+*/
 
     //Degree Section
     private void DegreeTableSelectionChanged(object sender, Syncfusion.Maui.DataGrid.DataGridSelectionChangedEventArgs e)
@@ -350,32 +351,41 @@ public partial class SubjectCenterTeacher : ContentPage
 
     //Post Section
     private void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e){
-        ShowAssignments.IsVisible = false;
-        ShowDesFileBtn.IsVisible = false;
+        //ShowAssignments.IsVisible = false;
+        //ShowDesFileBtn.IsVisible = false;
+        OpenLinkBtn.IsVisible = false;
         var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
 
         IdLblPopup.Text = SelectedPost.PostId.ToString();
         TitleLblPopup.Text = SelectedPost.PostTitle;
         DesLblPopup.Text = SelectedPost.PostDes;
-        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
+        if (!string.IsNullOrEmpty(SelectedPost.PostFileLink)) {
+        OpenLinkBtn.IsVisible = true;
+        }
+        /*DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
         if(!String.IsNullOrEmpty(DeadLineTimeLblPopup.Text))
         {
             ShowAssignments.IsVisible = true;
         }
         if (SelectedPost.PostDesFile != null) {
             ShowDesFileBtn.IsVisible = true;
-        }
+        }*/
         EditPostPopupWindow.IsVisible = true;
         Postslistview.SelectedItem = null;
     }
-    private async void ShowAssignmentsClicked(object sender, EventArgs e) { 
+    /*private async void ShowAssignmentsClicked(object sender, EventArgs e) { 
         await Navigation.PushAsync(new AssignmentsPage(int.Parse(IdLblPopup.Text)));
-    }
+    }*/
     private async void EditPostClicked(object sender, EventArgs e) {   
-        await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text,DeadLineTimeLblPopup.Text)); // i want here to take data from selected list view
+        await Navigation.PushAsync(new EditPostPage(SSubId, IdLblPopup.Text.ToString(), TitleLblPopup.Text, DesLblPopup.Text , LinkUrl/*,DeadLineTimeLblPopup.Text*/)); // i want here to take data from selected list view
         EditPostPopupWindow.IsVisible = false;
     }
-    private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
+    private async void OpenLinkBtnClicked(object sender, EventArgs e){
+        if (Uri.IsWellFormedUriString(LinkUrl, UriKind.Absolute)){
+            await Launcher.OpenAsync(LinkUrl);
+        }
+    }
+    /*private async void ShowDesFileBtnClicked(object sender, EventArgs e) {
         int pid = int.Parse(IdLblPopup.Text);
         var desFile = await database.getSubjectPost(pid);
 
@@ -391,7 +401,7 @@ public partial class SubjectCenterTeacher : ContentPage
         {
             File = new ReadOnlyFile(tempPath)
         });
-    }
+    }*/
     private void CancelPostClicked(object sender, EventArgs e) {
         EditPostPopupWindow.IsVisible = false;
     }

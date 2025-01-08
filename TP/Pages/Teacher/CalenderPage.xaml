@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+             x:Class="TP.Pages.Teacher.CalenderPage"
+             xmlns:icon="clr-namespace:TP"
+             BackgroundColor="#EFEFEF"
+             FlowDirection="RightToLeft">
+    <Grid>
+        
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Grid.Row="0" Padding="20">
+            <HorizontalStackLayout Spacing="20">
+                <Button CornerRadius="40" 
+                        BackgroundColor="#D3B05F"
+                        Padding="15"
+                        VerticalOptions="Center"
+                        Clicked="OnAddTaskClicked"
+                        >
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="GoogleIconsFont" 
+                                         Glyph="{x:Static icon:IconFont.Add}" 
+                                         StyleId="{x:StaticResource GoogleFont}" 
+                                         Color="#1a1a1a"
+                                         Size="24"
+                                         />
+                    </Button.ImageSource>
+                </Button>
+
+                <Button CornerRadius="40" 
+                        BackgroundColor="#1a1a1a"
+                        Padding="15"
+                        VerticalOptions="Center"
+                        Clicked="ChangeSchedulerViewClicked"
+                        >
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="GoogleIconsFont" 
+                                         Glyph="{x:Static icon:IconFont.Event_repeat}" 
+                                         StyleId="{x:StaticResource GoogleFont}" 
+                                         Color="#EFEFEF"
+                                         Size="24"
+                                         />
+                    </Button.ImageSource>
+                </Button>
+
+            </HorizontalStackLayout>
+            <Button CornerRadius="20" 
+            BackgroundColor="Transparent"
+            Padding="0"
+            Clicked="BackClicked"
+            >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                             Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                             StyleId="{x:StaticResource GoogleFont}" 
+                             Color="#1a1a1a"
+                             Size="40"
+                             />
+                </Button.ImageSource>
+            </Button>
+        </FlexLayout>
+        <!-- Scheduler placed in the first row -->
+        <Scheduler:SfScheduler x:Name="Scheduler"
+                               View="Week"
+                               AppointmentMapping="{Binding Appointments}"
+                               
+                               Tapped="Scheduler_Tapped"  
+                               LongPressed="Scheduler_LongPressed"
+                               BackgroundColor="#EFEFEF"
+                               TodayHighlightBrush="#1a1a1a"
+                               Grid.Row="1">
+            <Scheduler:SfScheduler.HeaderView>
+                <Scheduler:SchedulerHeaderView>
+                    <Scheduler:SchedulerHeaderView.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Background = "#1a1a1a">
+                                <Label x:Name="label" TextColor="#efefef" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat = "{}{0:MMM ,yy}">
+                                            <Binding Path="StartDate" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </Grid>
+                        </DataTemplate>
+                    </Scheduler:SchedulerHeaderView.HeaderTemplate>
+                </Scheduler:SchedulerHeaderView>
+            </Scheduler:SfScheduler.HeaderView>
+        </Scheduler:SfScheduler>
+
+    </Grid>
+
+        <ContentView x:Name="TaskPopupWindow" IsVisible="False" BackgroundColor="#90000000">
+
+            <Border Padding="20" Margin="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                    Opacity="0.5"
+                    Radius="05"
+                    Offset="0,10" />
+                </Border.Shadow>
+
+
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                    <FlexLayout JustifyContent="SpaceBetween" HorizontalOptions="Center" VerticalOptions="Center">
+                        
+                    <Button
+                            HorizontalOptions="Center" 
+                            BackgroundColor="#D3B05F"
+                            TextColor="#1a1a1a"
+                            FontFamily="CairoB"
+                            CornerRadius="50"
+                            Padding="0"
+                            x:Name="CreateTaskBtn"
+                            Clicked="CreateTaskBtnClick">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Add}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#1a1a1a"
+                                             />
+                        </Button.ImageSource>
+                    </Button>
+                    <Button
+                            HorizontalOptions="Center" 
+                            BackgroundColor="#D3B05F"
+                            TextColor="#1a1a1a"
+                            FontFamily="CairoB"
+                            FontSize="16"
+                            CornerRadius="30"
+                            IsVisible="False"
+                            x:Name="EditTaskBtn"
+                            Clicked="EditTaskBtnClick">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" 
+                                             Glyph="{x:Static icon:IconFont.Edit}" 
+                                             StyleId="{x:StaticResource GoogleFont}" 
+                                             Color="#1a1a1a"
+                                             />
+                        </Button.ImageSource>
+                    </Button>
+                        <Button
+                                HorizontalOptions="Center" 
+                                VerticalOptions="Center"
+                                BackgroundColor="Transparent"
+                                CornerRadius="50"
+                                Padding="0"
+                                Clicked="CancelTaskClick">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="GoogleIconsFont" 
+                                                 Glyph="{x:Static icon:IconFont.Close}" 
+                                                 StyleId="{x:StaticResource GoogleFont}" 
+                                                 Color="#1a1a1a"
+                                                 Size="40"
+                                                 />
+                            </Button.ImageSource>
+                        </Button>
+                    </FlexLayout>
+
+                    <Label Text="إضافة تذكير" 
+                           x:Name="PopupTitle"
+                   FontSize="32"
+                   FontFamily="CairoB"
+                   HorizontalOptions="Center"
+                   TextColor="#1a1a1a"
+                   />
+                    
+
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Entry
+                        Placeholder="عنوان"
+                        x:Name="TaskTitleEntry"
+                        FontFamily="CairoB"
+                        FontSize="16"
+                        TextColor="#1a1a1a"
+                        FlowDirection="RightToLeft"
+                        IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
+                        PlaceholderColor="#959595" />
+                    </Border>
+                    <HorizontalStackLayout>
+                        
+                    </HorizontalStackLayout>
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Entry
+                        Placeholder="وصف"
+                        x:Name="TaskDesEntry"
+                        FontFamily="CairoB"
+                        FontSize="16"
+                        TextColor="#1a1a1a"
+                        FlowDirection="RightToLeft"
+                        IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
+                        PlaceholderColor="#959595" />
+                    </Border>
+
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="بداية الوقت" x:Name="StartTimeBtn" Clicked="StartTimeBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="Cairo" TextColor="#efefef" BackgroundColor="#1a1a1a">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="GoogleIconsFont" 
+                             Glyph="{x:Static icon:IconFont.Hourglass_top}" 
+                             StyleId="{x:StaticResource GoogleFont}" 
+                             Color="#EFEFEF"
+                             Size="24"/>
+                            </Button.ImageSource>
+                        </Button>
+                        <Button Text="نهاية الوقت" x:Name="EndTimeBtn" Clicked="EndTimeBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="Cairo" TextColor="#efefef" BackgroundColor="#1a1a1a">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="GoogleIconsFont" 
+                             Glyph="{x:Static icon:IconFont.Hourglass_bottom}" 
+                             StyleId="{x:StaticResource GoogleFont}" 
+                             Color="#EFEFEF"
+                             Size="24"/>
+                            </Button.ImageSource>
+                        </Button>
+                        <picker:SfDateTimePicker x:Name="TimePicker" TimeFormat="hh_mm_tt" Mode="Dialog" FlowDirection="RightToLeft" BackgroundColor="#EFEFEF"  ColumnDividerColor="Transparent" SelectionChanged="TimePickerChanged">
+
+                            <picker:SfDateTimePicker.HeaderView>
+                                <picker:DateTimePickerHeaderView Background="#1a1a1a">
+                                    <picker:DateTimePickerHeaderView.TextStyle>
+                                        <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="Cairo"/>
+                                    </picker:DateTimePickerHeaderView.TextStyle>
+
+                                    <picker:DateTimePickerHeaderView.SelectionTextStyle>
+                                        <picker:PickerTextStyle FontSize="16" TextColor="#D3B05F" FontFamily="CairoB"/>
+
+                                    </picker:DateTimePickerHeaderView.SelectionTextStyle>
+
+                                </picker:DateTimePickerHeaderView>
+                            </picker:SfDateTimePicker.HeaderView>
+
+                            <picker:SfDateTimePicker.ColumnHeaderView>
+                                <picker:DateTimePickerColumnHeaderView Background="#EFEFEF"
+                                                                       DayHeaderText="يوم" MonthHeaderText="شهر" YearHeaderText="عام"
+                                                                       HourHeaderText="ساعة" MinuteHeaderText="دقيقة" SecondHeaderText="ثواني" 
+                                                                       MeridiemHeaderText="توقيت">
+                                    <picker:DateTimePickerColumnHeaderView.TextStyle>
+                                        <picker:PickerTextStyle FontSize="16" TextColor="#1a1a1a" FontFamily="CairoB"/>
+                                    </picker:DateTimePickerColumnHeaderView.TextStyle>
+                                </picker:DateTimePickerColumnHeaderView>
+                            </picker:SfDateTimePicker.ColumnHeaderView>
+
+                            <picker:SfDateTimePicker.SelectionView >
+                                <picker:PickerSelectionView CornerRadius="10" Stroke="#1a1a1a" Padding="10, 5, 10, 5"  />
+                            </picker:SfDateTimePicker.SelectionView>
+                            <picker:SfDateTimePicker.SelectedTextStyle >
+                                <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="CairoB"/>
+                            </picker:SfDateTimePicker.SelectedTextStyle>
+                        </picker:SfDateTimePicker>
+                    </HorizontalStackLayout>
+                        <Button Text="لون المهمة"
+                                FontFamily="CairoB"
+                                FontSize="16"
+                                TextColor="#efefef"
+                                x:Name="TaskColorBtn"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Clicked="TaskColorBtnClicked"/>
+                    
+                </VerticalStackLayout>
+
+            </Border>
+        </ContentView>
+
+    </Grid>
+</ContentPage>

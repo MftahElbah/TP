@@ -7,6 +7,7 @@ namespace TP.Pages.Teacher;
 
 public partial class AssignmentsPage : ContentPage
 {
+    /*
     Database database = Database.SelectedDatabase;
     public ObservableCollection<SubjectAssignments> AssignmentsForListView { get; set; }
     public int postid;
@@ -116,7 +117,7 @@ public partial class AssignmentsPage : ContentPage
 
 
 
-    /*
+    
         [RelayCommand]
         async Task RequestReadAndRight
         private async void DownloadClicked(object sender, EventArgs e) {
@@ -171,5 +172,6 @@ public partial class AssignmentsPage : ContentPage
                 }
             }
         }
+    
     */
 }

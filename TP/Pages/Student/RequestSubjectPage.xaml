@@ -63,7 +63,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <ListView ItemsSource="{Binding Subjects}" HasUnevenRows="True" VerticalOptions="FillAndExpand" HorizontalOptions="Center">
+                    <ListView x:Name="list" HasUnevenRows="True" VerticalOptions="FillAndExpand" HorizontalOptions="Center">
                         <ListView.ItemTemplate >
                             <DataTemplate>
                                 <ViewCell>
@@ -129,6 +129,7 @@
                        x:Name="NoExistSubTitle" />
             </VerticalStackLayout>
         </ContentView>
+        
     </Grid>
 
 </ContentPage>

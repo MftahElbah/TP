@@ -4,8 +4,12 @@
              xmlns:entry="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              x:Class="TP.Pages.LoginPage"
              xmlns:icon="clr-namespace:TP"
+             xmlns:nonet="clr-namespace:TP.Pages"
              BackgroundColor="#EFEFEF"
              >
+    <Grid>
+        <nonet:SnackbarPopup HorizontalOptions="Center" VerticalOptions="Start"/>
+        
     <ScrollView HorizontalOptions="Center" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Never">
         
     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
@@ -65,4 +69,6 @@
     </VerticalStackLayout>
     </ScrollView>
 
+
+    </Grid>
 </ContentPage>

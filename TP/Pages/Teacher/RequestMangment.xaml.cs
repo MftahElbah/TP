@@ -20,7 +20,6 @@ public partial class RequestMangment : ContentPage{
         SubIds = subid;
         
         RequestsColl = new ObservableCollection<RequestJoinSubject>();
-        BindingContext = this;
     }
     protected override async void OnAppearing()
     {
@@ -37,6 +36,7 @@ public partial class RequestMangment : ContentPage{
         {
             RequestsColl.Add(req);
         }
+        listview.ItemsSource = RequestsColl;
     }
     private async void LVSwipEnd(object sender, Syncfusion.Maui.ListView.SwipeEndedEventArgs e)
     {

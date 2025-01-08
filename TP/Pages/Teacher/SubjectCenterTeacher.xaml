@@ -117,7 +117,7 @@
                          />
                         </Button.ImageSource>
                     </Button>
-
+                    <!--
                     <Button Text="الكتب"
                         HorizontalOptions="Center" 
                         FontFamily="CairoB"
@@ -133,6 +133,7 @@
                          />
                         </Button.ImageSource>
                     </Button>
+                    -->
                 </HorizontalStackLayout>
             </Border>
             <!--.......................................-->
@@ -239,6 +240,7 @@
                 </datagrid:SfDataGrid.Columns>
             </datagrid:SfDataGrid>
 
+            <!--
             <listview:SfListView x:Name="PdfListView"
                      ItemsSource="{Binding Books}"
                      ItemSize="200"
@@ -261,14 +263,12 @@
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Padding="10" Spacing="5" HorizontalOptions="Center" VerticalOptions="Center">
-                                <!-- Book Name -->
                                 <Label Text="{Binding BookName}" 
                                        FontAttributes="Bold" 
                                        FontSize="16" 
                                        LineBreakMode="TailTruncation"
                                        TextColor="#1A1A1A"/>
 
-                                <!-- Upload Date -->
                                 <Label Text="{Binding UploadDate, StringFormat='Uploaded on: {0:yyyy-MM-dd}'}"
                                        FontSize="14" 
                                        FontFamily="CairoL"
@@ -281,6 +281,7 @@
 
                 </listview:SfListView.ItemTemplate>
             </listview:SfListView>
+            -->
 
             <!--.......................................-->
             
@@ -374,7 +375,7 @@
                         </Border.StrokeShape>
                         <Entry
                     x:Name="DegreeEntry"
-                    FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric"
+                    FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric" FlowDirection="LeftToRight"
                     Placeholder="اعمال"/>
                     </Border>
                     <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
@@ -383,7 +384,7 @@
                         </Border.StrokeShape>
                         <Entry
                     x:Name="MidDegreeEntry"
-                    FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric"
+                    FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric" FlowDirection="LeftToRight"
                     Placeholder="الجزئي"/>
                     </Border>
 
@@ -409,7 +410,7 @@
                 </VerticalStackLayout>
             </Border>
         </ContentView>
-
+<!--
         <ContentView x:Name="PopupEditBookNameWindow" IsVisible="False" BackgroundColor="#80000000">
             <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
                 <Border.StrokeShape>
@@ -475,6 +476,7 @@
                 </VerticalStackLayout>
             </Border>
         </ContentView>
+        -->
 
         <ContentView x:Name="EditPostPopupWindow" IsVisible="False" BackgroundColor="#80000000">
             <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350"  MaximumHeightRequest="550">
@@ -509,14 +511,23 @@
                     
                     <ScrollView Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
                         <VerticalStackLayout Spacing="20">
-                            <Label x:Name="IdLblPopup" IsVisible="False"/>
-                    <Label x:Name="DeadLineTimeLblPopup" IsVisible="False"/>
+                    <Label x:Name="IdLblPopup" IsVisible="False"/>
+                    
+                    <!--
+                            <Label x:Name="DeadLineTimeLblPopup" IsVisible="False"/>
+                            -->
                     <Label x:Name="TitleLblPopup" Text="mmm" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo" TextColor="#1a1a1a"/>
                         
                     <Label x:Name="DesLblPopup" Text="mmm" HorizontalOptions="Start" FontSize="20" FontFamily="Cairo" TextColor="#1a1a1a"/>
                         
                 </VerticalStackLayout>
                     </ScrollView>
+                    <Button Text="فتح الرابط" x:Name="OpenLinkBtn" Clicked="OpenLinkBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="CairoB" CornerRadius="20" Padding="10" BackgroundColor="#1a1a1a" TextColor="#EFEFEF" Grid.Row="2">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Link}" Color="#EFEFEF" Size="24" />
+                            </Button.ImageSource>
+                        </Button>
+                    <!--
                     <VerticalStackLayout Grid.Row="2" HorizontalOptions="Center" VerticalOptions="Center">
                         <Button Text="عرض التفاصيل" x:Name="ShowDesFileBtn" Clicked="ShowDesFileBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="CairoB" CornerRadius="20" Padding="10" BackgroundColor="#1a1a1a" TextColor="#EFEFEF">
                             <Button.ImageSource>
@@ -529,6 +540,7 @@
                             </Button.ImageSource>
                         </Button>
                     </VerticalStackLayout>
+                    -->
                 </Grid>                
             </Border>
         </ContentView>
@@ -545,17 +557,15 @@
                                     Offset="0,10" />
                 </Border.Shadow>
                 <VerticalStackLayout Spacing="20">
-                    <!-- Cancel Button at the Top -->
+                    
                     <Button FontFamily="Cairo"  HorizontalOptions="End" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="0" BackgroundColor="Transparent" Clicked="CloseMenuClicked">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Close}" Color="#1a1a1a" Size="40"/>
                         </Button.ImageSource>
                     </Button>
 
-                    <!-- Title -->
                     <Label Text="القائمة" HorizontalOptions="Center" FontSize="32" FontFamily="CairoB" TextColor="#1a1a1a"/>
 
-                    <!-- Button 1: اضافة منشور -->
                     <Button FontFamily="Cairo" Clicked="AddPostClicked" HorizontalOptions="Center" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="10" BackgroundColor="Transparent" BorderColor="#1a1a1a" BorderWidth="2">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Post_add}" Color="#1a1a1a" Size="24"/>
@@ -564,7 +574,7 @@
                         <Button.Text>اضافة منشور</Button.Text>
                     </Button>
 
-                    <!-- Button 2: اضافة كتاب -->
+                    <!-- Button 2: اضافة كتاب 
                     <Button FontFamily="Cairo" Clicked="AddBookClicked" HorizontalOptions="Center" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="10" BackgroundColor="Transparent" BorderColor="#1a1a1a" BorderWidth="2">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Bookmark_add}" Color="#1a1a1a" Size="24"/>
@@ -572,6 +582,7 @@
                         <Button.TextColor>#1a1a1a</Button.TextColor>
                         <Button.Text>اضافة كتاب</Button.Text>
                     </Button>
+                    -->
 
                     <!-- Button 3: طلبات الانضمام -->
                     <Button FontFamily="Cairo" Clicked="RequestsMangmentClicked" HorizontalOptions="Center" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="10" BackgroundColor="Transparent" BorderColor="#1a1a1a" BorderWidth="2">

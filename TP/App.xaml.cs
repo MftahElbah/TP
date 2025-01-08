@@ -8,7 +8,25 @@ namespace TP
 {
     public partial class App : Application
     {
-                Database database = Database.SelectedDatabase;
+        Database database = Database.SelectedDatabase;
+        //private MineSQLite _sqlite = new MineSQLite();
+        public static async Task<bool> IsInternetAvailable()
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetAsync("https://clients3.google.com/generate_204");
+                    Console.WriteLine($"Internet check response: {response.StatusCode}");
+                    return response.IsSuccessStatusCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internet check failed: {ex.Message}");
+                return false;
+            }
+        }
 
         public App(){
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
@@ -20,23 +38,35 @@ namespace TP
             return new Window(new ContentPage());
         }
 
+
+
         protected override async void OnStart()
         {
             try
             {
-                Database.SelectedDatabase = new firebaseDB(); // new SQLiteDB(); if you want to use SQLite
-                //Database.SelectedDatabase = new MineSQLite(); // new SQLiteDB(); if you want to use SQLite
+                UserSession.internet = await IsInternetAvailable();
+                if (UserSession.internet)
+                {
+                    Database.SelectedDatabase = new firebaseDB();
+                    UserSession.internet = true;
+                    Console.WriteLine("Using Firebase Database.");
+                }
+                else
+                {
+                    Database.SelectedDatabase = new MineSQLite();
+                    
+                    Console.WriteLine("Using SQLite Database.");
+                }
+
                 database = Database.SelectedDatabase;
 
-              
                 database.DatabaseStarted();
-                
-                //to preinsert data
-                
+                await Task.Delay(1000);
                 await InitializeApp();
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Critical Error: {ex.Message}");
                 if (Application.Current?.Windows.Count > 0)
                 {
                     Application.Current.Windows[0].Page = new ContentPage
@@ -52,6 +82,7 @@ namespace TP
                 }
             }
         }
+
         private async Task InitializeApp()
         {
             try

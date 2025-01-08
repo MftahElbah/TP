@@ -14,5 +14,7 @@ namespace TP.Methods
         public static string Password { get; set; }
         public static int UserType { get; set; }
         public static bool SessionYesNo {  get; set; }
+
+        public static bool internet { get; set; }
     }
 }

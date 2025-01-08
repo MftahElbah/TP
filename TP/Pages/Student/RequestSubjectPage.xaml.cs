@@ -30,18 +30,47 @@ public partial class RequestSubjectPage : ContentPage
 
     private async Task LoadAvailableSubjects()
     {
-        var subjects = await database.getSubTable();
-        
-        Subjects.Clear();
-        foreach (var subject in subjects)
-        { 
-            var SubInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
-            var StdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);
-            if (SubInReq.Count == 0 && StdInTable.Count == 0) {
-                Subjects.Add(subject);
+        try
+        {
+            var subjects = await database.getSubTable() ?? new List<SubTable>();
+
+            // Log the count of subjects for debugging
+            Console.WriteLine($"Total subjects fetched: {subjects.Count}");
+
+            Subjects.Clear();
+
+            // Filter out null entries in the subjects list
+            foreach (var subject in subjects.Where(s => s != null))
+            {
+                // Check if there are any requests or degrees associated with the subject
+                var SubInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
+                var StdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);
+
+                if ((SubInReq?.Count ?? 0) == 0 && (StdInTable?.Count ?? 0) == 0)
+                {
+                    Subjects.Add(subject);
+                }
             }
+
+            if (Subjects.Count == 0) {
+                EmptyMessage.IsVisible = true;
+                NoExistTitle.Text = "لا توجد مواد";
+                NoExistSubTitle.Text = "لا توجد مواد في الوقت الحالي";
+            }
+
+            // Bind the filtered subjects to the UI
+            list.ItemsSource = Subjects;
+
+            // Log the count of available subjects
+            Console.WriteLine($"Available subjects added: {Subjects.Count}");
+        }
+        catch (Exception ex)
+        {
+            // Log the error for debugging
+            Console.WriteLine($"Error in LoadAvailableSubjects: {ex.Message}");
         }
     }
+
     private async void BackClicked(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
@@ -49,26 +78,14 @@ public partial class RequestSubjectPage : ContentPage
     
     private async void SearchEntryChanged(object sender, TextChangedEventArgs e)
     {
-        string searchText = e.NewTextValue?.Trim().ToLower();
+        string searchText = e.NewTextValue?.ToLower();
 
         if (string.IsNullOrEmpty(searchText))
         {
             // Load all subjects with filtering logic
-            var subjects = await database.getSubTable();
-            Subjects.Clear();
-
-            foreach (var subject in subjects)       
-            {
-                var subInReq = await database.getRequestJoinBySubIdAndUserId(subject.SubId);
-                var stdInTable = await database.getDegreeTableBySubIdAndStdName(subject.SubId);  
-
-                if (subInReq.Count == 0 && stdInTable.Count == 0)
-                {
-                    Subjects.Add(subject);
-                }
-            }
+            await LoadAvailableSubjects();
             EmptyMessage.IsVisible = false;
-            return;
+
         }
 
         // Search for subjects with names matching the search text
@@ -76,6 +93,8 @@ public partial class RequestSubjectPage : ContentPage
         Subjects.Clear();
         if (filteredSubjects.Count == 0) {
             EmptyMessage.IsVisible = true;
+            NoExistTitle.Text = "غير متوفر";
+            NoExistSubTitle.Text = "لالمادة او الاستاذ الذي تبحث عليه غير متوفر";
             return;
         }
         EmptyMessage.IsVisible = false;
@@ -90,6 +109,7 @@ public partial class RequestSubjectPage : ContentPage
                 Subjects.Add(subject);
             }
         }
+
         
     }
 

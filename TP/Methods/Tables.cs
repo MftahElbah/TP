@@ -61,6 +61,7 @@ namespace TP
         public int SubId { get; set; }
         public DateTime RequestDate { get; set; }
     }
+    /*
     //Online
     public class SubjectBooks
     {
@@ -71,6 +72,7 @@ namespace TP
         public Byte[] BookFile { get; set; }
         public DateTime UploadDate { get; set; }
     }
+    */
     //Online
     public class SubjectPosts
     {
@@ -80,10 +82,12 @@ namespace TP
         public string PostTitle { get; set; }
         public string PostDes { get; set; }
         public DateTime PostDate { get; set; }
-        public DateTime? DeadLineTime { get; set; }
-        public Byte[] PostDesFile { get; set; }
+        //public DateTime? DeadLineTime { get; set; }
+        //public Byte[] PostDesFile { get; set; }
+        public string PostFileLink { get; set; }
         
     }
+    /*
     //Online
     public class SubjectAssignments{
         public int PostId { get; set; }
@@ -93,5 +97,18 @@ namespace TP
         public string FileType { get; set; }
 
     }
-    
+    */
+
+    public class SchedulerTask
+    {
+        [PrimaryKey, AutoIncrement]
+        public int TaskId { get; set; }
+        public string TaskTitle { get; set; }
+        public string TaskDes { get; set; }
+        public DateTime TaskStartTime { get; set; }
+        public DateTime TaskEndTime { get; set; }
+        public string TaskColor { get; set; } // Property to store the selected color
+        public int UserId { get; set; }
+        
+    }
 }

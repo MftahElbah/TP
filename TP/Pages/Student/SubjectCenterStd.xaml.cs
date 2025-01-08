@@ -10,10 +10,11 @@ public partial class SubjectCenterStd : ContentPage
     Database database = Database.SelectedDatabase;
 
     public ObservableCollection<SubjectPosts> Posts { get; set; }
-    public ObservableCollection<SubjectBooks> Books { get; set; }
-    private System.Timers.Timer _countdownTimer;
+    //public ObservableCollection<SubjectBooks> Books { get; set; }
+    //private System.Timers.Timer _countdownTimer;
     public int SubId;
     public bool[] Emptys = new bool[2];
+    public string LinkUrl;
 
 
     public SubjectCenterStd(int subid,bool showdeg)
@@ -22,7 +23,7 @@ public partial class SubjectCenterStd : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SubId = subid;
-        Books = new ObservableCollection<SubjectBooks>();
+        //Books = new ObservableCollection<SubjectBooks>();
         Posts = new ObservableCollection<SubjectPosts>();
         if (!showdeg)
         { ShowDegree.IsVisible = false; }
@@ -31,9 +32,11 @@ public partial class SubjectCenterStd : ContentPage
     }
     protected override async void OnAppearing(){
         base.OnAppearing();
-        await LoadBooks();
+        //await LoadBooks();
         await LoadPosts();
-        PageShowStatus(1);
+        Postslistview.IsVisible = true;
+
+        //PageShowStatus(1);
     }
     //LoadDataSection
     private async Task LoadPosts()
@@ -54,7 +57,7 @@ public partial class SubjectCenterStd : ContentPage
         }
         Emptys[0] = false;
     }
-    private async Task LoadBooks()
+    /*private async Task LoadBooks()
     {
         var data = await database.getSubjectBooksBySubId(SubId);
        var books = data     
@@ -74,7 +77,7 @@ public partial class SubjectCenterStd : ContentPage
             Books.Add(book);
         }
         Emptys[1] = false;
-    }
+    }*/
     //Nav Bar
     private async void ShowDegreeClicked(object sender, EventArgs e) {
         var data = await database.getDegreeTableBySubIdAndStdName(SubId);
@@ -87,7 +90,7 @@ public partial class SubjectCenterStd : ContentPage
         await Navigation.PopAsync();
     }
     //Selection View Bar
-    private void PostsShowerClicked(object sender, EventArgs e)
+    /*private void PostsShowerClicked(object sender, EventArgs e)
     {
         PageShowStatus(1);
     }
@@ -146,22 +149,28 @@ public partial class SubjectCenterStd : ContentPage
                 //Add btn icon change
                 break;
         }
-    }
+    }*/
     //Post Section
     private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
     {
-        ShowAssignments.IsVisible = false;
-        ShowDesFileBtn.IsVisible = false;
-        CountdownLabel.IsVisible = false;
+        //ShowAssignments.IsVisible = false;
+        //ShowDesFileBtn.IsVisible = false;
+        //CountdownLabel.IsVisible = false;
+        OpenLinkBtn.IsVisible = false;
+
         var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
 
         IdLblPopup.Text = SelectedPost.PostId.ToString();
         TitleLblPopup.Text = SelectedPost.PostTitle;
         DesLblPopup.Text = SelectedPost.PostDes;
-        DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
+        //DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
         PostPopupWindow.IsVisible = true;
         Postslistview.SelectedItem = null;
-        if (SelectedPost.PostDesFile != null)
+        if (!string.IsNullOrEmpty(SelectedPost.PostFileLink))
+        {
+            OpenLinkBtn.IsVisible = true;
+        }
+        /*if (SelectedPost.PostDesFile != null)
         {
             ShowDesFileBtn.IsVisible = true;
         }
@@ -185,10 +194,17 @@ public partial class SubjectCenterStd : ContentPage
         ShowAssignments.IsEnabled = false;
         ShowAssignments.Text = "تم الرفع";
         ShowAssignments.BackgroundColor = Colors.Gray;
-        }
+        }*/
 
     }
-    private void Countdown(DateTime deadlineTime)
+    private async void OpenLinkBtnClicked(object sender, EventArgs e)
+    {
+        if (Uri.IsWellFormedUriString(LinkUrl, UriKind.Absolute))
+        {
+            await Launcher.OpenAsync(LinkUrl);
+        }
+    }
+    /*private void Countdown(DateTime deadlineTime)
     {
         if (_countdownTimer != null)
         {
@@ -224,8 +240,8 @@ public partial class SubjectCenterStd : ContentPage
         };
 
         _countdownTimer.Start();
-    }
-    private async void ShowDesFileBtnClicked(object sender, EventArgs e)
+    }*/
+    /*private async void ShowDesFileBtnClicked(object sender, EventArgs e)
     {
         int pid = int.Parse(IdLblPopup.Text);
         var desFile = await database.getSubjectPost(pid);
@@ -243,8 +259,8 @@ public partial class SubjectCenterStd : ContentPage
         {
             File = new ReadOnlyFile(tempPath)
         });
-    }
-    private async void UploadAssignmentsClicked(object sender, EventArgs e)
+    }*/
+    /*private async void UploadAssignmentsClicked(object sender, EventArgs e)
     {
         string filetypename;
         try
@@ -301,14 +317,14 @@ public partial class SubjectCenterStd : ContentPage
         {
             await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
-    }
+    }*/
     private void CancelPostClicked(object sender, EventArgs e)
     {
         PostPopupWindow.IsVisible = false;
     }
     
     //Book Section
-    private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
+    /*private async void BookTapped(object sender, Syncfusion.Maui.ListView.ItemTappedEventArgs e)
     {
         if (e.DataItem is SubjectBooks selectedPdf)
         {
@@ -322,6 +338,6 @@ public partial class SubjectCenterStd : ContentPage
                 File = new ReadOnlyFile(tempPath)
             });
         }
-    }
+    }*/
 
 }

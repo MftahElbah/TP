@@ -13,24 +13,25 @@ public partial class EditPostPage : ContentPage
 	public string PostId;
     private FileResult result;
 
-    public EditPostPage(int subid , string postid , string posttitel , string postdes , string DLTime){
+    public EditPostPage(int subid , string postid , string posttitel , string postdes , string Link  /*,string DLTime*/){
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SubId = subid;
 		PostId = postid;
-		PostRadio.IsChecked = true;
+		//PostRadio.IsChecked = true;
 		if(PostId == null) {return;}
 		
 		DeleteBtn.IsVisible = true;
 		TitleEntry.Text = posttitel;
 		DesEditor.Text = postdes;
-		if(string.IsNullOrEmpty(DLTime))
+        LinkEntry.Text = Link;
+		/*if(string.IsNullOrEmpty(DLTime))
 		{
 			return;
-		}
-		DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
-		AssignmentRadio.IsChecked = true;
+		}*/
+		//DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
+		//AssignmentRadio.IsChecked = true;
         
     }
     private async void BackClicked(object sender, EventArgs e){
@@ -71,7 +72,7 @@ public partial class EditPostPage : ContentPage
         }
 	}
 
-    private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
+    /*private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
         var selectedRadioButton = sender as RadioButton;
 
         // Update the UI or show something based on the selected radio button
@@ -149,4 +150,43 @@ public partial class EditPostPage : ContentPage
 		
 			await Navigation.PopAsync();
 	}
+	*/
+    private async void SaveClicked(object sender, EventArgs e)
+    {
+
+        if (!string.IsNullOrEmpty(LinkEntry.Text) && !Uri.IsWellFormedUriString(LinkEntry.Text, UriKind.Absolute))
+        {
+            await DisplayAlert("خطأ", "الرابط الذي أدخلته غير صحيح. يرجى إدخال رابط صالح.", "حسنا");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(PostId))
+        {
+            var post = new SubjectPosts
+            {
+                PostTitle = TitleEntry.Text,
+                PostDes = DesEditor.Text,
+                SubId = SubId,
+                PostDate = DateTime.Now,
+                PostFileLink = LinkEntry.Text,
+            };
+            await database.insertSubjectPost(post);
+            await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+        }
+        else
+        {
+            int pid = int.Parse(PostId);
+            var existingPost = await database.getSubjectPost(pid);
+            if (existingPost != null)
+            {
+                existingPost.PostTitle = TitleEntry.Text;
+                existingPost.PostDes = DesEditor.Text;
+                existingPost.PostFileLink = LinkEntry.Text;
+                await database.updateSubjectPost(existingPost);
+                await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
+            }
+        }
+
+        await Navigation.PopAsync();
+    }
 }

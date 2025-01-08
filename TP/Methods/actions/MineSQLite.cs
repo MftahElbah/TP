@@ -1,10 +1,5 @@
-﻿using Javax.Security.Auth;
+﻿using Firebase;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TP.Methods.actions
 {
@@ -16,25 +11,31 @@ namespace TP.Methods.actions
 
         public MineSQLite()
         {
-            _database = new SQLiteAsyncConnection(dbPath);
+            _database = new SQLiteAsyncConnection(GetDatabasePath());
 
         }
 
+        private string GetDatabasePath()
+        {
+            // Path for SQLite file
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(folderPath, "YourDatabaseName.db");
+        }
         public override async void DatabaseStarted()
         {
+            await _database.CreateTableAsync<UserSessionTable>();
             await _database.CreateTableAsync<SubTable>();
             await _database.CreateTableAsync<UsersAccountTable>();
             await _database.CreateTableAsync<RequestJoinSubject>();
             await _database.CreateTableAsync<DegreeTable>();
-            await _database.CreateTableAsync<SubjectBooks>();
             await _database.CreateTableAsync<SubjectPosts>();
-            await _database.CreateTableAsync<UserSessionTable>();
-            await _database.CreateTableAsync<SubjectAssignments>();
+            await _database.CreateTableAsync<SchedulerTask>();
+            //await _database.CreateTableAsync<SubjectBooks>();
+            //await _database.CreateTableAsync<SubjectAssignments>();
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
         }
-        private async Task SeedDatabase()
-        {
+        private async Task SeedDatabase(){
             var teacher = await _database.Table<UsersAccountTable>().ToListAsync();
             if (teacher.Count == 0)
             {
@@ -99,11 +100,11 @@ namespace TP.Methods.actions
             return DegreeTable;
         }
 
-        public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
+        /*public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
         {
             var assignment = await _database.Table<SubjectAssignments>().FirstOrDefaultAsync(a => a.PostId == postId && a.StdName == UserSession.Name);
             return assignment;
-        }
+        }*/
         public override async Task<List<SubTable>> getSubByUser()
         {
             var teacherSubjects = await _database.Table<SubTable>()
@@ -158,13 +159,12 @@ namespace TP.Methods.actions
             return rows;
 
         }
-
+        /*
         public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
         {
             int rows = await _database.InsertAsync(assignment);
             return rows;
         }
-
         public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
         {
             var assignments = await _database.Table<SubjectAssignments>()
@@ -172,6 +172,7 @@ namespace TP.Methods.actions
             .ToListAsync();
             return assignments;
         }
+        */
 
 
         public override async Task<List<SubjectPosts>> getSubjectPosts()
@@ -230,7 +231,7 @@ namespace TP.Methods.actions
             return rows;
 
         }
-
+/*
         public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
         {
             var books = await _database.Table<SubjectBooks>().Where(b => b.SubId == subId).ToListAsync();
@@ -241,7 +242,7 @@ namespace TP.Methods.actions
             int rows = await _database.InsertAsync(book);
             return rows;
         }
-
+*/
 
         public override async Task<List<SubjectPosts>> getSubjectPostsBySubId(int subId)
         {
@@ -255,13 +256,13 @@ namespace TP.Methods.actions
             int rows = await _database.DeleteAsync(degreeTable);
             return rows;
         }
-
+        /*
         public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             int rows = await _database.DeleteAsync(book);
             return rows;
         }
-
+        */
         public override async Task<int> deletePost(SubjectPosts post)
         {
             int rows = await _database.DeleteAsync(post);
@@ -294,6 +295,70 @@ namespace TP.Methods.actions
             int rows = await _database.UpdateAsync(degree);
             return rows;
         }
+        public override async Task<List<SchedulerTask>> getTaskTableByUserId()
+        {
+            var allTasks = await _database.Table<SchedulerTask>().Where(t=> t.UserId == UserSession.UserId).ToListAsync();
+            return allTasks;
+        }
+
+        public override async Task<SchedulerTask> getTaskByID(int taskid)
+        {
+            var task = await _database.Table<SchedulerTask>().FirstOrDefaultAsync(t => t.TaskId == taskid);
+            return task;
+        }
+        public override async Task<int> insertTask(SchedulerTask Task){
+            int rows = await _database.InsertAsync(Task);
+            return rows;
+        }
+        public override async Task<int> updateTask(SchedulerTask Task)
+        {
+            int rows = await _database.UpdateAsync(Task);
+            return rows;
+        }
+        public override async Task<bool> TaskTimeConflict(DateTime newStartTime, DateTime newEndTime, string id)
+        {
+            SchedulerTask conflict;
+            if (string.IsNullOrEmpty(id))
+            {
+                conflict = await _database.Table<SchedulerTask>().FirstOrDefaultAsync(t =>
+                t.UserId == UserSession.UserId &&(
+                    (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
+                    (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
+                    (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
+                    ));
+            }
+            else
+            {
+                int tid = int.Parse(id);
+                conflict = await _database.Table<SchedulerTask>().FirstOrDefaultAsync(t =>
+                    t.UserId == UserSession.UserId && t.TaskId != tid && (
+                        (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
+                        (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
+                        (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
+                    ));
+            }
+
+            return conflict != null;
+        }
+
+        public override async Task<int> deleteTask(int taskid)
+        {
+            var task = await getTaskByID(taskid);
+            int rows = await _database.DeleteAsync(task);
+            return rows;
+        }
+        /*public  async Task CheckSchedulerExist()
+        {
+            
+                var tableExist = await _database.Table<SchedulerTask>().ToListAsync();
+
+                // If the table is empty or doesn't exist, create the table
+                if (tableExist == null || !tableExist.Any())
+                {
+                    // Create the table if it doesn't exist
+                    await _database.CreateTableAsync<SchedulerTask>();
+                }
+        }*/
 
 
     }

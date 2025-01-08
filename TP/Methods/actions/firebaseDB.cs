@@ -1,5 +1,4 @@
-﻿using Android.App;
-using FireSharp.Config;
+﻿using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using Newtonsoft.Json;
@@ -156,7 +155,7 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
-        public override async Task<int> deleteSubjectBook(SubjectBooks book)
+        /*public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             try
             {
@@ -168,7 +167,7 @@ namespace TP.Methods.actions
                 Console.WriteLine(e.Message);
                 return 0;
             }
-        }
+        }*/
         public override async Task<int> deleteSubjectPost(int postId)
         {
             try
@@ -361,24 +360,39 @@ namespace TP.Methods.actions
             try
             {
                 FirebaseResponse response = await client.GetAsync("sub");
-                if (response == null || response.Body == "null")
+                if (response == null || string.IsNullOrWhiteSpace(response.Body) || response.Body == "null")
                 {
                     return new List<SubTable>();
                 }
 
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
-                if (LUS == null) return new List<SubTable>();
+                List<SubTable> LUS;
+                try
+                {
+                    LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during deserialization: {ex.Message}");
+                    return new List<SubTable>();
+                }
 
+                if (LUS == null)
+                    return new List<SubTable>();
 
-                List<SubTable> result = LUS.Where(s => s.UserId == UserSession.UserId).ToList();
+                List<SubTable> result = LUS
+                    .Where(s => s != null && s.UserId == UserSession.UserId)
+                    .ToList();
+
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error in getSubByUser: {ex.Message}");
                 return new List<SubTable>();
             }
         }
-        public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
+
+        /*public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
         {
             try
             {
@@ -396,8 +410,8 @@ namespace TP.Methods.actions
             {
                 return null;
             }
-        }
-        public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
+        }*/
+        /*public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
         {
             try
             {
@@ -418,8 +432,8 @@ namespace TP.Methods.actions
             {
                 return new List<SubjectAssignments>();
             }
-        }
-        public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
+        }*/
+        /*public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
         {
             try
             {
@@ -440,7 +454,7 @@ namespace TP.Methods.actions
             {
                 return new List<SubjectBooks>();
             }
-        }
+        }*/
         public override async Task<SubjectPosts> getSubjectPost(int postId)
         {
             try
@@ -629,7 +643,7 @@ namespace TP.Methods.actions
                 return 1;
             }catch { return 0; }
         }
-        public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
+        /*public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
         {
             try
             {
@@ -642,8 +656,8 @@ namespace TP.Methods.actions
                 Console.WriteLine(e.Message);
                 return 0;
             }
-        }
-        public override async Task<List<SubjectBooks>> getsubjectBooks()
+        }*/
+        /*public override async Task<List<SubjectBooks>> getsubjectBooks()
         {
             try
             {
@@ -664,8 +678,8 @@ namespace TP.Methods.actions
             {
                 return new List<SubjectBooks>();
             }
-        }
-        public override async Task<int> insertSubjectBook(SubjectBooks book)
+        }*/
+        /*public override async Task<int> insertSubjectBook(SubjectBooks book)
         {
             try
             {
@@ -678,7 +692,7 @@ namespace TP.Methods.actions
             {
                 return 0;
             }
-        }
+        }*/
         public override async Task<List<SubjectPosts>> GetSubjectPosts()
         {
             try
@@ -742,25 +756,61 @@ namespace TP.Methods.actions
         {
             try
             {
-                FirebaseResponse response = await  client.GetAsync("sub");
-                if (response == null || response.Body == "null")
+                // Ensure searchText is non-null and non-empty
+                if (string.IsNullOrEmpty(searchText))
                 {
+                    Console.WriteLine("Search text is null or empty.");
                     return new List<SubTable>();
                 }
 
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
-                if (LUS == null) return new List<SubTable>();
+                // Fetch data from Firebase
+                FirebaseResponse response = await client.GetAsync("sub");
+                if (response == null || response.Body == "null")
+                {
+                    Console.WriteLine("Firebase response is null or empty.");
+                    return new List<SubTable>();
+                }
 
+                // Log raw response for debugging
+                Console.WriteLine($"Raw Firebase response: {response.Body}");
 
-                List<SubTable> result = LUS.Where(s => s.SubName.Contains(searchText) || s.SubTeacherName.Contains(searchText)).ToList();
+                // Deserialize the response into a list of SubTable objects
+                var LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                if (LUS == null || !LUS.Any())
+                {
+                    Console.WriteLine("Deserialized data is null or empty.");
+                    return new List<SubTable>();
+                }
+
+                // Log the number of entries fetched
+                Console.WriteLine($"Fetched {LUS.Count} subjects from Firebase.");
+
+                // Perform the search with case-insensitive comparison
+                var result = LUS
+                             .Where(s =>
+                                 s != null && // Ensure the subject object is not null
+                                 (
+                                     (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                     (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                 )
+                             )
+                             .ToList();
+
+                // Log the number of results found
+                Console.WriteLine($"Found {result.Count} matching subjects for search text: {searchText}");
+
                 return result;
 
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error in searchSubTable: {ex.Message}");
                 return new List<SubTable>();
             }
         }
+
+
+
         public override async Task<UsersAccountTable> UserLoginChecker(string username, string password)
         {
             
@@ -818,7 +868,6 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
-
         public override async Task<int> updateSubjectPost(SubjectPosts subjectPosts)
         {
             try
@@ -830,6 +879,193 @@ namespace TP.Methods.actions
             {
                 Console.WriteLine(e.Message);
                 return 0;
+            }
+        }
+
+        public override async Task<List<SchedulerTask>> getTaskTable()
+        {
+            try
+            {
+                FirebaseResponse response = await client.GetAsync("tasks");
+                if (response == null || response.Body == "null")
+                {
+                    return new List<SchedulerTask>();
+                }
+
+                List<SchedulerTask> LUS = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
+                if (LUS == null) return new List<SchedulerTask>();
+
+                return LUS.ToList();
+                
+            }
+            catch
+            {
+                return new List<SchedulerTask>();
+            }
+        }
+        public override async Task<List<SchedulerTask>> getTaskTableByUserId()
+        {
+            try
+            {
+                // Fetch tasks from Firebase
+                FirebaseResponse response = await client.GetAsync("tasks");
+                if (response == null || response.Body == "null")
+                {
+                    Console.WriteLine("Response is null or empty.");
+                    return new List<SchedulerTask>();
+                }
+
+                // Log the raw response for debugging
+                Console.WriteLine($"Raw response: {response.Body}");
+
+                // Deserialize response to a list while ignoring null values
+                List<SchedulerTask> tasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body)?
+                    .Where(task => task != null) // Remove null entries
+                    .ToList();
+
+                if (tasksList == null || tasksList.Count == 0)
+                {
+                    Console.WriteLine("Deserialized task list is null or empty.");
+                    return new List<SchedulerTask>();
+                }
+
+                // Log the user session for debugging
+                Console.WriteLine($"Current UserId: {UserSession.UserId}");
+
+                // Filter tasks by the current user
+                List<SchedulerTask> result = tasksList
+                    .Where(s => s.UserId == UserSession.UserId)
+                    .ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in getTaskTableByUserId: {ex.Message}");
+                return new List<SchedulerTask>();
+            }
+        }
+
+
+        public override async Task<SchedulerTask> getTaskByID(int taskId)
+        {
+            try
+            {
+                FirebaseResponse response = await client.GetAsync("tasks/" + taskId);
+                if (response == null || response.Body == "null")
+                {
+                    return null;
+                }
+
+                SchedulerTask LUS = JsonConvert.DeserializeObject<SchedulerTask>(response.Body.ToString());
+                SchedulerTask result = LUS;
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public override async Task<int> insertTask(SchedulerTask Task)
+        {
+            try
+            {
+                FirebaseResponse response = await client.GetAsync("tasks");
+                if (response != null && response.Body != "null")
+                {
+                    var existingTasks = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body);
+                    if (existingTasks != null && existingTasks.Any())
+                    {
+                        int maxId = existingTasks.Values.Max(t => t.TaskId);
+                        Task.TaskId = maxId + 1;
+                    }
+                    else
+                    {
+                        Task.TaskId = 1; // First TaskId
+                    }
+                }
+                else
+                {
+                    Task.TaskId = 1; // First TaskId if no tasks exist
+                }
+
+                // Insert the new task
+                await client.SetAsync($"tasks/{Task.TaskId}", Task);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error in insertTask: {e.Message}");
+                return 0;
+            }
+        }
+
+          
+        public override async Task<int> updateTask(SchedulerTask Task) {
+            try
+            {
+                var SetData = await client.UpdateAsync("tasks/" + Task.TaskId, Task);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+        public override async Task<int> deleteTask(int taskid) {
+            try
+            {
+                var SetData = await client.DeleteAsync("tasks/" + taskid);
+                return 1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+        public override async Task<bool> TaskTimeConflict(DateTime newStartTime, DateTime newEndTime, string id)
+        {
+            try
+            {
+                // Fetch all tasks
+                FirebaseResponse response = await client.GetAsync("tasks");
+                if (response == null || response.Body == "null")
+                {
+                    return false;
+                }
+
+                // Deserialize tasks
+                List<SchedulerTask> tasks = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body);
+                List<SchedulerTask> userTasks = tasks.Where(t => t.UserId == UserSession.UserId).ToList();
+
+                SchedulerTask conflict;
+                if (string.IsNullOrEmpty(id))
+                {
+                    conflict = userTasks.FirstOrDefault(t =>
+                        (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
+                        (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
+                        (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
+                    );
+                }
+                else
+                {
+                    int tid = int.Parse(id);
+                    conflict = userTasks.FirstOrDefault(t =>
+                        t.TaskId != tid && (
+                            (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
+                            (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
+                            (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
+                        ));
+                }
+
+                return conflict != null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in TaskTimeConflict: {ex.Message}");
+                return false;
             }
         }
 

@@ -86,6 +86,18 @@
                 <Editor Placeholder="وصف" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
             </Border>
 
+                <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Entry
+                            x:Name="LinkEntry"
+                            FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a"
+                            Placeholder="رابط الملف"
+                            IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
+                </Border>
+
+                <!--
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
                 <RadioButton TextColor="#1a1a1a" x:Name="PostRadio" GroupName="PostType" Content="منشور" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
                 <RadioButton TextColor="#1a1a1a" x:Name="AssignmentRadio" GroupName="PostType" Content="واجب" CheckedChanged="OnRadioButtonCheckedChanged" FontSize="16" FontFamily="Cairo"/>
@@ -111,7 +123,8 @@
                         </Button.ImageSource>
                     </Button>
                 </HorizontalStackLayout>
-
+                -->
+<!--
             <picker:SfDateTimePicker x:Name="DeadLinePicker" TimeFormat="hh_mm_tt" Mode="Dialog" FlowDirection="RightToLeft" BackgroundColor="#EFEFEF"  ColumnDividerColor="Transparent">
                
                 <picker:SfDateTimePicker.HeaderView>
@@ -122,7 +135,7 @@
 
                         <picker:DateTimePickerHeaderView.SelectionTextStyle>
                             <picker:PickerTextStyle FontSize="16" TextColor="#D3B05F" FontFamily="CairoB"/>
-                            <!-- Example with gold color -->
+                            
                         </picker:DateTimePickerHeaderView.SelectionTextStyle>
 
                     </picker:DateTimePickerHeaderView>
@@ -146,6 +159,7 @@
                     <picker:PickerTextStyle FontSize="16" TextColor="#EFEFEF" FontFamily="CairoB"/>
                 </picker:SfDateTimePicker.SelectedTextStyle>
             </picker:SfDateTimePicker>
+                -->
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
                 <Button x:Name="SaveBtn" IsEnabled="False" Clicked="SaveClicked" Text="حفظ" BackgroundColor="#D9D9D9" TextColor="#1A1A1A" FontSize="16" FontFamily="CairoB">

@@ -76,7 +76,7 @@ public partial class SettingsForSub : ContentPage{
         // Deletes all branches associated with the department.
        
         var SubStdToDelete = await database.getDegreeTablesBySubId(SubId);
-        var booksToDelete = await database.getSubjectBooksBySubId(SubId);
+        //var booksToDelete = await database.getSubjectBooksBySubId(SubId);
         var postsToDelete = await database.getSubjectPostsBySubId(SubId);
         var Sub = await database.getSubBySubId(SubId);
         foreach (var delete in SubStdToDelete)
@@ -87,11 +87,11 @@ public partial class SettingsForSub : ContentPage{
                                                 //
                                                 // .
         }
-        foreach (var book in booksToDelete)
+        /*foreach (var book in booksToDelete)
         {
             await database.deleteSubjectBook(book); // Deletes the branches from the
                                                    // .
-        }
+        }*/
         foreach (var post in postsToDelete)
         {
             await database.deletePost(post); // Deletes the branches from the database.
