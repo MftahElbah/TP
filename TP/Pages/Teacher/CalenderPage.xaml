@@ -98,7 +98,7 @@
 
         <ContentView x:Name="TaskPopupWindow" IsVisible="False" BackgroundColor="#90000000">
 
-            <Border Padding="20" Margin="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">
+            <Border x:Name="TaskPopupBorder" Padding="20" Margin="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>

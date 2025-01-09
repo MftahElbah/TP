@@ -816,15 +816,6 @@ namespace TP.Methods.actions
             
             try
             {
-                /*
-                Old Code:
-
-                FirebaseResponse response = client.Get("User/Account");
-                List<UsersAccountTable> LUS = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body.ToString());
-                UsersAccountTable result = LUS.FirstOrDefault(e => e.Username == username && e.Password == password);
-                return result;
-                */
-
                 //New Code:
                 FirebaseResponse response = await client.GetAsync("User/Account");
                 if (response == null || response.Body == "null")
@@ -911,12 +902,8 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("tasks");
                 if (response == null || response.Body == "null")
                 {
-                    Console.WriteLine("Response is null or empty.");
                     return new List<SchedulerTask>();
                 }
-
-                // Log the raw response for debugging
-                Console.WriteLine($"Raw response: {response.Body}");
 
                 // Deserialize response to a list while ignoring null values
                 List<SchedulerTask> tasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body)?
@@ -925,12 +912,8 @@ namespace TP.Methods.actions
 
                 if (tasksList == null || tasksList.Count == 0)
                 {
-                    Console.WriteLine("Deserialized task list is null or empty.");
                     return new List<SchedulerTask>();
                 }
-
-                // Log the user session for debugging
-                Console.WriteLine($"Current UserId: {UserSession.UserId}");
 
                 // Filter tasks by the current user
                 List<SchedulerTask> result = tasksList
@@ -945,8 +928,6 @@ namespace TP.Methods.actions
                 return new List<SchedulerTask>();
             }
         }
-
-
         public override async Task<SchedulerTask> getTaskByID(int taskId)
         {
             try
@@ -998,9 +979,7 @@ namespace TP.Methods.actions
                 Console.WriteLine($"Error in insertTask: {e.Message}");
                 return 0;
             }
-        }
-
-          
+        } 
         public override async Task<int> updateTask(SchedulerTask Task) {
             try
             {

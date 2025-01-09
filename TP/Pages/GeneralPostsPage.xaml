@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             x:Class="TP.Pages.GeneralPostsPage"
+             xmlns:icon="clr-namespace:TP"
+             Title="GeneralPostsPage"
+             FlowDirection="RightToLeft"
+             BackgroundColor="#efefef">
+    <Grid>
+        
+    <Grid HorizontalOptions="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!--Navigation Bar-->
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Grid.Row="0" Padding="20">
+                <Label/>
+
+                <Button CornerRadius="20" 
+                    BackgroundColor="Transparent"
+                    Padding="0"
+                    Clicked="BackClicked"
+                    >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                         Glyph="{x:Static icon:IconFont.Arrow_back}" 
+                         StyleId="{x:StaticResource GoogleFont}" 
+                         Color="#1a1a1a"
+                         Size="40"
+                         />
+                </Button.ImageSource>
+            </Button>
+        </FlexLayout>
+            <listview:SfListView x:Name="Postslistview"
+                                 ItemsSource="{Binding Posts}"
+                                 ItemSize="180"
+                                 SelectionMode="Single"
+                                 SelectionChanged="SelectionPostChanged"
+                                 IsScrollingEnabled="True"
+                                 ScrollBarVisibility="Always"
+                                 SelectionBackground="Transparent"
+                                 Grid.Row="2"
+                                 Margin="0,20"
+                                 ItemSpacing="0,10"
+                                 >
+                <listview:SfListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#D9D9D9" Stroke="#959595" StrokeThickness="3" WidthRequest="350">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout
+                                                Padding="10"
+                                                Spacing="5">
+
+                                <!-- Post Title -->
+                                <Label 
+                                        Text="{Binding PostTitle}" 
+                                        FontFamily="CairoB"
+                                        HorizontalOptions="Start" 
+                                        VerticalOptions="Start" 
+                                        FontAttributes="Bold" 
+                                        FontSize="24" 
+                                        TextColor="#1A1A1A"/>
+
+                                <!-- Click to view details -->
+                                <Label 
+                                        Text="{Binding PostDes,StringFormat='{0}'}" 
+                                        FontFamily="CairoL"
+                                        HorizontalOptions="Start" 
+                                        VerticalOptions="Center"
+                                        FontSize="16" 
+                                        LineBreakMode="TailTruncation"
+                                        TextColor="#1A1A1A"/>
+
+                                <!-- Post Date -->
+                                <Label 
+                                        Text="{Binding PostDate, StringFormat='تاريخ: {0:yyyy-MM-dd}'}"
+                                        FontFamily="Cairo"
+                                        HorizontalOptions="Start" 
+                                        VerticalOptions="End" 
+                                        FontSize="14" 
+                                        TextColor="#1A1A1A"/>
+                                <Label 
+                                        Text="{Binding PostDate, StringFormat='الوقت: {0:hh:mm tt}'}"
+                                        FontFamily="Cairo"
+                                        HorizontalOptions="Start" 
+                                        VerticalOptions="End" 
+                                        FontSize="14" 
+                                        TextColor="#1A1A1A"/>
+
+
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </DataTemplate>
+                </listview:SfListView.ItemTemplate>
+            </listview:SfListView>
+
+        </Grid>
+        <ContentView x:Name="PostPopupWindow" IsVisible="False" BackgroundColor="#80000000">
+            <Border x:Name="PostBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350"  MaximumHeightRequest="550">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#1a1a1a"
+                            Opacity="0.5"
+                            Radius="05"
+                            Offset="0,10" />
+                </Border.Shadow>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+
+                    </Grid.RowDefinitions>
+                    <FlexLayout JustifyContent="SpaceBetween" HorizontalOptions="Center" VerticalOptions="Center" Padding="0" Grid.Row="0">
+                        <Label/>
+                        <Button FontFamily="Cairo" Clicked="CancelPostClicked" HorizontalOptions="End" FontSize="16" CornerRadius="60" VerticalOptions="Center" Padding="0" BackgroundColor="Transparent">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Close}" Color="#1a1a1a" Size="40"/>
+                            </Button.ImageSource>
+                        </Button>
+                    </FlexLayout>
+
+                    <ScrollView Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="20">
+                            <Label x:Name="IdLblPopup" IsVisible="False"/>
+                            <Label x:Name="TitleLblPopup" Text="mmm" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo" TextColor="#1a1a1a"/>
+                            <Label x:Name="DesLblPopup" Text="mmm" HorizontalOptions="Start" FontSize="20" FontFamily="Cairo" TextColor="#1a1a1a"/>
+
+                        </VerticalStackLayout>
+                    </ScrollView>
+                    <Button Text="فتح الرابط" x:Name="OpenLinkBtn" Clicked="OpenLinkBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="CairoB" CornerRadius="20" Padding="10" BackgroundColor="#1a1a1a" TextColor="#EFEFEF" Grid.Row="2">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Link}" Color="#EFEFEF" Size="24" />
+                        </Button.ImageSource>
+                    </Button>
+
+                    
+
+                </Grid>
+            </Border>
+        </ContentView>
+        <ContentView x:Name="EmptyMessage" IsVisible="False">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="لا يوجد منشورات" 
+               FontSize="Title" 
+               HorizontalTextAlignment="Center" 
+               VerticalTextAlignment="Center"
+                  FontFamily="Cairo"
+               FontAttributes="Bold" 
+               x:Name="NoExistTitle"
+               TextColor="#1a1a1a"/>
+                <Label Text='لا يوجد منشورات متوفرة حاليا' 
+               FontSize="Subtitle" 
+               HorizontalTextAlignment="Center" 
+               VerticalTextAlignment="Center" 
+                  FontFamily="Cairo"
+               TextColor="#959595"
+               x:Name="NoExistSubTitle"
+               />
+            </VerticalStackLayout>
+        </ContentView>
+    </Grid>
+</ContentPage>

@@ -22,8 +22,8 @@ public partial class SubjectSelectionPage : ContentPage
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         Subjects = new ObservableCollection<SubTable>();
-        HideContentViewMethod.HideContentView(SaveSession);
-        HideContentViewMethod.HideContentView(AddSubPopupWindow);
+        HideContentViewMethod.HideContentView(SaveSession, SessionBorder);
+        HideContentViewMethod.HideContentView(AddSubPopupWindow, AddSubBorder);
         BindingContext = this;
     }
     protected override async void OnAppearing()
@@ -126,6 +126,9 @@ public partial class SubjectSelectionPage : ContentPage
     }
     private async void SearchBtnClicked(object sender, EventArgs e){
         await Navigation.PushAsync(new RequestSubjectPage());
+    }
+    private async void NewsBtnClicked(object sender, EventArgs e){
+        await Navigation.PushAsync(new GeneralPostsPage());
     }
     private async void CalenderClicked(object sender, EventArgs e)
     {
