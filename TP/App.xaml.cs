@@ -100,7 +100,7 @@ namespace TP
                 var user = await database.loginSecction(session.Password, session.UserId);
                                 
 
-                if (user == null)
+                if (user == null || !user.IsActive)
                 {
                     if (Application.Current?.Windows.Count > 0)
                     {

@@ -22,7 +22,7 @@ public partial class LoginPage : ContentPage
 
     private async Task DeleteSession()
     {
-        database.deleteSession();
+        await database.deleteSession();
     }
 
     private async void LoginBtnClicked(object sender, EventArgs e)
@@ -38,6 +38,11 @@ public partial class LoginPage : ContentPage
         if (IfUserExist == null)
         {
             await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");
+            return;
+        }
+        if (!IfUserExist.IsActive)
+        {
+            await DisplayAlert("خطاء", "هذا الحساب غير فعال, راجع قسم التسجيل", "حسنا");
             return;
         }
         UserSession.UserId = IfUserExist.UserId;
