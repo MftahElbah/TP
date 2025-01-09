@@ -72,6 +72,23 @@
                      />
                 </Button.ImageSource>
             </Button>
+                    <Button CornerRadius="40" 
+                    Padding="15"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    BackgroundColor="#1a1a1a"
+                    Clicked="NewsBtnClicked"
+                    
+                    >
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleIconsFont" 
+                     Glyph="{x:Static icon:IconFont.Newspaper}" 
+                     StyleId="{x:StaticResource GoogleFont}" 
+                     Color="#efefef"
+                     Size="24"
+                     />
+                </Button.ImageSource>
+            </Button>
                 </HorizontalStackLayout>    
             
             <Button CornerRadius="40" 
@@ -162,7 +179,7 @@
                 --><!-- Tap gesture to capture clicks on the black background --><!--
                 <TapGestureRecognizer Tapped="BackgroundTapped" />
             </ContentView.GestureRecognizers>-->
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="200">
+            <Border x:Name="SessionBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="200">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
@@ -203,7 +220,7 @@
         </ContentView>
         <ContentView x:Name="AddSubPopupWindow" IsVisible="False" BackgroundColor="#90000000">
 
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">
+            <Border x:Name="AddSubBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>

@@ -313,7 +313,7 @@
 
 
         <ContentView x:Name="PopupEditDegreeWindow" IsVisible="False" BackgroundColor="#80000000">
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
+            <Border x:Name="PopupEditDegreeBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
@@ -369,7 +369,7 @@
                            TextColor="#1a1a1a"/>
                     <Label Text="" x:Name="StdNameEntry" FontSize="20" HorizontalOptions="Center" FontFamily="Cairo" TextColor="#1a1a1a" />
                     <!-- Input Fields -->
-                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" MaximumWidthRequest="300" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -378,7 +378,7 @@
                     FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric" FlowDirection="LeftToRight"
                     Placeholder="اعمال"/>
                     </Border>
-                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
+                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" MaximumWidthRequest="300" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -479,7 +479,7 @@
         -->
 
         <ContentView x:Name="EditPostPopupWindow" IsVisible="False" BackgroundColor="#80000000">
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350"  MaximumHeightRequest="550">
+            <Border x:Name="EditPostPopupBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="FillAndExpand" WidthRequest="350"  MaximumHeightRequest="550">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
@@ -546,7 +546,7 @@
         </ContentView>
         
         <ContentView x:Name="MenuPopupWindow" IsVisible="False" BackgroundColor="#80000000">
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="350">
+            <Border x:Name="MenuPopupBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="350">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>

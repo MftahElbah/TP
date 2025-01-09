@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Methods.actions;
+using static Java.Util.Jar.Attributes;
 
 namespace TP.Pages.Student;
 
@@ -28,7 +29,7 @@ public partial class SubjectCenterStd : ContentPage
         if (!showdeg)
         { ShowDegree.IsVisible = false; }
         BindingContext = this;
-        HideContentViewMethod.HideContentView(PostPopupWindow);
+        HideContentViewMethod.HideContentView(PostPopupWindow , PostBorder);
     }
     protected override async void OnAppearing(){
         base.OnAppearing();
@@ -151,7 +152,7 @@ public partial class SubjectCenterStd : ContentPage
         }
     }*/
     //Post Section
-    private async void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
+    private void SelectionPostChanged(object sender, Syncfusion.Maui.ListView.ItemSelectionChangedEventArgs e)
     {
         //ShowAssignments.IsVisible = false;
         //ShowDesFileBtn.IsVisible = false;
@@ -166,7 +167,8 @@ public partial class SubjectCenterStd : ContentPage
         //DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();
         PostPopupWindow.IsVisible = true;
         Postslistview.SelectedItem = null;
-        if (!string.IsNullOrEmpty(SelectedPost.PostFileLink))
+        LinkUrl = SelectedPost.PostFileLink;
+        if (!string.IsNullOrEmpty(LinkUrl))
         {
             OpenLinkBtn.IsVisible = true;
         }

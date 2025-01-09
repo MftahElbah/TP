@@ -1,6 +1,4 @@
-﻿using SQLite;
-using SQLitePCL;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Methods.actions;
 
@@ -41,10 +39,10 @@ public partial class SubjectCenterTeacher : ContentPage
         BindingContext = this;
 
 
-        HideContentViewMethod.HideContentView(PopupEditDegreeWindow);
+        HideContentViewMethod.HideContentView(PopupEditDegreeWindow, PopupEditDegreeBorder);
         //HideContentViewMethod.HideContentView(PopupEditBookNameWindow);
-        HideContentViewMethod.HideContentView(EditPostPopupWindow);
-        HideContentViewMethod.HideContentView(MenuPopupWindow);
+        HideContentViewMethod.HideContentView(EditPostPopupWindow, EditPostPopupBorder);
+        HideContentViewMethod.HideContentView(MenuPopupWindow, MenuPopupBorder);
     }
 
 
@@ -321,6 +319,11 @@ public partial class SubjectCenterTeacher : ContentPage
             await DisplayAlert("خطا", "يجب ملئ جميع الحقول", "حسنا");
             return;
         }
+        if (float.Parse(DegreeEntry.Text) < 0 || float.Parse(MidDegreeEntry.Text) < 0)
+        {
+            await DisplayAlert("خطا", "يجب الا يكون الدرجة اصغر من الصفر", "حسنا");
+            return;
+        }
         float total = float.Parse(DegreeEntry.Text) + float.Parse(MidDegreeEntry.Text);
         if(total > 40){
             await DisplayAlert("خطا", "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40", "حسنا");
@@ -359,7 +362,8 @@ public partial class SubjectCenterTeacher : ContentPage
         IdLblPopup.Text = SelectedPost.PostId.ToString();
         TitleLblPopup.Text = SelectedPost.PostTitle;
         DesLblPopup.Text = SelectedPost.PostDes;
-        if (!string.IsNullOrEmpty(SelectedPost.PostFileLink)) {
+        LinkUrl = SelectedPost.PostFileLink;
+        if (!string.IsNullOrEmpty(LinkUrl)) {
         OpenLinkBtn.IsVisible = true;
         }
         /*DeadLineTimeLblPopup.Text = SelectedPost.DeadLineTime.ToString();

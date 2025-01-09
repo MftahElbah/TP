@@ -33,7 +33,7 @@ public partial class CalenderPage : ContentPage
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
         _appointments = new ObservableCollection<SchedulerAppointment>();
-        HideContentViewMethod.HideContentView(TaskPopupWindow);
+        HideContentViewMethod.HideContentView(TaskPopupWindow, TaskPopupBorder);
         CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("ar-SA");
 
     }

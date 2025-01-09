@@ -98,7 +98,7 @@
 
         <!-- Password Confirmation Popup (on top) -->
         <ContentView x:Name="PasswordPopup" IsVisible="False" BackgroundColor="#80000000" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="1">
-            <Border Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
+            <Border x:Name="PasswordPopupBorder" Padding="20" BackgroundColor="#EFEFEF" VerticalOptions="Center" HorizontalOptions="Center" Margin="20,0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>

@@ -46,6 +46,17 @@ namespace TP.Methods.actions
                 };
                 await _database.InsertAllAsync(initialTeacher); // Inserts the initial Teacher Account into the database.
             }
+            var post = await _database.Table<SubjectPosts>().ToListAsync();
+            if (post.Count == 0)
+            {
+                DateTime dtn = DateTime.Now;
+                var initialPost = new List<SubjectPosts>
+                {
+                    new SubjectPosts {PostId = -1 , PostTitle= "الى التجريب", PostDes="تجريب تجريب" , PostDate=dtn,PostFileLink = string.Empty , SubId = -1},
+                    new SubjectPosts {PostId = -2 , PostTitle= "الى التجريب بالرابط", PostDes="تجريب تجريب" , PostDate=dtn,PostFileLink = "https://www.youtube.com/" , SubId = -1},
+                };
+                await _database.InsertAllAsync(initialPost); // Inserts the initial Teacher Account into the database.
+            }
         }
         public override async Task<UsersAccountTable> getUserAccountById(int userId)
         {

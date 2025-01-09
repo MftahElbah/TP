@@ -14,7 +14,7 @@ public partial class SettingsForSub : ContentPage{
         SubId = id;
 
 
-        HideContentViewMethod.HideContentView(PasswordPopup);
+        HideContentViewMethod.HideContentView(PasswordPopup, PasswordPopupBorder);
     }
     protected override async void OnAppearing()
     {
