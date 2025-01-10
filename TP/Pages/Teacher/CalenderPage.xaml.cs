@@ -47,8 +47,7 @@ public partial class CalenderPage : ContentPage
         //PageShowStatus(1);
         Scheduler.AppointmentDragStarting += OnAppointmentDragStarting;
         Scheduler.AppointmentDrop += OnAppointmentDrop;
-        Scheduler.Tapped += Scheduler_Tapped;
-        Scheduler.LongPressed += Scheduler_LongPressed;
+        
     }
     private async Task LoadTasks()
     {
