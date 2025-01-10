@@ -30,8 +30,13 @@ public partial class RequestMangment : ContentPage{
         await Navigation.PopAsync();
     }
     private async Task LoadRequests(){
+            EmptyMessage.IsVisible = false;
         RequestsColl.Clear();
         var requests =  await database.getRequestJoinSubjectsBySubId(SubIds);
+        if (requests.Count == 0) {
+            EmptyMessage.IsVisible = true;
+            return; 
+        }
         foreach (var req in requests)
         {
             RequestsColl.Add(req);

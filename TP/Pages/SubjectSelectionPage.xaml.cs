@@ -34,6 +34,13 @@ public partial class SubjectSelectionPage : ContentPage
         CheckSession();
 
     }
+    private async void OnPullToRefreshRefreshing(object sender, EventArgs args)
+    {
+        pulltorefresh.IsRefreshing = true;
+        await Task.Delay(2000);
+        await LoadSubjects();
+        pulltorefresh.IsRefreshing = false;
+    }
 
     //load data depends on UserType if he's Teacher or Student
     private async Task LoadSubjects()
@@ -41,11 +48,11 @@ public partial class SubjectSelectionPage : ContentPage
 
         Subjects.Clear();
 
+        NoSubExist.IsVisible = false;
         switch (UserSession.UserType)
         {
             case 1: // Teacher
                 AddBtn.IsVisible = true;
-                NoSubExist.IsVisible = false;
                 CalenderBtn.IsVisible = true;
                 var teacherSubjects = await database.getSubByUser();
                 if (teacherSubjects.Count == 0 )

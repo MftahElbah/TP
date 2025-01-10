@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.Pages.SubjectSelectionPage"
+             xmlns:refresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
              xmlns:icon="clr-namespace:TP"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              BackgroundColor="#EFEFEF"
@@ -108,7 +109,14 @@
             </Button>
                
         </FlexLayout>
-        
+            <refresh:SfPullToRefresh x:Name="pulltorefresh" 
+                         TransitionMode="SlideOnTop" 
+                         ProgressBackground="#dedede" 
+                         ProgressColor="#1a1a1a" 
+                         Refreshing="OnPullToRefreshRefreshing"
+                         Grid.Row="1">
+                <refresh:SfPullToRefresh.PullableContent>
+                    
             <!-- Main -->
             <listview:SfListView x:Name="SubList"
                                  ItemTapped="OnItemTapped"
@@ -143,6 +151,8 @@
                 </listview:SfListView.ItemTemplate>
             </listview:SfListView>
 
+                </refresh:SfPullToRefresh.PullableContent>
+            </refresh:SfPullToRefresh>
 
         </Grid>
         

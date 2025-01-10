@@ -6,7 +6,8 @@
              Title="RequestMangment"
              xmlns:icon="clr-namespace:TP"
              BackgroundColor="#EFEFEF">
-
+    <Grid>
+        
     <Grid>
         <!-- Define rows for the header, content, and footer -->
         <Grid.RowDefinitions>
@@ -89,6 +90,26 @@
             </listview:SfListView.ItemTemplate>
         </listview:SfListView>
 
+
+        <ContentView x:Name="EmptyMessage" IsVisible="False" Grid.Row="1">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="لا يوجد" 
+               FontSize="Title" 
+               HorizontalTextAlignment="Center" 
+               VerticalTextAlignment="Center"
+               FontFamily="CairoB"
+               x:Name="NoExistTitle"
+               TextColor="#1a1a1a"/>
+                <Label Text='لا يوجد طلبات الانضمام في الوقت الحالي' 
+               FontSize="Subtitle" 
+               HorizontalTextAlignment="Center" 
+               VerticalTextAlignment="Center" 
+               FontFamily="Cairo"
+               TextColor="Gray"
+               x:Name="NoExistSubTitle" />
+            </VerticalStackLayout>
+        </ContentView>
+    </Grid>
     </Grid>
 
 </ContentPage>
