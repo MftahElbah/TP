@@ -67,10 +67,15 @@ public partial class SettingsForSub : ContentPage{
     {
         PasswordPopup.IsVisible = false; // Hide the popup
     }
-    private async void AgreeDeleteClicked(object sender, EventArgs e)
+    /*private async void AgreeDeleteClicked(object sender, EventArgs e)
     {
-        string password = PasswordEntry.Text; // Retrieve entered password
-        var agree = await database.getUserAccountById(UserSession.UserId);
+        //string password = PasswordEntry.Text; // Retrieve entered password
+        if (PasswordEntry.Text != UserSession.Password) { 
+        await DisplayAlert("Success", "كلمة السر خطا", "OK");
+            return;
+        }
+        await database.deleteSub(SubId); // Deletes the department from the database.
+        *//*var agree = await database.getUserAccountById(UserSession.UserId);
         if (agree == null || string.IsNullOrEmpty(PasswordEntry.Text)) { return; }
 
         // Deletes all branches associated with the department.
@@ -87,16 +92,33 @@ public partial class SettingsForSub : ContentPage{
                                                 //
                                                 // .
         }
-        /*foreach (var book in booksToDelete)
+        *//*foreach (var book in booksToDelete)
         {
             await database.deleteSubjectBook(book); // Deletes the branches from the
                                                    // .
-        }*/
+        }*//*
         foreach (var post in postsToDelete)
         {
             await database.deletePost(post); // Deletes the branches from the database.
+        }*//*
+        await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
+
+        if (Navigation?.NavigationStack?.Count > 2)
+        {
+            var secondLastPage = Navigation.NavigationStack[^2];
+            Navigation.RemovePage(secondLastPage); // Removes the second last page
+            await Navigation.PopAsync(); // Pops the last page
+        }   
+    }*/
+    private async void AgreeDeleteClicked(object sender, EventArgs e)
+    {
+        //string password = PasswordEntry.Text; // Retrieve entered password
+        if (PasswordEntry.Text != UserSession.Password) { 
+        await DisplayAlert("Success", "كلمة السر خطا", "OK");
+            return;
         }
-        await database.deleteSub(Sub); // Deletes the department from the database.
+        await database.deleteSub(SubId); // Deletes the department from the database.
+        
         await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
 
         if (Navigation?.NavigationStack?.Count > 2)

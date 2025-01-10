@@ -55,6 +55,7 @@ namespace TP
                 {
                     Database.SelectedDatabase = new MineSQLite();
                     
+                    UserSession.internet = false;
                     Console.WriteLine("Using SQLite Database.");
                 }
 

@@ -280,7 +280,7 @@ namespace TP.Methods.actions
             return rows;
         }
 
-        public override async Task<int> deleteSub(SubTable sub)
+        public override async Task<int> deleteSub(int sub)
         {
             int rows = await _database.DeleteAsync(sub);
             return rows;

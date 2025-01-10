@@ -167,9 +167,9 @@ namespace TP.Methods.actions
         {
             return new int();
         }
-        public virtual async Task<int> deleteSub(SubTable sub)
+        public virtual async Task<int> deleteSub(int sub)
         {
-            return new int();
+            return sub;
         }
         public virtual async Task<DegreeTable> getDegreeByStdNameAndSubId(string stdName, int subId)
         {

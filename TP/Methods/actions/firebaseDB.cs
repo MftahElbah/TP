@@ -142,18 +142,106 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
-        public override async Task<int> deleteSub(SubTable sub)
+        public override async Task<int> deleteSub(int subId)
         {
             try
             {
-                var SetData = await client.DeleteAsync("sub/" + sub.SubId);
-                return 1;
+                // Delete the subject from "sub/"
+                var subDeleteResponse = await client.DeleteAsync($"sub/{subId}");
+                if (subDeleteResponse == null || subDeleteResponse.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return 0; // Failed to delete the subject
+                }
+
+                int deletedCount = 1; // Count the deleted subject
+
+                // Call separate methods to delete related data
+                deletedCount += await DeleteDegreesBySubId(subId);
+                deletedCount += await DeletePostsBySubId(subId);
+                deletedCount += await DeleteRequestsBySubId(subId);
+
+                return deletedCount; // Return total number of deleted records
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"Error deleting subject and related data: {ex.Message}");
                 return 0;
             }
+        }
+
+        private async Task<int> DeleteDegreesBySubId(int subId)
+        {
+            int deletedCount = 0;
+
+            var degreeData = await client.GetAsync("degree/");
+            if (degreeData != null && degreeData.Body != "null")
+            {
+                var degrees = JsonConvert.DeserializeObject<List<DegreeTable>>(degreeData.Body);
+                foreach (var item in degrees)
+                {
+                    if (item.SubId == subId)
+                    {
+                        var degreeDelete = await client.DeleteAsync($"degree/{item.DegId}");
+                        if (degreeDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            deletedCount++;
+                        }
+                    }
+                }
+            }
+
+            return deletedCount;
+        }
+
+        private async Task<int> DeletePostsBySubId(int subId)
+        {
+            int deletedCount = 0;
+
+            var postData = await client.GetAsync("post/");
+            if (postData != null && postData.Body != "null")
+            {
+                var posts = JsonConvert.DeserializeObject<List<SubjectPosts>>(postData.Body);
+                foreach (var item in posts)
+                {
+                    if (item.SubId == subId)
+                    {
+                        var postDelete = await client.DeleteAsync($"post/{item.PostId}");
+                        if (postDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            deletedCount++;
+                        }
+                    }
+                }
+            }
+
+            return deletedCount;
+        }
+
+        private async Task<int> DeleteRequestsBySubId(int subId)
+        {
+            int deletedCount = 0;
+
+            var requestData = await client.GetAsync("request/");
+            if (requestData != null && requestData.Body != "null")
+            {
+                var requests = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(requestData.Body);
+                foreach (var item in requests)
+                {
+                    if(item != null)
+                    {
+                        if (item.SubId == subId)
+                        {
+                            var requestDelete = await client.DeleteAsync($"request/{item.ReqId}");
+                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                deletedCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return deletedCount;
         }
         /*public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
@@ -282,7 +370,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<RequestJoinSubject>();
 
 
-                List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId ).ToList();
+                List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId ).ToList();
                 return result;
             }
             catch
