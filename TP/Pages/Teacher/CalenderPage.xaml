@@ -7,9 +7,9 @@
              xmlns:icon="clr-namespace:TP"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
-    <Grid>
-        
-    <Grid>
+    <Grid x:Name="MainLayout">
+
+        <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -111,8 +111,13 @@
                 </Border.Shadow>
 
 
-                <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
-                    <FlexLayout JustifyContent="SpaceBetween" HorizontalOptions="Center" VerticalOptions="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>    
+                            
+                    <FlexLayout Grid.Row ="0"  JustifyContent="SpaceBetween" HorizontalOptions="Center" VerticalOptions="Center">
                         
                     <Button
                             HorizontalOptions="Center" 
@@ -166,22 +171,25 @@
                             </Button.ImageSource>
                         </Button>
                     </FlexLayout>
+                    <ScrollView Grid.Row ="1" HorizontalOptions="Center" VerticalOptions="Center">
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                                    
+                            <Label Text="إضافة تذكير" 
+                                   x:Name="PopupTitle"
+                                   FontSize="32"
+                                   FontFamily="CairoB"
+                                   HorizontalOptions="Center"
+                                   TextColor="#1a1a1a"
+                                   />
 
-                    <Label Text="إضافة تذكير" 
-                           x:Name="PopupTitle"
-                   FontSize="32"
-                   FontFamily="CairoB"
-                   HorizontalOptions="Center"
-                   TextColor="#1a1a1a"
-                   />
-                    
-
-                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+                                
+                            
+                            <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
                         <Entry
-                        Placeholder="عنوان"
+                        Placeholder="عنوان*"
                         x:Name="TaskTitleEntry"
                         FontFamily="CairoB"
                         FontSize="16"
@@ -190,17 +198,18 @@
                         IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
                         PlaceholderColor="#959595" />
                     </Border>
-                    <HorizontalStackLayout>
+                            <HorizontalStackLayout>
                         
                     </HorizontalStackLayout>
-                    <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
+                            <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="250" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
-                        <Entry
+                        <Editor
                         Placeholder="وصف"
                         x:Name="TaskDesEntry"
                         FontFamily="CairoB"
+                        HeightRequest="200"
                         FontSize="16"
                         TextColor="#1a1a1a"
                         FlowDirection="RightToLeft"
@@ -208,7 +217,7 @@
                         PlaceholderColor="#959595" />
                     </Border>
 
-                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                         <Button Text="بداية الوقت" x:Name="StartTimeBtn" Clicked="StartTimeBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="Cairo" TextColor="#efefef" BackgroundColor="#1a1a1a">
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="GoogleIconsFont" 
@@ -262,7 +271,7 @@
                             </picker:SfDateTimePicker.SelectedTextStyle>
                         </picker:SfDateTimePicker>
                     </HorizontalStackLayout>
-                        <Button Text="لون المهمة"
+                            <Button Text="لون المهمة"
                                 FontFamily="CairoB"
                                 FontSize="16"
                                 TextColor="#efefef"
@@ -270,9 +279,11 @@
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"
                                 Clicked="TaskColorBtnClicked"/>
-                    
-                </VerticalStackLayout>
+                                </VerticalStackLayout>
+                    </ScrollView>
+                
 
+                </Grid>
             </Border>
         </ContentView>
 

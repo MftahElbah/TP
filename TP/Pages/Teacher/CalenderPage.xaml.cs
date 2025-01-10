@@ -294,8 +294,25 @@ public partial class CalenderPage : ContentPage
 
     private async void Scheduler_LongPressed(object sender, SchedulerLongPressedEventArgs e)
     {
-        var result = await DisplayAlert("متأكد ؟", "هل انت متأكد من الحذف", "نعم", "لا");
+        /*var result = await DisplayAlert("متأكد ؟", "هل انت متأكد من الحذف", "نعم", "لا");
         if (!result)
+        {
+            return;
+        }*/
+        // Initialize the YesNoContentView
+        var yesNoPopup = new YesNoContentView();
+
+        // Add the popup to the current page's layout (assuming a Grid or StackLayout named 'MainLayout')
+        MainLayout.Children.Add(yesNoPopup);
+
+        // Show the popup and wait for the user's response
+        bool isConfirmed = await yesNoPopup.ShowAsync();
+
+        // Remove the popup after the response
+        MainLayout.Children.Remove(yesNoPopup);
+
+        // If user clicked "No", exit the method
+        if (!isConfirmed)
         {
             return;
         }

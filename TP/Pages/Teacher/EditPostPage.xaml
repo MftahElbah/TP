@@ -9,8 +9,10 @@
     xmlns:icon="clr-namespace:TP"
     Title="EditPostPage">
 
-    <Grid>
-        
+
+    <Grid x:Name="MainLayout">
+        <Grid>
+            
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -75,7 +77,7 @@
                     <Entry
                         x:Name="TitleEntry"
                         FontFamily="CairoB" FontSize="24" TextColor="#1a1a1a"
-                        Placeholder="عنوان"
+                        Placeholder="عنوان*"
                         IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
                 </Border>
 
@@ -83,7 +85,7 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
-                <Editor Placeholder="وصف" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
+                <Editor Placeholder="وصف*" x:Name="DesEditor" HeightRequest="200" TextChanged="DesEditorChanged" FontSize="16" FontFamily="Cairo" TextColor="#1a1a1a" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
             </Border>
 
                 <Border Stroke="#959595" StrokeThickness="3" Padding="10" WidthRequest="300" BackgroundColor="#D9D9D9">
@@ -175,4 +177,5 @@
         </VerticalStackLayout>
         </ScrollView>
     </Grid>
+        </Grid>
 </ContentPage>

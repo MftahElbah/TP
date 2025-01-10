@@ -30,6 +30,7 @@ public partial class SubjectCenterStd : ContentPage
         { ShowDegree.IsVisible = false; }
         BindingContext = this;
         HideContentViewMethod.HideContentView(PostPopupWindow , PostBorder);
+        HideContentViewMethod.HideContentView(PopupShowDegreeWindow, PopupShowDegreeBorder);
     }
     protected override async void OnAppearing(){
         base.OnAppearing();
@@ -42,6 +43,7 @@ public partial class SubjectCenterStd : ContentPage
     //LoadDataSection
     private async Task LoadPosts()
     {
+        EmptyMessage.IsVisible = false;
         Posts.Clear();
         var data = await database.getSubjectPostsBySubId(SubId);
         var posts = data
@@ -49,14 +51,15 @@ public partial class SubjectCenterStd : ContentPage
             .ToList();
         if (posts.Count == 0)
         {
-            Emptys[0] = true;
+        EmptyMessage.IsVisible = true;
+            //Emptys[0] = true;
             return;
         }
         foreach (var post in posts)
         {
             Posts.Add(post);
         }
-        Emptys[0] = false;
+        //Emptys[0] = false;
     }
     /*private async Task LoadBooks()
     {
@@ -81,9 +84,14 @@ public partial class SubjectCenterStd : ContentPage
     }*/
     //Nav Bar
     private async void ShowDegreeClicked(object sender, EventArgs e) {
+
         var data = await database.getDegreeTableBySubIdAndStdName(SubId);
         var deg = data.FirstOrDefault();
-        await DisplayAlert("درجات", $"الأعمال:{deg.Deg}\n الجزئي:{deg.MiddelDeg} \n المجموع:{deg.Total}","حسنا");
+        DegreeLbl.Text = $"الأعمال:{deg.Deg}";
+        MidDegreeLbl.Text = $"الجزئي:{deg.MiddelDeg}";
+        TotalDegreeLbl.Text = $"المجموع:{deg.Total}";
+        //await DisplayAlert("درجات", $"الأعمال:{deg.Deg}\n الجزئي:{deg.MiddelDeg} \n المجموع:{deg.Total}","حسنا");
+        PopupShowDegreeWindow.IsVisible = true;
     }
 
     private async void BackClicked(object sender, EventArgs e)
@@ -320,6 +328,10 @@ public partial class SubjectCenterStd : ContentPage
             await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
     }*/
+    private void CancelDegreeClicked(object sender, EventArgs e)
+    {
+        PopupShowDegreeWindow.IsVisible = false;
+    }
     private void CancelPostClicked(object sender, EventArgs e)
     {
         PostPopupWindow.IsVisible = false;

@@ -71,7 +71,9 @@ public partial class RequestMangment : ContentPage{
 
         await database.deleteRequestJoin(swipedItem.ReqId);
         RequestsColl.Remove(swipedItem);
-      
+        await LoadRequests();
+
+
 
     }
 }

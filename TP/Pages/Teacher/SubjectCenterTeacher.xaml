@@ -18,7 +18,7 @@
             <Setter Property="FontFamily" Value="Cairo"/>
         </Style>
     </ContentPage.Resources>
-    <Grid>
+    <Grid x:Name="MainLayout">
 
         
         <Grid HorizontalOptions="Center">
@@ -376,7 +376,7 @@
                         <Entry
                     x:Name="DegreeEntry"
                     FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric" FlowDirection="LeftToRight"
-                    Placeholder="اعمال"/>
+                    Placeholder="اعمال*"/>
                     </Border>
                     <Border Stroke="#959595" StrokeThickness="3" Padding="10" MaximumWidthRequest="300" BackgroundColor="#D9D9D9">
                         <Border.StrokeShape>
@@ -385,7 +385,7 @@
                         <Entry
                     x:Name="MidDegreeEntry"
                     FontFamily="CairoB" FontSize="16" TextColor="#1a1a1a" Keyboard="Numeric" FlowDirection="LeftToRight"
-                    Placeholder="الجزئي"/>
+                    Placeholder="الجزئي*"/>
                     </Border>
 
                     <!-- Save Button -->

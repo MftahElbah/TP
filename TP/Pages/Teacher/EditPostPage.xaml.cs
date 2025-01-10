@@ -40,10 +40,27 @@ public partial class EditPostPage : ContentPage
     private async void DeleteClicked(object sender, EventArgs e)
     {
         int pid = int.Parse(PostId);
-        bool confirm = await DisplayAlert("تأكيد الحذف", "هل أنت متأكد أنك تريد حذف هذا المنشور؟", "نعم", "لا");
+        /*bool confirm = await DisplayAlert("تأكيد الحذف", "هل أنت متأكد أنك تريد حذف هذا المنشور؟", "نعم", "لا");
         if (!confirm)
         {
 			return;
+        }*/
+        // Initialize the YesNoContentView
+        var yesNoPopup = new YesNoContentView();
+
+        // Add the popup to the current page's layout (assuming a Grid or StackLayout named 'MainLayout')
+        MainLayout.Children.Add(yesNoPopup);
+
+        // Show the popup and wait for the user's response
+        bool isConfirmed = await yesNoPopup.ShowAsync();
+
+        // Remove the popup after the response
+        MainLayout.Children.Remove(yesNoPopup);
+
+        // If user clicked "No", exit the method
+        if (!isConfirmed)
+        {
+            return;
         }
             // Perform delete operation
         await database.deleteSubjectPost(pid);

@@ -343,9 +343,26 @@ public partial class SubjectCenterTeacher : ContentPage
         PopupEditDegreeWindow.IsVisible = false;
     }
     private async void DeleteDegreeClicked(object sender, EventArgs e) {
-        bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
-        if (!isConfirmed) { return; }
-        
+        /*bool isConfirmed =await DisplayAlert("تأكيد", "هل انت متأكد", "متأكد", "الغاء");
+        if (!isConfirmed) { return; }*/
+
+        // Initialize the YesNoContentView
+        var yesNoPopup = new YesNoContentView();
+
+        // Add the popup to the current page's layout (assuming a Grid or StackLayout named 'MainLayout')
+        MainLayout.Children.Add(yesNoPopup);
+
+        // Show the popup and wait for the user's response
+        bool isConfirmed = await yesNoPopup.ShowAsync();
+
+        // Remove the popup after the response
+        MainLayout.Children.Remove(yesNoPopup);
+
+        // If user clicked "No", exit the method
+        if (!isConfirmed)
+        {
+            return;
+        }
         var DelDeg = await database.getDegreeByStdNameAndSubId(namevar, SSubId);
         await database.deleteDegree(DelDeg);
         PopupEditDegreeWindow.IsVisible = false;
