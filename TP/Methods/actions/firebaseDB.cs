@@ -1040,12 +1040,17 @@ namespace TP.Methods.actions
             try
             {
                 FirebaseResponse response = await client.GetAsync("tasks");
+                List<SchedulerTask> existingTasks = new List<SchedulerTask>();
+
                 if (response != null && response.Body != "null")
                 {
-                    var existingTasks = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body);
+                    // Deserialize as a List instead of Dictionary
+                    existingTasks = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body);
+
                     if (existingTasks != null && existingTasks.Any())
                     {
-                        int maxId = existingTasks.Values.Max(t => t.TaskId);
+
+                        int maxId = existingTasks.Where(t => t != null).Max(t => t.TaskId);
                         Task.TaskId = maxId + 1;
                     }
                     else
@@ -1067,7 +1072,8 @@ namespace TP.Methods.actions
                 Console.WriteLine($"Error in insertTask: {e.Message}");
                 return 0;
             }
-        } 
+        }
+
         public override async Task<int> updateTask(SchedulerTask Task) {
             try
             {

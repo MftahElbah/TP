@@ -64,7 +64,8 @@ public partial class EditPostPage : ContentPage
         }
             // Perform delete operation
         await database.deleteSubjectPost(pid);
-        await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
+        Snackbar.ShowSnackbar(1, "تم حذف المنشور بنجاح");
+        //await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
         await Navigation.PopAsync();
     }
 
@@ -173,7 +174,8 @@ public partial class EditPostPage : ContentPage
 
         if (!string.IsNullOrEmpty(LinkEntry.Text) && !Uri.IsWellFormedUriString(LinkEntry.Text, UriKind.Absolute))
         {
-            await DisplayAlert("خطأ", "الرابط الذي أدخلته غير صحيح. يرجى إدخال رابط صالح.", "حسنا");
+            Snackbar.ShowSnackbar(2, "الرابط الذي أدخلته غير صالح");
+            //await DisplayAlert("خطأ", "الرابط الذي أدخلته غير صحيح. يرجى إدخال رابط صالح.", "حسنا");
             return;
         }
 
@@ -200,7 +202,8 @@ public partial class EditPostPage : ContentPage
                 existingPost.PostDes = DesEditor.Text;
                 existingPost.PostFileLink = LinkEntry.Text;
                 await database.updateSubjectPost(existingPost);
-                await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
+                Snackbar.ShowSnackbar(1, "تم تعديل المنشور");
+                //await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
             }
         }
 

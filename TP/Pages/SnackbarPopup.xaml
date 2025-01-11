@@ -2,23 +2,36 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TP.Pages.SnackbarPopup"
-             FlowDirection="RightToLeft">
-    
-        <Border Padding="20" BackgroundColor="#1a1a1a" VerticalOptions="Center" HorizontalOptions="Center" x:Name="ConBoarder">
+             FlowDirection="RightToLeft"
+             xmlns:icon="clr-namespace:TP"
+             IsVisible="False"
+             x:Name="Message">
 
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="20"/>
-            </Border.StrokeShape>
-            <Border.Shadow>
-                <Shadow Brush="#1a1a1a"
-        Opacity="0.5"
-        Radius="05"
-        Offset="0,10" />
-            </Border.Shadow>
-        <Label Text="لا يوجد اتصال على الشبكة"
-               FontSize="14"
+    <Border Padding="15,10" BackgroundColor="#1a1a1a" VerticalOptions="Center" HorizontalOptions="Center" x:Name="ConBoarder" Margin="20">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20"/>
+        </Border.StrokeShape>
+        <Border.Shadow>
+            <Shadow Brush="#1a1a1a"
+                    Opacity="0.5"
+                    Radius="05"
+                    Offset="0,10" />
+        </Border.Shadow>
+
+        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+            <Image x:Name="SnackbarIcon">
+                <Image.Source>
+                    <FontImageSource FontFamily="GoogleIconsFont"
+                             Glyph="{x:Static icon:IconFont.Login}"
+                             Color="#EFEFEF"
+                             Size="20"/>
+                </Image.Source>
+            </Image>
+            <Label x:Name="SnackbarMessageLabel"
+               Text="لا يوجد اتصال على الشبكة"
+               FontSize="12"
                FontFamily="CairoB"
-               TextColor="#efefef"
-               />
+               TextColor="#EFEFEF"/>
+        </HorizontalStackLayout>
     </Border>
 </ContentView>

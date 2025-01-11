@@ -5,6 +5,7 @@
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              x:Class="TP.Pages.Teacher.CalenderPage"
              xmlns:icon="clr-namespace:TP"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
     <Grid x:Name="MainLayout">
@@ -286,6 +287,7 @@
                 </Grid>
             </Border>
         </ContentView>
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
 
     </Grid>
 </ContentPage>

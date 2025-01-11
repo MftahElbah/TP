@@ -5,6 +5,7 @@
     xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
     x:Class="TP.Pages.Teacher.EditPostPage"
     FlowDirection="RightToLeft"
+    xmlns:snackbarmessage="clr-namespace:TP.Pages"
     BackgroundColor="#EFEFEF"
     xmlns:icon="clr-namespace:TP"
     Title="EditPostPage">
@@ -177,5 +178,7 @@
         </VerticalStackLayout>
         </ScrollView>
     </Grid>
-        </Grid>
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
+
+    </Grid>
 </ContentPage>

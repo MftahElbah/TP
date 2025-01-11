@@ -5,10 +5,11 @@
              x:Class="TP.Pages.LoginPage"
              xmlns:icon="clr-namespace:TP"
              xmlns:nonet="clr-namespace:TP.Pages"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
              BackgroundColor="#EFEFEF"
              >
     <Grid>
-        <nonet:SnackbarPopup HorizontalOptions="Center" VerticalOptions="Start"/>
+        <nonet:SnackbarPopup HorizontalOptions="Center" VerticalOptions="Start" x:Name="NointernetSnackbar"/>
         
     <ScrollView HorizontalOptions="Center" VerticalOptions="FillAndExpand" VerticalScrollBarVisibility="Never">
         
@@ -68,6 +69,7 @@
 
     </VerticalStackLayout>
     </ScrollView>
+    <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
 
 
     </Grid>

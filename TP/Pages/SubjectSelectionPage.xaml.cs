@@ -154,7 +154,8 @@ public partial class SubjectSelectionPage : ContentPage
     private async void CreateSubClick(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(SubNameEntry.Text)){
-            await DisplayAlert("خطا", "يجب وضع اسم للمادة", "حسنا");
+            Snackbar.ShowSnackbar(2, "حدث خطأ أثناء الحذف!");
+            //await DisplayAlert("خطا", "يجب وضع اسم للمادة", "حسنا");
             return;
         }
         try{
@@ -165,14 +166,16 @@ public partial class SubjectSelectionPage : ContentPage
                ShowDeg = false,
                };
            await database.insertSub(Sub);
-           await DisplayAlert("تمت", "تم انشاء المادة بنجاح", "حسنا"); 
+           SubNameEntry.Text = "";
+           AddSubPopupWindow.IsVisible = false;
+           await LoadSubjects();
+           Snackbar.ShowSnackbar(1, "تم انشاء المادة بنجاح");
+           //await DisplayAlert("تمت", "تم انشاء المادة بنجاح", "حسنا"); 
         }
         catch (Exception ex){
-            await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            Snackbar.ShowSnackbar(2, $"{ex.Message}");
+            //await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
-        SubNameEntry.Text = "";
-        AddSubPopupWindow.IsVisible = false;
-        await LoadSubjects();
     }
     private void CancelSubClick(object sender, EventArgs e)
     {

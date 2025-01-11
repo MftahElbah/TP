@@ -31,6 +31,7 @@ namespace TP
         public App(){
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzYzMTM0MEAzMjM4MmUzMDJlMzBIUEF2a3E1ZzlTN3I3VXJDOHRKNDd3NlIyd0crTTd0TTBibml6Unl6SFl3PQ==");
             InitializeComponent();
+           
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
@@ -42,6 +43,7 @@ namespace TP
 
         protected override async void OnStart()
         {
+
             try
             {
                 UserSession.internet = await IsInternetAvailable();

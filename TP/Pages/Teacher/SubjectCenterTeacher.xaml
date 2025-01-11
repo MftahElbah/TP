@@ -5,6 +5,8 @@
              xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              x:Class="TP.Pages.Teacher.SubjectCenterTeacher"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
+
              xmlns:icon="clr-namespace:TP"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft"
@@ -596,8 +598,9 @@
             </Border>
         </ContentView>
 
-        
-        
+
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
+
 
     </Grid>
 </ContentPage>

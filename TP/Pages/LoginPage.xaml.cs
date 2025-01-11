@@ -4,9 +4,8 @@ using TP.Methods.actions;
 namespace TP.Pages;
 
 public partial class LoginPage : ContentPage
-{
+{   
     Database database = Database.SelectedDatabase;
-
     public LoginPage()
 	{
 		InitializeComponent();
@@ -16,6 +15,10 @@ public partial class LoginPage : ContentPage
     {
         base.OnAppearing();
         await DeleteSession();
+        if (!UserSession.internet)
+        {
+            NointernetSnackbar.ShowSnackbar(3, "لا يوجد اتصال بالإنترنت!");
+        }
     }
     //delete session if user logout from the account
 
@@ -29,7 +32,8 @@ public partial class LoginPage : ContentPage
     {
         if(string.IsNullOrEmpty(UsernameEntry.Text) || string.IsNullOrEmpty(PasswordEntry.Text))
         {
-            await DisplayAlert("خطا", "يجب ملئ جميع الحقول", "حسنا");
+            Snackbar.ShowSnackbar(2, "يجب ملئ جميع الحقول");
+            //await DisplayAlert("خطا", "يجب ملئ جميع الحقول", "حسنا");
             return;
         }
         string username = UsernameEntry.Text.ToLower();
@@ -37,12 +41,14 @@ public partial class LoginPage : ContentPage
         var IfUserExist = await database.UserLoginChecker(username, password);
         if (IfUserExist == null)
         {
-            await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");
+            Snackbar.ShowSnackbar(2, "هناك خطاء في اسم المستخدم أو كلمة المرور");
+            //await DisplayAlert("خطاء", "هناك خطاء في اسم المستخدم أو كلمة المرور", "حسنا");
             return;
         }
         if (!IfUserExist.IsActive)
         {
-            await DisplayAlert("خطاء", "هذا الحساب غير فعال, راجع قسم التسجيل", "حسنا");
+            Snackbar.ShowSnackbar(2, "هذا الحساب غير فعال, راجع قسم التسجيل");
+            //await DisplayAlert("خطاء", "هذا الحساب غير فعال, راجع قسم التسجيل", "حسنا");
             return;
         }
         UserSession.UserId = IfUserExist.UserId;

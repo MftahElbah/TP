@@ -106,18 +106,21 @@ public partial class CalenderPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(TaskTitleEntry.Text))
         {
-            await DisplayAlert("خطا", "العنوان مطلوب.", "موافق");
+            Snackbar.ShowSnackbar(2, "العنوان مطلوب");
+            //await DisplayAlert("خطا", "العنوان مطلوب.", "موافق");
             return true;
         }
         if (EndTime <= StartTime)
         {
-            await DisplayAlert("Validation Error", "يجب أن يكون وقت الانتهاء بعد وقت البدء.", "موافق");
+            Snackbar.ShowSnackbar(2, "يجب أن يكون وقت الانتهاء بعد وقت البدء");
+            //await DisplayAlert("Validation Error", "يجب أن يكون وقت الانتهاء بعد وقت البدء.", "موافق");
             return true;
         }
         bool checker = await database.TaskTimeConflict(StartTime, EndTime,TaskId);
         if (checker)
         {
-            await DisplayAlert("Time Conflict", "لديك بالفعل مهمة مجدولة في هذا الوقت.", "موافق");
+            Snackbar.ShowSnackbar(2, "لديك بالفعل مهمة مجدولة في هذا الوقت");
+            //await DisplayAlert("Time Conflict", "لديك بالفعل مهمة مجدولة في هذا الوقت.", "موافق");
             return true;
         }
         return false;
@@ -179,11 +182,12 @@ public partial class CalenderPage : ContentPage
         };
         await database.insertTask(inserted);
 
-        await DisplayAlert("نجحت العملية", "نجحت اضافة التذكير", "حسنا");
+        //await DisplayAlert("نجحت العملية", "نجحت اضافة التذكير", "حسنا");
 
         TaskPopupWindow.IsVisible = false;
         await LoadTasks();
         CleanTaskPopup();
+        Snackbar.ShowSnackbar(1, "تم إضافة التذكير");
     }
     private async void EditTaskBtnClick(object sender, EventArgs e) {
         bool res = await TaskValidation();
@@ -198,9 +202,10 @@ public partial class CalenderPage : ContentPage
         task.TaskEndTime = EndTime;
         task.TaskColor = ColorToHex(TaskColorBtn.BackgroundColor);
         await database.updateTask(task);
-        await DisplayAlert("نجحت العملية", "نجحت تعديل التذكير", "حسنا");
+        //await DisplayAlert("نجحت العملية", "نجحت تعديل التذكير", "حسنا");
         TaskPopupWindow.IsVisible = false;
         await LoadTasks(); CleanTaskPopup();
+        Snackbar.ShowSnackbar(1, "تم تعديل التذكير");
     }
     private void StartTimeBtnClicked(object sender, EventArgs e)
     {
@@ -298,6 +303,10 @@ public partial class CalenderPage : ContentPage
         {
             return;
         }*/
+
+        if (!(e.Element == SchedulerElement.Appointment && e.Appointments != null && e.Appointments.Count > 0)) return;
+
+
         // Initialize the YesNoContentView
         var yesNoPopup = new YesNoContentView();
 

@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Google.Android.Material.Snackbar;
+using SQLite;
 using TP.Methods;
 using TP.Methods.actions;
 namespace TP.Pages.Teacher;
@@ -39,7 +40,8 @@ public partial class SettingsForSub : ContentPage{
 
         if (string.IsNullOrWhiteSpace(Name))
         {
-            await DisplayAlert("Error", "All fields are required.", "OK");
+            Snackbar.ShowSnackbar(2, "يجب ملئ جميع الحقول");
+            //await DisplayAlert("Error", "All fields are required.", "OK");
             return;
         }        
         try
@@ -50,13 +52,15 @@ public partial class SettingsForSub : ContentPage{
                 Sub.ShowDeg = ShowDegSwitch.IsToggled;
                 await database.updateSubBySubId(Sub);
             }
-            await DisplayAlert("تم التعديل", "تم التعديل بنجاح", "حسنا");
+            Snackbar.ShowSnackbar(1, "تم التعديل بنجاح");
+            //await DisplayAlert("تم التعديل", "تم التعديل بنجاح", "حسنا");
 
             await Navigation.PopAsync();
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
+            Snackbar.ShowSnackbar(2, $"An error occurred: {ex.Message}");
+            //await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
         }
     }
 
@@ -114,12 +118,14 @@ public partial class SettingsForSub : ContentPage{
     {
         //string password = PasswordEntry.Text; // Retrieve entered password
         if (PasswordEntry.Text != UserSession.Password) { 
-        await DisplayAlert("Success", "كلمة السر خطا", "OK");
+        Snackbar.ShowSnackbar(2, "كلمة السر خطا");
+        //await DisplayAlert("Success", "كلمة السر خطا", "OK");
             return;
         }
         await database.deleteSub(SubId); // Deletes the department from the database.
         
-        await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
+        Snackbar.ShowSnackbar(1, "تمت الحذف بنجاح");
+        //await DisplayAlert("Success", "تمت الحذف بنجاح", "OK");
 
         if (Navigation?.NavigationStack?.Count > 2)
         {

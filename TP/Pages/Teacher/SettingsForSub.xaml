@@ -4,6 +4,7 @@
              xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
              xmlns:icon="clr-namespace:TP"
              x:Class="TP.Pages.Teacher.SettingsForSub"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
 
@@ -170,6 +171,7 @@
                 </VerticalStackLayout>
             </Border>
         </ContentView>
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
 
     </Grid>
 

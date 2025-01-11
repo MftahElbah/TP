@@ -4,6 +4,7 @@
              x:Class="TP.Pages.SubjectSelectionPage"
              xmlns:refresh="clr-namespace:Syncfusion.Maui.PullToRefresh;assembly=Syncfusion.Maui.PullToRefresh"
              xmlns:icon="clr-namespace:TP"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
@@ -307,6 +308,7 @@
 
             </Border>
         </ContentView>
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
 
     </Grid>
 </ContentPage>

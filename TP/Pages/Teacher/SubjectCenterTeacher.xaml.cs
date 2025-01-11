@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Google.Android.Material.Snackbar;
+using System.Collections.ObjectModel;
 using TP.Methods;
 using TP.Methods.actions;
 
@@ -315,18 +316,22 @@ public partial class SubjectCenterTeacher : ContentPage
     }
     private async void SaveDegreeClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(DegreeEntry.Text) || string.IsNullOrEmpty(MidDegreeEntry.Text)) { 
-            await DisplayAlert("خطا", "يجب ملئ جميع الحقول", "حسنا");
+        if (string.IsNullOrEmpty(DegreeEntry.Text) || string.IsNullOrEmpty(MidDegreeEntry.Text)) {
+            Snackbar.ShowSnackbar(2, "يجب ملئ جميع الحقول");
+            
+            //alert("خطا", "يجب ملئ جميع الحقول", "حسنا");
             return;
         }
         if (float.Parse(DegreeEntry.Text) < 0 || float.Parse(MidDegreeEntry.Text) < 0)
         {
-            await DisplayAlert("خطا", "يجب الا يكون الدرجة اصغر من الصفر", "حسنا");
+            Snackbar.ShowSnackbar(2, "يجب الا يكون الدرجة اصغر من الصفر");
+            //await DisplayAlert("خطا", "يجب الا يكون الدرجة اصغر من الصفر", "حسنا");
             return;
         }
         float total = float.Parse(DegreeEntry.Text) + float.Parse(MidDegreeEntry.Text);
         if(total > 40){
-            await DisplayAlert("خطا", "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40", "حسنا");
+            Snackbar.ShowSnackbar(2, "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40");
+            //await DisplayAlert("خطا", "يجب ان يكون مجموع درجة الطالب اقل او تساوي 40", "حسنا");
             return;
         }
 
