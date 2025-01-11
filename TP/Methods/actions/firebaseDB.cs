@@ -326,7 +326,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<DegreeTable>();
 
 
-                List<DegreeTable> result = LUS.Where(s => s.SubId == SubId && s.StdName == UserSession.Name).ToList();
+                List<DegreeTable> result = LUS.Where(s => s != null && ( s.SubId == SubId && s.StdName == UserSession.Name)).ToList();
                 return result;
             }
             catch
@@ -348,7 +348,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<DegreeTable>();
 
 
-                List<DegreeTable> result = LUS.Where(s => s.SubId == SubId ).ToList();
+                List<DegreeTable> result = LUS.Where(s => s != null && (s.SubId == SubId) ).ToList();
                 return result;
             }
             catch
@@ -370,7 +370,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<RequestJoinSubject>();
 
 
-                List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId ).ToList();
+                List<RequestJoinSubject> result = LUS.Where(s => s!=null && ( s.SubId == SubId && s.UserId == UserSession.UserId )).ToList();
                 return result;
             }
             catch
@@ -414,7 +414,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<RequestJoinSubject>();
 
 
-                List<RequestJoinSubject> result = LUS.Where(s => s.SubId == subId ).ToList();
+                List<RequestJoinSubject> result = LUS.Where(s => s!= null && ( s.SubId == subId )).ToList();
                 return result;
             }
             catch
@@ -598,7 +598,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<SubjectPosts>();
 
 
-                List<SubjectPosts> result = LUS.Where(e => e.SubId ==  subId).ToList();
+                List<SubjectPosts> result = LUS.Where(e => e!= null &&( e.SubId ==  subId)).ToList();
                 return result;
             }
             catch
@@ -620,7 +620,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<SubTable>();
 
 
-                List<SubTable> result = LUS.ToList();
+                List<SubTable> result = LUS.Where(l => l != null).ToList();
                 return result;
             }
             catch
@@ -912,7 +912,7 @@ namespace TP.Methods.actions
                 }
 
                 var usersDict = JsonConvert.DeserializeObject<Dictionary<string, UsersAccountTable>>(response.Body);
-                var user = usersDict?.Values.FirstOrDefault(u => u.Username == username && u.Password == password);
+                var user = usersDict?.Values.FirstOrDefault(u => u != null && (u.Username == username && u.Password == password));
                 return user;
             }
             catch(Exception error)

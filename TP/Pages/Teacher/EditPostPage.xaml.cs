@@ -190,7 +190,8 @@ public partial class EditPostPage : ContentPage
                 PostFileLink = LinkEntry.Text,
             };
             await database.insertSubjectPost(post);
-            await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+            //await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+            Snackbar.ShowSnackbar(1, "تم اضافة المنشور");
         }
         else
         {
