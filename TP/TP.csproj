@@ -29,7 +29,7 @@
 		<ApplicationId>com.companyname.TP</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">26.0</SupportedOSPlatformVersion>
@@ -165,11 +165,13 @@
     <RunAOTCompilation>True</RunAOTCompilation>
     <DebugSymbols>True</DebugSymbols>
     <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android35.0|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <DebugSymbols>False</DebugSymbols>
+    <ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
   </PropertyGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadUnhandledDeviceExceptionTPHideInfoBar="True" /></VisualStudio></ProjectExtensions>
