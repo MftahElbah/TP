@@ -116,19 +116,7 @@ namespace TP.Methods.actions
             }
         }
 
-        public override async Task<int> deletePost(SubjectPosts post)
-        {
-            try
-            {
-                var SetData = await client.DeleteAsync("post/" + post.PostId);
-                return 1;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return 0;
-            }
-        }
+        
         public override async Task<int> deleteRequestJoin(int requestId)
         {
             try
@@ -227,21 +215,22 @@ namespace TP.Methods.actions
         {
             int deletedCount = 0;
 
+            // Fetch assignments from Firebase
             var requestData = await client.GetAsync("assignment/");
             if (requestData != null && requestData.Body != "null")
             {
-                var requests = JsonConvert.DeserializeObject<List<SubjectAssignments>>(requestData.Body);
+                // Deserialize the data into a dictionary
+                var requests = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(requestData.Body);
+
                 foreach (var item in requests)
                 {
-                    if (item != null)
+                    if (item.Value != null && item.Value.PostId == postId)
                     {
-                        if (item.PostId == postId)
+                        // Delete using the key (Firebase ID)
+                        var requestDelete = await client.DeleteAsync($"assignment/{item.Key}");
+                        if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            var requestDelete = await client.DeleteAsync($"assignment/{item.PostId}");
-                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
-                            {
-                                deletedCount++;
-                            }
+                            deletedCount++;
                         }
                     }
                 }
@@ -249,6 +238,7 @@ namespace TP.Methods.actions
 
             return deletedCount;
         }
+
         private async Task<int> DeleteRequestsBySubId(int subId)
         {
             int deletedCount = 0;
@@ -319,6 +309,7 @@ namespace TP.Methods.actions
         {
             try
             {
+                await DeleteAssignmentByPostId(postId);
                 var SetData = await client.DeleteAsync("post/" + postId);
                 return 1;
             }
@@ -328,6 +319,7 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
+        
         public override async Task<List<DegreeTable>> getDegreeBySessionName()
         {
             try
@@ -890,8 +882,15 @@ namespace TP.Methods.actions
         {
             try
             {
+                int id;
                 List<SubjectPosts> sb = await getSubjectPosts();
-                subjectPosts.PostId = sb.Count ;
+                if(sb.Count == 0)
+                    id = 1;
+                else
+                {
+                    id = sb.Max(s => s?.PostId ?? 0) + 1;
+                }
+                subjectPosts.PostId = id;
                 var setData = await client.SetAsync("post/" + subjectPosts.PostId, subjectPosts);
                 return 1;
             }
@@ -900,6 +899,8 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
+
+
         public override async Task<UsersAccountTable> loginSecction(string password, int userid)
         {
             try

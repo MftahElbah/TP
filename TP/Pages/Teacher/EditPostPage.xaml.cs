@@ -119,12 +119,7 @@ public partial class EditPostPage : ContentPage
 		if (PTNum == 2) {
 			STime = DeadLinePicker?.SelectedDate.Value;
 		}
-		/*
-        Byte[]? fileContent = null;
-		if (result != null)
-		{
-			fileContent = await File.ReadAllBytesAsync(result.FullPath);
-		}*/
+		
 
         if (string.IsNullOrEmpty(PostId)){
 
@@ -144,7 +139,8 @@ public partial class EditPostPage : ContentPage
 				SubId = SubId,
 				PostDate = DateTime.Now,
 				DeadLineTime = STime,
-				PostFileLink = result.FullPath
+				PostFileLink = result?.FullPath,
+                
 			};
 			await database.insertSubjectPost(post);
 			//await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");

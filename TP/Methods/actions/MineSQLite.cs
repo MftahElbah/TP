@@ -279,11 +279,7 @@ namespace TP.Methods.actions
             return rows;
         }
         
-        public override async Task<int> deletePost(SubjectPosts post)
-        {
-            int rows = await _database.DeleteAsync(post);
-            return rows;
-        }
+        
 
         public override async Task<int> deleteSub(int sub)
         {

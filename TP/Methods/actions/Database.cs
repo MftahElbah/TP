@@ -163,10 +163,7 @@ namespace TP.Methods.actions
         {
             return new int();
         }
-        public virtual async Task<int> deletePost(SubjectPosts post)
-        {
-            return new int();
-        }
+        
         public virtual async Task<int> deleteSub(int sub)
         {
             return sub;
