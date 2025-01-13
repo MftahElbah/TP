@@ -5,12 +5,14 @@
              xmlns:listview="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
              x:Class="TP.Pages.Student.SubjectCenterStd"
              xmlns:icon="clr-namespace:TP"
+             xmlns:snackbarmessage="clr-namespace:TP.Pages"
              BackgroundColor="#EFEFEF"
              FlowDirection="RightToLeft">
     <Grid>
         <Grid>
             
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
 
@@ -51,18 +53,19 @@
                 </Button>
             </FlexLayout>
 
-                <!--
+                
             <Border BackgroundColor="#D9D9D9" 
-        HorizontalOptions="Center" 
-        Grid.Row="1" 
-        Padding="10" 
-        Stroke="#1a1a1a" 
-        StrokeThickness="2">
+                    HorizontalOptions="Center" 
+                    Grid.Row="1" 
+                    Padding="10" 
+                    Stroke="#1a1a1a" 
+                    VerticalOptions="Center"
+                    StrokeThickness="2">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20"/>
                 </Border.StrokeShape>
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                     Posts Button with Icon
+                    
                     <Button Text="المنشورات"
                 HorizontalOptions="Center" 
                 FontFamily="CairoB"
@@ -120,14 +123,12 @@
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Padding="10" Spacing="5" HorizontalOptions="Center" VerticalOptions="Center">
-                                Book Name (Truncated)
                                 <Label Text="{Binding BookName}" 
                                        LineBreakMode="TailTruncation"
                                        FontSize="16" 
                                        TextColor="#1A1A1A"
                                        FontFamily="CairoB"/>
 
-                                Upload Date 
                                 <Label Text="{Binding UploadDate, StringFormat='Uploaded on: {0:yyyy-MM-dd}'}"
                            FontSize="14" 
                            FontFamily="CairoL"
@@ -138,10 +139,7 @@
                     </DataTemplate>
                 </listview:SfListView.ItemTemplate>
             </listview:SfListView>
-                    -->
-
-
-
+                    
             <listview:SfListView x:Name="Postslistview"
                      ItemsSource="{Binding Posts}"
                      ItemSize="180"
@@ -150,7 +148,7 @@
                      IsScrollingEnabled="True"
                      ScrollBarVisibility="Always"
                      SelectionBackground="Transparent"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Margin="0,20"
                      ItemSpacing="0,10">
                 <listview:SfListView.ItemTemplate>
@@ -164,7 +162,6 @@
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Padding="10" Spacing="5">
-                                <!-- Post Title -->
                                 <Label Text="{Binding PostTitle}" 
                            FontFamily="CairoB"
                            HorizontalOptions="Start" 
@@ -256,9 +253,9 @@
                     <!-- Close Button -->
                     <!-- Hidden Labels for ID and Deadline -->
                     <Label x:Name="IdLblPopup" HorizontalOptions="Center" FontSize="20" IsVisible="False" TextColor="#1a1a1a"/>
-                    <!--
+                    
                         <Label x:Name="DeadLineTimeLblPopup" HorizontalOptions="Center" FontSize="16" IsVisible="False" TextColor="#1a1a1a"/>
-                        -->
+                        
 
                     <!-- Post Title -->
                     <Label x:Name="TitleLblPopup" Text="mmm" HorizontalOptions="Center" FontSize="32" FontAttributes="Bold" FontFamily="Cairo" TextColor="#1a1a1a"/>
@@ -269,13 +266,13 @@
                     <!-- Timer (Countdown Label) -->
                     </VerticalStackLayout>
                     </ScrollView>
-                    <Button Text="فتح الرابط" x:Name="OpenLinkBtn" Clicked="OpenLinkBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="CairoB" CornerRadius="20" Padding="10" BackgroundColor="#1a1a1a" TextColor="#EFEFEF" Grid.Row="2">
+                    <!--<Button Text="فتح الرابط" x:Name="OpenLinkBtn" Clicked="OpenLinkBtnClicked" HorizontalOptions="Center" IsVisible="False" FontSize="16" FontFamily="CairoB" CornerRadius="20" Padding="10" BackgroundColor="#1a1a1a" TextColor="#EFEFEF" Grid.Row="2">
                         <Button.ImageSource>
                             <FontImageSource FontFamily="GoogleIconsFont" Glyph="{x:Static icon:IconFont.Link}" Color="#EFEFEF" Size="24" />
                         </Button.ImageSource>
-                    </Button>
-                    <!--
-                    <VerticalStackLayout Grid.Row="2">
+                    </Button>-->
+                    
+                    <VerticalStackLayout Grid.Row="2" Spacing="10">
                     <Label x:Name="CountdownLabel" 
                    Text="00:00:00:00" 
                    FontSize="18" 
@@ -290,7 +287,6 @@
                         </Button.ImageSource>
                     </Button>
 
-                    Upload Button 
                     <Button Text="رفع" 
                             x:Name="ShowAssignments" 
                             Clicked="UploadAssignmentsClicked" 
@@ -310,7 +306,7 @@
                     </Button>
 
                 </VerticalStackLayout>
-                    -->
+                    
                 </Grid>
             </Border>
         </ContentView>
@@ -362,5 +358,7 @@
                 </VerticalStackLayout>
             </Border>
         </ContentView>
+        <snackbarmessage:SnackbarPopup HorizontalOptions="Center" VerticalOptions="End" x:Name="Snackbar"/>
+
     </Grid>
 </ContentPage>

@@ -159,6 +159,7 @@ namespace TP.Methods.actions
                 deletedCount += await DeleteDegreesBySubId(subId);
                 deletedCount += await DeletePostsBySubId(subId);
                 deletedCount += await DeleteRequestsBySubId(subId);
+                deletedCount += await DeleteBookssBySubId(subId);
 
                 return deletedCount; // Return total number of deleted records
             }
@@ -196,6 +197,8 @@ namespace TP.Methods.actions
         private async Task<int> DeletePostsBySubId(int subId)
         {
             int deletedCount = 0;
+            int deletedpostCount = 0;
+            
 
             var postData = await client.GetAsync("post/");
             if (postData != null && postData.Body != "null")
@@ -207,6 +210,7 @@ namespace TP.Methods.actions
                     {
                         if (item.SubId == subId)
                         {
+                            deletedpostCount = await DeleteAssignmentByPostId(item.PostId);
                             var postDelete = await client.DeleteAsync($"post/{item.PostId}");
                             if (postDelete.StatusCode == System.Net.HttpStatusCode.OK)
                             {
@@ -217,9 +221,34 @@ namespace TP.Methods.actions
                 }
             }
 
+            return deletedCount + deletedpostCount;
+        }
+        private async Task<int> DeleteAssignmentByPostId(int postId)
+        {
+            int deletedCount = 0;
+
+            var requestData = await client.GetAsync("assignment/");
+            if (requestData != null && requestData.Body != "null")
+            {
+                var requests = JsonConvert.DeserializeObject<List<SubjectAssignments>>(requestData.Body);
+                foreach (var item in requests)
+                {
+                    if (item != null)
+                    {
+                        if (item.PostId == postId)
+                        {
+                            var requestDelete = await client.DeleteAsync($"assignment/{item.PostId}");
+                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                deletedCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
             return deletedCount;
         }
-
         private async Task<int> DeleteRequestsBySubId(int subId)
         {
             int deletedCount = 0;
@@ -246,7 +275,34 @@ namespace TP.Methods.actions
 
             return deletedCount;
         }
-        /*public override async Task<int> deleteSubjectBook(SubjectBooks book)
+        private async Task<int> DeleteBookssBySubId(int subId)
+        {
+            int deletedCount = 0;
+
+            var requestData = await client.GetAsync("book/");
+            if (requestData != null && requestData.Body != "null")
+            {
+                var requests = JsonConvert.DeserializeObject<List<SubjectBooks>>(requestData.Body);
+                foreach (var item in requests)
+                {
+                    if(item != null)
+                    {
+                        if (item.SubId == subId)
+                        {
+                            var requestDelete = await client.DeleteAsync($"book/{item.BookId}");
+                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                deletedCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return deletedCount;
+        }
+        
+        public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             try
             {
@@ -258,7 +314,7 @@ namespace TP.Methods.actions
                 Console.WriteLine(e.Message);
                 return 0;
             }
-        }*/
+        }
         public override async Task<int> deleteSubjectPost(int postId)
         {
             try
@@ -483,26 +539,44 @@ namespace TP.Methods.actions
             }
         }
 
-        /*public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
+        public override async Task<bool> getSubjectAssignmentByPostIdAndStdId(int postId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("assignment/" + postId);
+                // Fetch all assignments from Firebase
+                FirebaseResponse response = await client.GetAsync("assignment");
                 if (response == null || response.Body == "null")
                 {
-                    return null;
+                    return false; // No assignments found
                 }
 
-                SubjectAssignments LUS = JsonConvert.DeserializeObject<SubjectAssignments>(response.Body.ToString());
-                SubjectAssignments result = LUS;
-                return result;
+                // Deserialize the response into a list of SubjectAssignments
+                var assignments = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
+                if (assignments == null || !assignments.Any())
+                {
+                    return false; // No assignments in the database
+                }
+
+                // Loop through the assignments and check conditions
+                foreach (var assignment in assignments.Values)
+                {
+                    if (assignment != null)
+                    {
+                        if (assignment.PostId == postId && assignment.StdId == UserSession.UserId)
+                        return true; // Match found
+                    }
+                }
+
+                return false; // No match found
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Console.WriteLine($"Error in getSubjectAssignmentByPostIdAndStdId: {ex.Message}");
+                return false; // Return false if an exception occurs
             }
-        }*/
-        /*public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
+        }
+
+        public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
         {
             try
             {
@@ -512,23 +586,29 @@ namespace TP.Methods.actions
                     return new List<SubjectAssignments>();
                 }
 
-                List<SubjectAssignments> LUS = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectAssignments>();
+                // Deserialize into Dictionary because Firebase stores data as key-value pairs
+                var data = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
+                if (data == null) return new List<SubjectAssignments>();
 
+                // Extract values and filter by PostId
+                List<SubjectAssignments> result = data.Values
+                                                      .Where(s => s != null && (s.PostId == postId))
+                                                      .ToList();
 
-                List<SubjectAssignments> result = LUS.Where(s => s.PostId == postId ).ToList();
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error in getSubjectAssignmentsByPost: {ex.Message}");
                 return new List<SubjectAssignments>();
             }
-        }*/
-        /*public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
+        }
+
+        public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
         {
             try
             {
-                FirebaseResponse response = await client.GetAsync("Book");
+                FirebaseResponse response = await client.GetAsync("book");
                 if (response == null || response.Body == "null")
                 {
                     return new List<SubjectBooks>();
@@ -545,7 +625,7 @@ namespace TP.Methods.actions
             {
                 return new List<SubjectBooks>();
             }
-        }*/
+        }
         public override async Task<SubjectPosts> getSubjectPost(int postId)
         {
             try
@@ -734,7 +814,7 @@ namespace TP.Methods.actions
                 return 1;
             }catch { return 0; }
         }
-        /*public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
+        public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
         {
             try
             {
@@ -747,8 +827,8 @@ namespace TP.Methods.actions
                 Console.WriteLine(e.Message);
                 return 0;
             }
-        }*/
-        /*public override async Task<List<SubjectBooks>> getsubjectBooks()
+        }
+        public override async Task<List<SubjectBooks>> getsubjectBooks()
         {
             try
             {
@@ -769,8 +849,8 @@ namespace TP.Methods.actions
             {
                 return new List<SubjectBooks>();
             }
-        }*/
-        /*public override async Task<int> insertSubjectBook(SubjectBooks book)
+        }
+        public override async Task<int> insertSubjectBook(SubjectBooks book)
         {
             try
             {
@@ -783,7 +863,7 @@ namespace TP.Methods.actions
             {
                 return 0;
             }
-        }*/
+        }
         public override async Task<List<SubjectPosts>> GetSubjectPosts()
         {
             try

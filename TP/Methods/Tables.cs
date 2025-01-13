@@ -61,7 +61,7 @@ namespace TP
         public int SubId { get; set; }
         public DateTime RequestDate { get; set; }
     }
-    /*
+    
     //Online
     public class SubjectBooks
     {
@@ -69,10 +69,10 @@ namespace TP
         public int BookId { get; set; }
         public string BookName { get; set; }
         public int SubId { get; set; }
-        public Byte[] BookFile { get; set; }
+        public string BookFile { get; set; }
         public DateTime UploadDate { get; set; }
     }
-    */
+    
     //Online
     public class SubjectPosts
     {
@@ -82,22 +82,22 @@ namespace TP
         public string PostTitle { get; set; }
         public string PostDes { get; set; }
         public DateTime PostDate { get; set; }
-        //public DateTime? DeadLineTime { get; set; }
+        public DateTime? DeadLineTime { get; set; }
         //public Byte[] PostDesFile { get; set; }
         public string PostFileLink { get; set; }
         
     }
-    /*
+    
     //Online
     public class SubjectAssignments{
         public int PostId { get; set; }
         public int StdId { get; set; }
         public string StdName { get; set; }
-        public Byte[] AssignmentFile { get; set; }
-        public string FileType { get; set; }
+        public string AssignmentFile { get; set; }
+        //public string FileType { get; set; }
 
     }
-    */
+    
 
     public class SchedulerTask
     {

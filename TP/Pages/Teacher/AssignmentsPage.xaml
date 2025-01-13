@@ -7,7 +7,7 @@
              FlowDirection="RightToLeft"
              BackgroundColor="#efefef"
              Title="AssignmentsPage">
-    <!--
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -82,5 +82,5 @@
         </listview:SfListView.ItemTemplate>
     </listview:SfListView>
     </Grid>
-    -->
+    
 </ContentPage>

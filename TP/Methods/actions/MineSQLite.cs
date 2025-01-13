@@ -30,8 +30,8 @@ namespace TP.Methods.actions
             await _database.CreateTableAsync<DegreeTable>();
             await _database.CreateTableAsync<SubjectPosts>();
             await _database.CreateTableAsync<SchedulerTask>();
-            //await _database.CreateTableAsync<SubjectBooks>();
-            //await _database.CreateTableAsync<SubjectAssignments>();
+            await _database.CreateTableAsync<SubjectBooks>();
+            await _database.CreateTableAsync<SubjectAssignments>();
             await SeedDatabase(); // Calls the method to seed the database with initial data if needed.
 
         }
@@ -111,11 +111,14 @@ namespace TP.Methods.actions
             return DegreeTable;
         }
 
-        /*public override async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
+        public override async Task<bool> getSubjectAssignmentByPostIdAndStdId(int postId)
         {
             var assignment = await _database.Table<SubjectAssignments>().FirstOrDefaultAsync(a => a.PostId == postId && a.StdName == UserSession.Name);
-            return assignment;
-        }*/
+            if(assignment == null)
+            return false;
+
+            return true;
+        }
         public override async Task<List<SubTable>> getSubByUser()
         {
             var teacherSubjects = await _database.Table<SubTable>()
@@ -170,20 +173,22 @@ namespace TP.Methods.actions
             return rows;
 
         }
-        /*
-        public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
+        
+        //public override async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
+        public async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
         {
             int rows = await _database.InsertAsync(assignment);
             return rows;
         }
-        public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
+        //public override async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
+        public async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
         {
             var assignments = await _database.Table<SubjectAssignments>()
             .Where(a => a.PostId == postId)
             .ToListAsync();
             return assignments;
         }
-        */
+        
 
 
         public override async Task<List<SubjectPosts>> getSubjectPosts()
@@ -242,7 +247,7 @@ namespace TP.Methods.actions
             return rows;
 
         }
-/*
+
         public override async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
         {
             var books = await _database.Table<SubjectBooks>().Where(b => b.SubId == subId).ToListAsync();
@@ -253,7 +258,7 @@ namespace TP.Methods.actions
             int rows = await _database.InsertAsync(book);
             return rows;
         }
-*/
+
 
         public override async Task<List<SubjectPosts>> getSubjectPostsBySubId(int subId)
         {
@@ -267,13 +272,13 @@ namespace TP.Methods.actions
             int rows = await _database.DeleteAsync(degreeTable);
             return rows;
         }
-        /*
+        
         public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             int rows = await _database.DeleteAsync(book);
             return rows;
         }
-        */
+        
         public override async Task<int> deletePost(SubjectPosts post)
         {
             int rows = await _database.DeleteAsync(post);

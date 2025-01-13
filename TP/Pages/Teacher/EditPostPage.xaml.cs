@@ -11,27 +11,29 @@ public partial class EditPostPage : ContentPage
     public int SubId; // Subject Id
 	public int PTNum;   // Post Type Number
 	public string PostId;
+    private string fl;
     private FileResult result;
 
-    public EditPostPage(int subid , string postid , string posttitel , string postdes , string Link  /*,string DLTime*/){
+    public EditPostPage(int subid , string postid , string posttitel , string postdes , string fileloacaion  ,string DLTime){
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
         SubId = subid;
 		PostId = postid;
-		//PostRadio.IsChecked = true;
+		PostRadio.IsChecked = true;
 		if(PostId == null) {return;}
 		
 		DeleteBtn.IsVisible = true;
 		TitleEntry.Text = posttitel;
 		DesEditor.Text = postdes;
-        LinkEntry.Text = Link;
-		/*if(string.IsNullOrEmpty(DLTime))
+        fl = fileloacaion;
+        //LinkEntry.Text = Link;
+		if(string.IsNullOrEmpty(DLTime))
 		{
 			return;
-		}*/
-		//DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
-		//AssignmentRadio.IsChecked = true;
+		}
+		DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
+		AssignmentRadio.IsChecked = true;
         
     }
     private async void BackClicked(object sender, EventArgs e){
@@ -40,11 +42,7 @@ public partial class EditPostPage : ContentPage
     private async void DeleteClicked(object sender, EventArgs e)
     {
         int pid = int.Parse(PostId);
-        /*bool confirm = await DisplayAlert("تأكيد الحذف", "هل أنت متأكد أنك تريد حذف هذا المنشور؟", "نعم", "لا");
-        if (!confirm)
-        {
-			return;
-        }*/
+        
         // Initialize the YesNoContentView
         var yesNoPopup = new YesNoContentView();
 
@@ -65,7 +63,6 @@ public partial class EditPostPage : ContentPage
             // Perform delete operation
         await database.deleteSubjectPost(pid);
         Snackbar.ShowSnackbar(1, "تم حذف المنشور بنجاح");
-        //await DisplayAlert("تم الحذف", "تم حذف المنشور بنجاح", "حسنا");
         await Navigation.PopAsync();
     }
 
@@ -90,7 +87,7 @@ public partial class EditPostPage : ContentPage
         }
 	}
 
-    /*private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
+    private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
         var selectedRadioButton = sender as RadioButton;
 
         // Update the UI or show something based on the selected radio button
@@ -122,18 +119,20 @@ public partial class EditPostPage : ContentPage
 		if (PTNum == 2) {
 			STime = DeadLinePicker?.SelectedDate.Value;
 		}
-		Byte[]? fileContent = null;
+		/*
+        Byte[]? fileContent = null;
 		if (result != null)
 		{
 			fileContent = await File.ReadAllBytesAsync(result.FullPath);
-		}
+		}*/
 
-            if (string.IsNullOrEmpty(PostId)){
+        if (string.IsNullOrEmpty(PostId)){
 
             if (DeadLinePicker.SelectedDate < DateTime.Now && AssignmentRadio.IsChecked)
             {
                 await Task.Delay(500);
-                await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
+                Snackbar.ShowSnackbar(2, "يجب الا يكون اخر موعد قبل الوقت الحالي");
+                //await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
                 DeadLinePicker.SelectedDate = DateTime.Now.AddMinutes(1).Date;// + minute
 
                 return;
@@ -145,10 +144,11 @@ public partial class EditPostPage : ContentPage
 				SubId = SubId,
 				PostDate = DateTime.Now,
 				DeadLineTime = STime,
-				PostDesFile = fileContent
+				PostFileLink = result.FullPath
 			};
 			await database.insertSubjectPost(post);
-			await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+			//await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+            Snackbar.ShowSnackbar(1, "تم اضافة المنشور");
 		}
 		else
 		{
@@ -158,18 +158,27 @@ public partial class EditPostPage : ContentPage
 				existingPost.PostTitle = TitleEntry.Text;
 				existingPost.PostDes = DesEditor.Text;
 				existingPost.DeadLineTime = STime;
+                /*
 				if(fileContent != null){
-				existingPost.PostDesFile = fileContent;
-			}
-				await database.updateSubjectPost(existingPost);
-				await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
+				existingPost.PostDesFile = fileContent;*/
+
+                if (result != null)
+                {
+                    existingPost.PostFileLink = result.FullPath;
+
+                }
+                else
+                existingPost.PostFileLink = fl;
+                await database.updateSubjectPost(existingPost);
+				//await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
+                Snackbar.ShowSnackbar(1, "تم تعديل المنشور");
 			}
 		}
 		
 			await Navigation.PopAsync();
 	}
-	*/
-    private async void SaveClicked(object sender, EventArgs e)
+	
+    /*private async void SaveClicked(object sender, EventArgs e)
     {
 
         if (!string.IsNullOrEmpty(LinkEntry.Text) && !Uri.IsWellFormedUriString(LinkEntry.Text, UriKind.Absolute))
@@ -209,5 +218,5 @@ public partial class EditPostPage : ContentPage
         }
 
         await Navigation.PopAsync();
-    }
+    }*/
 }

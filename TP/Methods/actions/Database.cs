@@ -47,10 +47,10 @@ namespace TP.Methods.actions
         {
             return new List<DegreeTable>();
         }
-        /*public virtual async Task<SubjectAssignments> getSubjectASsignmentByPostIdAndStdId(int postId)
+        public virtual async Task<bool> getSubjectAssignmentByPostIdAndStdId(int postId)
         {
-            return new SubjectAssignments();
-        }*/
+            return new bool();
+        }
         public virtual async Task<List<SubTable>> getSubByUser()
         {
             return new List<SubTable>();
@@ -83,14 +83,14 @@ namespace TP.Methods.actions
         {
             return new int();
         }
-        /*public virtual async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
+        public virtual async Task<int> insertSubjectAssignment(SubjectAssignments assignment)
         {
             return new int();
-        }*/
-        /*public virtual async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
+        }
+        public virtual async Task<List<SubjectAssignments>> getSubjectAssignmentsByPost(int postId)
         {
             return new List<SubjectAssignments>();
-        }*/
+        }
         public virtual async Task<List<DegreeTable>> getDegree()
         {
             return new List<DegreeTable>();
@@ -99,10 +99,10 @@ namespace TP.Methods.actions
         {
             return new List<RequestJoinSubject>();
         }
-        /*public virtual async Task<List<SubjectBooks>> getsubjectBooks()
+        public virtual async Task<List<SubjectBooks>> getsubjectBooks()
         {
             return new List<SubjectBooks>();
-        }*/
+        }
         public virtual async Task<List<SubjectPosts>> GetSubjectPosts()
         {
             return new List<SubjectPosts>();
@@ -143,14 +143,14 @@ namespace TP.Methods.actions
         {
             return new int();
         }
-        /*public virtual async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
+        public virtual async Task<List<SubjectBooks>> getSubjectBooksBySubId(int subId)
         {
             return new List<SubjectBooks>();
         }
         public virtual async Task<int> insertSubjectBook(SubjectBooks book)
         {
             return new int();
-        }*/
+        }
         public virtual async Task<List<SubjectPosts>> getSubjectPostsBySubId(int subId)
         {
             return new List<SubjectPosts>();
@@ -159,10 +159,10 @@ namespace TP.Methods.actions
         {
             return new int();
         }
-        /*public virtual async Task<int> deleteSubjectBook(SubjectBooks book)
+        public virtual async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             return new int();
-        }*/
+        }
         public virtual async Task<int> deletePost(SubjectPosts post)
         {
             return new int();
