@@ -9,7 +9,6 @@ public partial class GeneralPostsPage : ContentPage
     Database database = Database.SelectedDatabase;
 
     public ObservableCollection<SubjectPosts> Posts { get; set; }
-    public int SubId = -1;
     public string LinkUrl;
 
     public GeneralPostsPage()
@@ -30,7 +29,7 @@ public partial class GeneralPostsPage : ContentPage
     {
         EmptyMessage.IsVisible = false;
         Posts.Clear();
-        var data = await database.getSubjectPostsBySubId(SubId);
+        var data = await database.getGeneralPosts();
         if (data.Count == 0)
         {
             EmptyMessage.IsVisible = true;

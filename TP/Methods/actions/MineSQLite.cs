@@ -265,6 +265,11 @@ namespace TP.Methods.actions
             var posts = await _database.Table<SubjectPosts>().Where(b => b.SubId == subId).ToListAsync();
             return posts;
         }
+        public override async Task<List<SubjectPosts>> getGeneralPosts()
+        {
+            var posts = await _database.Table<SubjectPosts>().Where(b => b.SubId == -1 && b.PostDate < DateTime.Now).ToListAsync();
+            return posts;
+        }
 
 
         public override async Task<int> deleteDegree(DegreeTable degreeTable)

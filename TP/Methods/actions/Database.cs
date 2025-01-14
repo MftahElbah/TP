@@ -155,6 +155,10 @@ namespace TP.Methods.actions
         {
             return new List<SubjectPosts>();
         }
+        public virtual async Task<List<SubjectPosts>> getGeneralPosts()
+        {
+            return new List<SubjectPosts>();
+        }
         public virtual async Task<int> deleteDegree(DegreeTable degreeTable)
         {
             return new int();

@@ -681,6 +681,28 @@ namespace TP.Methods.actions
                 return new List<SubjectPosts>();
             }
         }
+        public override async Task<List<SubjectPosts>> getGeneralPosts()
+        {
+            try
+            {
+                FirebaseResponse response = await client.GetAsync("post");
+                if (response == null || response.Body == "null")
+                {
+                    return new List<SubjectPosts>();
+                }
+
+                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                if (LUS == null) return new List<SubjectPosts>();
+
+
+                List<SubjectPosts> result = LUS.Where(e => e != null && (e.SubId == -1 && e.PostDate < DateTime.Now)).ToList();
+                return result;
+            }
+            catch
+            {
+                return new List<SubjectPosts>();
+            }
+        }
         public override async Task<List<SubTable>> getSubTable()
         {
             try

@@ -50,10 +50,13 @@ public partial class SubjectCenterTeacher : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        /*
         await LoadPosts();
         await LoadData();
         await LoadBooks();
+        */
         PageShowStatus(1);
+
         MenuPopupWindow.IsVisible = false;
     }
     private async Task LoadPosts(){
@@ -132,11 +135,11 @@ public partial class SubjectCenterTeacher : ContentPage
     {
         PageShowStatus(2);
     }
-    private void BooksShowerClicked(object sender, EventArgs e)
+    private async void BooksShowerClicked(object sender, EventArgs e)
     {
         PageShowStatus(3);
     }
-    private void PageShowStatus(int status){
+    private async void PageShowStatus(int status){
         // Reset all controls to the default state
         PostsShower.TextColor = Color.FromArgb("#1A1A1A");
         if (PostsShower.ImageSource is FontImageSource postFontImageSource)
@@ -161,6 +164,9 @@ public partial class SubjectCenterTeacher : ContentPage
         }
         BooksShower.BackgroundColor = Colors.Transparent;
         PdfListView.IsVisible = false;
+        Books.Clear();
+        Posts.Clear();
+        DegreeTableSetter.Clear();
 
         // Change styles based on the status
         switch (status)
@@ -173,7 +179,7 @@ public partial class SubjectCenterTeacher : ContentPage
                 }
                 PostsShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 Postslistview.IsVisible = true;
-
+                await LoadPosts();
                 NoExistTitle.Text = "لا يوجد منشورات";
                 NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
                 EmptyMessage.IsVisible = Emptys[0];
@@ -189,6 +195,7 @@ public partial class SubjectCenterTeacher : ContentPage
                 DegreesShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 DegreeTableDataGrid.IsVisible = true;
 
+                await LoadData();
                 NoExistTitle.Text = "لا يوجد طالب مشترك";
                 NoExistSubTitle.Text = "تأكد من صفحة \"طلبات الانضمام\" الموجودة في القائمة";
                 EmptyMessage.IsVisible = Emptys[1];
@@ -203,6 +210,7 @@ public partial class SubjectCenterTeacher : ContentPage
                 }
                 BooksShower.BackgroundColor = Color.FromArgb("#1A1A1A");
                 PdfListView.IsVisible = true;
+                await LoadBooks();
                 NoExistTitle.Text = "لا يوجد كتب";
                 NoExistSubTitle.Text = "يمكنك اضافته عن طريق القائمة";
                 EmptyMessage.IsVisible = Emptys[2];

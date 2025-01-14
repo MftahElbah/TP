@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System;
 using TP.Methods;
 using TP.Methods.actions;
 
@@ -9,40 +10,54 @@ public partial class EditPostPage : ContentPage
     Database database = Database.SelectedDatabase;
 
     public int SubId; // Subject Id
-	public int PTNum;   // Post Type Number
-	public string PostId;
+    public int PTNum;   // Post Type Number
+    public string PostId;
     private string fl;
     private FileResult result;
 
-    public EditPostPage(int subid , string postid , string posttitel , string postdes , string fileloacaion  ,string DLTime){
-		InitializeComponent();
+    public EditPostPage(int subid, string postid, string posttitel, string postdes, string fileloacaion, string DLTime)
+    {
+        try
+        {
+            InitializeComponent();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"XAML Error: {ex.Message}");
+        }
         NavigationPage.SetHasNavigationBar(this, false); // Disable navigation bar for this page
 
+        TimeChecker.IsChecked = true;
+        TimeChecker.IsChecked = false;
         SubId = subid;
-		PostId = postid;
-		PostRadio.IsChecked = true;
-		if(PostId == null) {return;}
-		
-		DeleteBtn.IsVisible = true;
-		TitleEntry.Text = posttitel;
-		DesEditor.Text = postdes;
+        PostId = postid;
+        //PostRadio.IsChecked = true;
+        if (PostId == null) { return; }
+
+        DeleteBtn.IsVisible = true;
+        TitleEntry.Text = posttitel;
+        DesEditor.Text = postdes;
         fl = fileloacaion;
         //LinkEntry.Text = Link;
-		if(string.IsNullOrEmpty(DLTime))
-		{
-			return;
-		}
-		DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
-		AssignmentRadio.IsChecked = true;
-        
+        if (string.IsNullOrEmpty(DLTime))
+        {
+            return;
+        }
+        DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
+        TimeChecker.IsChecked = true;
+        DeadLinePicker.SelectedDate = DateTime.Parse(DLTime);
+        //AssignmentRadio.IsChecked = true;
+
     }
-    private async void BackClicked(object sender, EventArgs e){
-		await Navigation.PopAsync();
-	}
+
+    private async void BackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
     private async void DeleteClicked(object sender, EventArgs e)
     {
         int pid = int.Parse(PostId);
-        
+
         // Initialize the YesNoContentView
         var yesNoPopup = new YesNoContentView();
 
@@ -60,100 +75,131 @@ public partial class EditPostPage : ContentPage
         {
             return;
         }
-            // Perform delete operation
+        // Perform delete operation
         await database.deleteSubjectPost(pid);
         Snackbar.ShowSnackbar(1, "تم حذف المنشور بنجاح");
         await Navigation.PopAsync();
     }
 
     private void TitleEntryChanged(object sender, TextChangedEventArgs e)
-	{
-		CheckEmpty();
+    {
+        CheckEmpty();
     }
-	private void DesEditorChanged(object sender, TextChangedEventArgs e)
-	{
-		CheckEmpty();
+    private void DesEditorChanged(object sender, TextChangedEventArgs e)
+    {
+        CheckEmpty();
     }
     private void CheckEmpty()
-	{
-		if (string.IsNullOrEmpty(TitleEntry.Text) || string.IsNullOrEmpty(DesEditor.Text))
-		{
-			SaveBtn.IsEnabled = false;
-			SaveBtn.BackgroundColor = Color.FromArgb("#D9D9D9");
-		}
-		else {
+    {
+        if (string.IsNullOrEmpty(TitleEntry.Text) || string.IsNullOrEmpty(DesEditor.Text))
+        {
+            SaveBtn.IsEnabled = false;
+            SaveBtn.BackgroundColor = Color.FromArgb("#D9D9D9");
+        }
+        else
+        {
             SaveBtn.IsEnabled = true;
             SaveBtn.BackgroundColor = Color.FromArgb("#D3B05F");
         }
-	}
+    }
 
-    private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e){
+    private void timercheckedchanged(object sender, CheckedChangedEventArgs e)
+    {
+        var checkedtime = sender as CheckBox;
+        DeadLineBtn.IsEnabled = false;
+        DeadLineBtn.BackgroundColor = Color.FromArgb("#D9D9D9");
+        if (checkedtime.IsChecked)
+        {
+            DeadLineBtn.IsEnabled = true;
+            DeadLineBtn.BackgroundColor = Color.FromArgb("#1A1A1A");
+        }
+    }
+
+    /*private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
         var selectedRadioButton = sender as RadioButton;
 
         // Update the UI or show something based on the selected radio button
-        if (selectedRadioButton == PostRadio){
+        if (selectedRadioButton == PostRadio)
+        {
             DeadLineBtn.IsVisible = false;
-	        UploadDesBtn.IsVisible = false;
-			PTNum = 1;
-			return;
+            UploadDesBtn.IsVisible = false;
+            PTNum = 1;
+            return;
         }
-	        UploadDesBtn.IsVisible = true;
-            DeadLineBtn.IsVisible = true;
-			PTNum = 2;
+        UploadDesBtn.IsVisible = true;
+        DeadLineBtn.IsVisible = true;
+        PTNum = 2;
+    }*/
+    private void DeadLineBtnClicked(object sender, EventArgs e)
+    {
+        DeadLinePicker.IsOpen = true;
+        DeadLinePicker.SelectionView.Background = Color.FromRgba("#1a1a1a");
     }
-	private void DeadLineBtnClicked(object sender, EventArgs e)
-	{
-		DeadLinePicker.IsOpen = true;
-		DeadLinePicker.SelectionView.Background = Color.FromRgba("#1a1a1a");
-	}
-    private async void UploadDesBtnClicked(object sender, EventArgs e){
-        result = await FilePicker.Default.PickAsync(new PickOptions{
+    private async void UploadDesBtnClicked(object sender, EventArgs e)
+    {
+        result = await FilePicker.Default.PickAsync(new PickOptions
+        {
             FileTypes = FilePickerFileType.Pdf,
             PickerTitle = "Select a PDF"
         });
+
+        if (result != null)
+        {
+            UploadDesBtn.BackgroundColor = Color.FromArgb("#D3B05F");
+            UploadDesBtn.TextColor = Color.FromArgb("#1A1A1A");
+
+            // Change the icon color to #1A1A1A
+                //UploadDesIcon.Color = Color.FromArgb("#1A1A1A");
+            
+        }
     }
-	private async void SaveClicked(object sender, EventArgs e)
-	{
+
+
+    private async void SaveClicked(object sender, EventArgs e)
+    {
 
         DateTime? STime = null;
-		if (PTNum == 2) {
-			STime = DeadLinePicker?.SelectedDate.Value;
-		}
-		
+        if (TimeChecker.IsChecked)
+        {
+            STime = DeadLinePicker?.SelectedDate.Value;
+        }
+        if (DeadLinePicker.SelectedDate < DateTime.Now && TimeChecker.IsChecked)
+        {
+            await Task.Delay(500);
+            Snackbar.ShowSnackbar(2, "يجب الا يكون اخر موعد قبل الوقت الحالي");
+            //await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
+            DeadLinePicker.SelectedDate = DateTime.Now.AddMinutes(1).Date;// + minute
 
-        if (string.IsNullOrEmpty(PostId)){
+            return;
+        }
 
-            if (DeadLinePicker.SelectedDate < DateTime.Now && AssignmentRadio.IsChecked)
-            {
-                await Task.Delay(500);
-                Snackbar.ShowSnackbar(2, "يجب الا يكون اخر موعد قبل الوقت الحالي");
-                //await DisplayAlert("خطا", "يجب الا يكون اخر موعد قبل الوقت الحالي", "حسنا");
-                DeadLinePicker.SelectedDate = DateTime.Now.AddMinutes(1).Date;// + minute
 
-                return;
-            }
+        if (string.IsNullOrEmpty(PostId))
+        {
             var post = new SubjectPosts
-			{
-				PostTitle = TitleEntry.Text,
-				PostDes = DesEditor.Text,
-				SubId = SubId,
-				PostDate = DateTime.Now,
-				DeadLineTime = STime,
-				PostFileLink = result?.FullPath,
-                
-			};
-			await database.insertSubjectPost(post);
-			//await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
+            {
+                PostTitle = TitleEntry.Text,
+                PostDes = DesEditor.Text,
+                SubId = SubId,
+                PostDate = DateTime.Now,
+                DeadLineTime = STime,
+                PostFileLink = result?.FullPath,
+
+            };
+            await database.insertSubjectPost(post);
+            //await DisplayAlert("تمت", "تم اضافة منشور", "حسنا");
             Snackbar.ShowSnackbar(1, "تم اضافة المنشور");
-		}
-		else
-		{
-			int pid = int.Parse(PostId);
+        }
+        else
+        {
+            int pid = int.Parse(PostId);
             var existingPost = await database.getSubjectPost(pid);
-			if (existingPost != null){
-				existingPost.PostTitle = TitleEntry.Text;
-				existingPost.PostDes = DesEditor.Text;
-				existingPost.DeadLineTime = STime;
+            if (existingPost != null)
+            {
+                existingPost.PostTitle = TitleEntry.Text;
+                existingPost.PostDes = DesEditor.Text;
+                existingPost.DeadLineTime = STime;
                 /*
 				if(fileContent != null){
 				existingPost.PostDesFile = fileContent;*/
@@ -164,16 +210,16 @@ public partial class EditPostPage : ContentPage
 
                 }
                 else
-                existingPost.PostFileLink = fl;
+                    existingPost.PostFileLink = fl;
                 await database.updateSubjectPost(existingPost);
-				//await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
+                //await DisplayAlert("تمت", "تم تعديل المنشور", "حسنا");
                 Snackbar.ShowSnackbar(1, "تم تعديل المنشور");
-			}
-		}
-		
-			await Navigation.PopAsync();
-	}
-	
+            }
+        }
+
+        await Navigation.PopAsync();
+    }
+
     /*private async void SaveClicked(object sender, EventArgs e)
     {
 
