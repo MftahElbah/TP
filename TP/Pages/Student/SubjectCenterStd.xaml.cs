@@ -166,6 +166,9 @@ public partial class SubjectCenterStd : ContentPage
         ShowDesFileBtn.IsVisible = false;
         CountdownLabel.IsVisible = false;
         //OpenLinkBtn.IsVisible = false;
+        ShowAssignments.IsEnabled = true;
+        ShowAssignments.Text = "الرفع";
+        ShowAssignments.BackgroundColor = Color.FromArgb("#1A1A1A");
 
         var SelectedPost = Postslistview.SelectedItem as SubjectPosts;
 

@@ -334,7 +334,7 @@ namespace TP.Methods.actions
                 if (LUS == null) return new List<DegreeTable>();
 
 
-                List<DegreeTable> result = LUS.Where(x => x.StdName == UserSession.Name).ToList();
+                List<DegreeTable> result = LUS.Where(x => x != null && ( x.StdName == UserSession.Name)).ToList();
                 return result;
             }
             catch

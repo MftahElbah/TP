@@ -14,6 +14,7 @@ public partial class EditPostPage : ContentPage
     public string PostId;
     private string fl;
     private FileResult result;
+    
 
     public EditPostPage(int subid, string postid, string posttitel, string postdes, string fileloacaion, string DLTime)
     {

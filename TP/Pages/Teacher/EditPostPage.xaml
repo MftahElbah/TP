@@ -90,12 +90,12 @@
                     </Border>
 
 
-                    <Button Text="ملف للتوضيح" x:Name="UploadDesBtn" Clicked="UploadDesBtnClicked" Padding="10" FontSize="16" FontFamily="Cairo" HorizontalOptions="Center" TextColor="#efefef" BackgroundColor="#1a1a1a"/>
+                    <Button Text="ملف للتوضيح" x:Name="UploadDesBtn" Clicked="UploadDesBtnClicked" Padding="10" FontSize="16" FontFamily="CairoB" HorizontalOptions="Center" TextColor="#efefef" BackgroundColor="#1a1a1a"/>
 
                     <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" VerticalOptions="Center">
                         <CheckBox x:Name="TimeChecker" CheckedChanged="timercheckedchanged" Scale="1.3"/>
 
-                        <Button Text="اخر موعد" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="Cairo" TextColor="#efefef" BackgroundColor="#1a1a1a">
+                        <Button Text="موعد التسليم" x:Name="DeadLineBtn" Clicked="DeadLineBtnClicked" Padding="10" HorizontalOptions="Center" FontSize="16" FontFamily="CairoB" TextColor="#efefef" BackgroundColor="#1a1a1a">
                             <Button.ImageSource>
                                 <FontImageSource FontFamily="GoogleIconsFont" 
                                              Glyph="{x:Static icon:IconFont.Watch_later}" 
