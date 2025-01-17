@@ -74,18 +74,16 @@ namespace TP.Methods.actions
 
         public override async Task<UserSessionTable> UserSessionChecker()
         {
-            try
-            {
+            try{
                 FirebaseResponse response;
                 string userid = await SecureStorage.GetAsync("userid");
-                if (userid != null)
+                if (userid == null)
                 { 
-                    response = await client.GetAsync("User/UserSession/" + userid);
-                }
-                else
-                {
                     return null;
                 }
+
+                response = await client.GetAsync("User/UserSession/" + userid);
+                
                 if (response == null || response.Body == "null")
                 {
                     return null;
@@ -96,12 +94,13 @@ namespace TP.Methods.actions
                 UserSessionTable result = LUS;
                     return result; 
                 
-            } catch (Exception error)
-            {
+            } 
+            catch (Exception error){
                 Console.WriteLine(error.Message);
                 return null;
             }
         }
+
         public override async Task<int> deleteDegree(DegreeTable degreeTable)
         {
             try
@@ -165,16 +164,52 @@ namespace TP.Methods.actions
             var degreeData = await client.GetAsync("degree/");
             if (degreeData != null && degreeData.Body != "null")
             {
-                var degrees = JsonConvert.DeserializeObject<List<DegreeTable>>(degreeData.Body);
-                foreach (var item in degrees)
+                try
                 {
-                    if (item.SubId == subId)
+                    // Attempt to deserialize as Dictionary
+                    var degreesDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(degreeData.Body);
+                    if (degreesDict != null)
                     {
-                        var degreeDelete = await client.DeleteAsync($"degree/{item.DegId}");
-                        if (degreeDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                        foreach (var item in degreesDict)
                         {
-                            deletedCount++;
+                            if (item.Value != null && item.Value.SubId == subId)
+                            {
+                                var degreeDelete = await client.DeleteAsync($"degree/{item.Key}");
+                                if (degreeDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                {
+                                    deletedCount++;
+                                }
+                            }
                         }
+                        return deletedCount;
+                    }
+                }
+                catch
+                {
+                    // If deserialization as Dictionary fails, try as List
+                    try
+                    {
+                        var degreesList = JsonConvert.DeserializeObject<List<DegreeTable>>(degreeData.Body);
+                        if (degreesList != null)
+                        {
+                            foreach (var item in degreesList)
+                            {
+
+                                if (item != null && item.SubId == subId)
+                                {
+                                    var degreeDelete = await client.DeleteAsync($"degree/{item.DegId}");
+                                    if (degreeDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                    {
+                                        deletedCount++;
+                                    }
+                                }
+                            
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error during deletion: " + ex.Message);
                     }
                 }
             }
@@ -182,23 +217,46 @@ namespace TP.Methods.actions
             return deletedCount;
         }
 
+
+        // Delete Posts by SubId (Handles both List and Dictionary)
         private async Task<int> DeletePostsBySubId(int subId)
         {
             int deletedCount = 0;
-            int deletedpostCount = 0;
-            
+            int deletedPostCount = 0;
 
             var postData = await client.GetAsync("post/");
             if (postData != null && postData.Body != "null")
             {
-                var posts = JsonConvert.DeserializeObject<List<SubjectPosts>>(postData.Body);
-                foreach (var item in posts)
+                try
                 {
-                    if(item != null)
+                    // Attempt to deserialize as Dictionary
+                    var postsDict = JsonConvert.DeserializeObject<Dictionary<string, SubjectPosts>>(postData.Body);
+                    if (postsDict != null)
                     {
-                        if (item.SubId == subId)
+                        foreach (var item in postsDict)
                         {
-                            deletedpostCount = await DeleteAssignmentByPostId(item.PostId);
+                            if (item.Value != null && item.Value.SubId == subId)
+                            {
+                                deletedPostCount += await DeleteAssignmentByPostId(item.Value.PostId);
+                                var postDelete = await client.DeleteAsync($"post/{item.Value.PostId}");
+                                if (postDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                {
+                                    deletedCount++;
+                                }
+                            }
+                        }
+                        return deletedCount + deletedPostCount;
+                    }
+                }
+                catch
+                {
+                    // Fallback to List
+                    var postsList = JsonConvert.DeserializeObject<List<SubjectPosts>>(postData.Body);
+                    foreach (var item in postsList)
+                    {
+                        if (item != null && item.SubId == subId)
+                        {
+                            deletedPostCount += await DeleteAssignmentByPostId(item.PostId);
                             var postDelete = await client.DeleteAsync($"post/{item.PostId}");
                             if (postDelete.StatusCode == System.Net.HttpStatusCode.OK)
                             {
@@ -209,29 +267,51 @@ namespace TP.Methods.actions
                 }
             }
 
-            return deletedCount + deletedpostCount;
+            return deletedCount + deletedPostCount;
         }
+
+        // Delete Assignments by PostId (Handles both List and Dictionary)
         private async Task<int> DeleteAssignmentByPostId(int postId)
         {
             int deletedCount = 0;
 
-            // Fetch assignments from Firebase
             var requestData = await client.GetAsync("assignment/");
             if (requestData != null && requestData.Body != "null")
             {
-                // Deserialize the data into a dictionary
-                var requests = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(requestData.Body);
-
-                foreach (var item in requests)
+                try
                 {
-                    if (item.Value != null && item.Value.PostId == postId)
+                    var assignmentsDict = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(requestData.Body);
+                    if (assignmentsDict != null)
                     {
-                        // Delete using the key (Firebase ID)
-                        var requestDelete = await client.DeleteAsync($"assignment/{item.Key}");
-                        if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                        foreach (var item in assignmentsDict)
                         {
-                            deletedCount++;
+                            if (item.Value != null && item.Value.PostId == postId)
+                            {
+                                var requestDelete = await client.DeleteAsync($"assignment/{item.Key}");
+                                if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                {
+                                    deletedCount++;
+                                }
+                            }
                         }
+                        return deletedCount;
+                    }
+                }
+                catch
+                {
+                    var assignmentsList = JsonConvert.DeserializeObject<List<SubjectAssignments>>(requestData.Body);
+                    int index = 0;
+                    foreach (var item in assignmentsList)
+                    {
+                        if (item != null && item.PostId == postId)
+                        {
+                            var requestDelete = await client.DeleteAsync($"assignment/{item.StdId + item.PostId}");
+                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                deletedCount++;
+                            }
+                        }
+                        index++;
                     }
                 }
             }
@@ -239,6 +319,7 @@ namespace TP.Methods.actions
             return deletedCount;
         }
 
+        // Delete Requests by SubId (Handles both List and Dictionary)
         private async Task<int> DeleteRequestsBySubId(int subId)
         {
             int deletedCount = 0;
@@ -246,12 +327,32 @@ namespace TP.Methods.actions
             var requestData = await client.GetAsync("request/");
             if (requestData != null && requestData.Body != "null")
             {
-                var requests = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(requestData.Body);
-                foreach (var item in requests)
+                try
                 {
-                    if(item != null)
+                    var requestsDict = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(requestData.Body);
+                    if (requestsDict != null)
                     {
-                        if (item.SubId == subId)
+                        foreach (var item in requestsDict)
+                        {
+                            if (item.Value != null && item.Value.SubId == subId)
+                            {
+                                var requestDelete = await client.DeleteAsync($"request/{item.Key}");
+                                if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                {
+                                    deletedCount++;
+                                }
+                            }
+                        }
+                        return deletedCount;
+                    }
+                }
+                catch
+                {
+                    var requestsList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(requestData.Body);
+                    int index = 0;
+                    foreach (var item in requestsList)
+                    {
+                        if (item != null && item.SubId == subId)
                         {
                             var requestDelete = await client.DeleteAsync($"request/{item.ReqId}");
                             if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
@@ -259,12 +360,15 @@ namespace TP.Methods.actions
                                 deletedCount++;
                             }
                         }
+                        index++;
                     }
                 }
             }
 
             return deletedCount;
         }
+
+        // Delete Books by SubId (Handles both List and Dictionary)
         private async Task<int> DeleteBookssBySubId(int subId)
         {
             int deletedCount = 0;
@@ -272,26 +376,48 @@ namespace TP.Methods.actions
             var requestData = await client.GetAsync("book/");
             if (requestData != null && requestData.Body != "null")
             {
-                var requests = JsonConvert.DeserializeObject<List<SubjectBooks>>(requestData.Body);
-                foreach (var item in requests)
+                try
                 {
-                    if(item != null)
+                    var booksDict = JsonConvert.DeserializeObject<Dictionary<string, SubjectBooks>>(requestData.Body);
+                    if (booksDict != null)
                     {
-                        if (item.SubId == subId)
+                        foreach (var item in booksDict)
                         {
-                            var requestDelete = await client.DeleteAsync($"book/{item.BookId}");
-                            if (requestDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                            if (item.Value != null && item.Value.SubId == subId)
+                            {
+                                var bookDelete = await client.DeleteAsync($"book/{item.Key}");
+                                if (bookDelete.StatusCode == System.Net.HttpStatusCode.OK)
+                                {
+                                    deletedCount++;
+                                }
+                            }
+                        }
+                        return deletedCount;
+                    }
+                }
+                catch
+                {
+                    var booksList = JsonConvert.DeserializeObject<List<SubjectBooks>>(requestData.Body);
+                    int index = 0;
+                    foreach (var item in booksList)
+                    {
+                        if (item != null && item.SubId == subId)
+                        {
+                            var bookDelete = await client.DeleteAsync($"book/{item.BookId}");
+                            if (bookDelete.StatusCode == System.Net.HttpStatusCode.OK)
                             {
                                 deletedCount++;
                             }
                         }
+                        index++;
                     }
                 }
             }
 
             return deletedCount;
         }
-        
+
+
         public override async Task<int> deleteSubjectBook(SubjectBooks book)
         {
             try
@@ -319,7 +445,7 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
-        
+
         public override async Task<List<DegreeTable>> getDegreeBySessionName()
         {
             try
@@ -330,18 +456,47 @@ namespace TP.Methods.actions
                     return new List<DegreeTable>();
                 }
 
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                if (LUS == null) return new List<DegreeTable>();
+                List<DegreeTable> result = new List<DegreeTable>();
 
+                // Check if data is in Dictionary format
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var degreeDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
 
-                List<DegreeTable> result = LUS.Where(x => x != null && ( x.StdName == UserSession.Name)).ToList();
+                    // Filter results based on the current user session
+                    foreach (var item in degreeDict)
+                    {
+                        if (item.Value != null && item.Value.StdName == UserSession.Name)
+                        {
+                            result.Add(item.Value);
+                        }
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+
+                    // Filter results based on the current user session
+                    foreach (var item in degreeList)
+                    {
+                        if (item != null && item.StdName == UserSession.Name)
+                        {
+                            result.Add(item);
+                        }
+                    }
+                }
+
                 return result;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine($"Error: {e.Message}");
                 return new List<DegreeTable>();
             }
         }
+
         public override async Task<DegreeTable> getDegreeByStdNameAndSubId(string stdName, int subId)
         {
             try
@@ -352,10 +507,21 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                if (LUS == null) return null;
+                DegreeTable result = null;
 
-                DegreeTable result = LUS.FirstOrDefault(x => x.StdName == stdName && x.SubId == subId);
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var degreeDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
+                    result = degreeDict.Values.FirstOrDefault(x => x.StdName == stdName && x.SubId == subId);
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                    result = degreeList.FirstOrDefault(x => x.StdName == stdName && x.SubId == subId);
+                }
+
                 return result;
             }
             catch
@@ -363,6 +529,7 @@ namespace TP.Methods.actions
                 return null;
             }
         }
+
         public override async Task<List<DegreeTable>> getDegreeTableBySubIdAndStdName(int SubId)
         {
             try
@@ -370,14 +537,24 @@ namespace TP.Methods.actions
                 FirebaseResponse response = await client.GetAsync("degree");
                 if (response == null || response.Body == "null")
                 {
-                    return new List<DegreeTable>() ;
+                    return new List<DegreeTable>();
                 }
 
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                if (LUS == null) return new List<DegreeTable>();
+                List<DegreeTable> result = new List<DegreeTable>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var degreeDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
+                    result = degreeDict.Values.Where(s => s.StdName == UserSession.Name && s.SubId == SubId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                    result = degreeList.Where(s => s.StdName == UserSession.Name && s.SubId == SubId).ToList();
+                }
 
-                List<DegreeTable> result = LUS.Where(s => s != null && ( s.SubId == SubId && s.StdName == UserSession.Name)).ToList();
                 return result;
             }
             catch
@@ -385,6 +562,7 @@ namespace TP.Methods.actions
                 return new List<DegreeTable>();
             }
         }
+
         public override async Task<List<DegreeTable>> getDegreeTablesBySubId(int SubId)
         {
             try
@@ -395,11 +573,21 @@ namespace TP.Methods.actions
                     return new List<DegreeTable>();
                 }
 
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                if (LUS == null) return new List<DegreeTable>();
+                List<DegreeTable> result = new List<DegreeTable>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var degreeDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
+                    result = degreeDict.Values.Where(s => s.SubId == SubId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                    result = degreeList.Where(s => s.SubId == SubId).ToList();
+                }
 
-                List<DegreeTable> result = LUS.Where(s => s != null && (s.SubId == SubId) ).ToList();
                 return result;
             }
             catch
@@ -407,6 +595,7 @@ namespace TP.Methods.actions
                 return new List<DegreeTable>();
             }
         }
+
         public override async Task<List<RequestJoinSubject>> getRequestJoinBySubIdAndUserId(int SubId)
         {
             try
@@ -417,11 +606,21 @@ namespace TP.Methods.actions
                     return new List<RequestJoinSubject>();
                 }
 
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                if (LUS == null) return new List<RequestJoinSubject>();
+                List<RequestJoinSubject> result = new List<RequestJoinSubject>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var requestDict = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(response.Body.ToString());
+                    result = requestDict.Values.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                    result = requestList.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                }
 
-                List<RequestJoinSubject> result = LUS.Where(s => s!=null && ( s.SubId == SubId && s.UserId == UserSession.UserId )).ToList();
                 return result;
             }
             catch
@@ -429,6 +628,7 @@ namespace TP.Methods.actions
                 return new List<RequestJoinSubject>();
             }
         }
+
         public override async Task<List<RequestJoinSubject>> getREquestJoinSubjectBySubIdAndUserId(int SubId)
         {
             try
@@ -439,11 +639,21 @@ namespace TP.Methods.actions
                     return new List<RequestJoinSubject>();
                 }
 
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                if (LUS == null) return new List<RequestJoinSubject>();
+                List<RequestJoinSubject> result = new List<RequestJoinSubject>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var requestDict = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(response.Body.ToString());
+                    result = requestDict.Values.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                    result = requestList.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                }
 
-                List<RequestJoinSubject> result = LUS.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
                 return result;
             }
             catch
@@ -451,6 +661,7 @@ namespace TP.Methods.actions
                 return new List<RequestJoinSubject>();
             }
         }
+
         public override async Task<List<RequestJoinSubject>> getRequestJoinSubjectsBySubId(int subId)
         {
             try
@@ -461,11 +672,21 @@ namespace TP.Methods.actions
                     return new List<RequestJoinSubject>();
                 }
 
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                if (LUS == null) return new List<RequestJoinSubject>();
+                List<RequestJoinSubject> result = new List<RequestJoinSubject>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var requestDict = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(response.Body.ToString());
+                    result = requestDict.Values.Where(s => s.SubId == subId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                    result = requestList.Where(s => s.SubId == subId).ToList();
+                }
 
-                List<RequestJoinSubject> result = LUS.Where(s => s!= null && ( s.SubId == subId )).ToList();
                 return result;
             }
             catch
@@ -473,6 +694,7 @@ namespace TP.Methods.actions
                 return new List<RequestJoinSubject>();
             }
         }
+
         public override async Task<SubTable> getSubBySubId(int subId)
         {
             try
@@ -483,10 +705,11 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                SubTable LUS = JsonConvert.DeserializeObject<SubTable>(response.Body.ToString());
-                if (LUS == null) return null;
+                SubTable result = null;
 
-                SubTable result = LUS;
+                // Deserialize directly into a SubTable (not list or dict)
+                result = JsonConvert.DeserializeObject<SubTable>(response.Body.ToString());
+
                 return result;
             }
             catch
@@ -494,6 +717,7 @@ namespace TP.Methods.actions
                 return null;
             }
         }
+
         public override async Task<List<SubTable>> getSubByUser()
         {
             try
@@ -504,23 +728,20 @@ namespace TP.Methods.actions
                     return new List<SubTable>();
                 }
 
-                List<SubTable> LUS;
-                try
-                {
-                    LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during deserialization: {ex.Message}");
-                    return new List<SubTable>();
-                }
+                List<SubTable> result = new List<SubTable>();
 
-                if (LUS == null)
-                    return new List<SubTable>();
-
-                List<SubTable> result = LUS
-                    .Where(s => s != null && s.UserId == UserSession.UserId)
-                    .ToList();
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var subDict = JsonConvert.DeserializeObject<Dictionary<string, SubTable>>(response.Body.ToString());
+                    result = subDict.Values.Where(s => s != null && s.UserId == UserSession.UserId).ToList();
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var subList = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                    result = subList.Where(s => s != null && s.UserId == UserSession.UserId).ToList();
+                }
 
                 return result;
             }
@@ -531,40 +752,44 @@ namespace TP.Methods.actions
             }
         }
 
+
         public override async Task<bool> getSubjectAssignmentByPostIdAndStdId(int postId)
         {
             try
             {
-                // Fetch all assignments from Firebase
                 FirebaseResponse response = await client.GetAsync("assignment");
                 if (response == null || response.Body == "null")
                 {
                     return false; // No assignments found
                 }
 
-                // Deserialize the response into a list of SubjectAssignments
-                var assignments = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
-                if (assignments == null || !assignments.Any())
-                {
-                    return false; // No assignments in the database
-                }
+                bool matchFound = false;
 
-                // Loop through the assignments and check conditions
-                foreach (var assignment in assignments.Values)
+                if (response.Body.Trim().StartsWith("{"))
                 {
-                    if (assignment != null)
+                    // Deserialize as Dictionary
+                    var assignments = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
+                    if (assignments != null)
                     {
-                        if (assignment.PostId == postId && assignment.StdId == UserSession.UserId)
-                        return true; // Match found
+                        matchFound = assignments.Values.Any(assignment => assignment != null && assignment.PostId == postId && assignment.StdId == UserSession.UserId);
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var assignmentsList = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
+                    if (assignmentsList != null)
+                    {
+                        matchFound = assignmentsList.Any(assignment => assignment != null && assignment.PostId == postId && assignment.StdId == UserSession.UserId);
                     }
                 }
 
-                return false; // No match found
+                return matchFound;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in getSubjectAssignmentByPostIdAndStdId: {ex.Message}");
-                return false; // Return false if an exception occurs
+                return false;
             }
         }
 
@@ -578,14 +803,26 @@ namespace TP.Methods.actions
                     return new List<SubjectAssignments>();
                 }
 
-                // Deserialize into Dictionary because Firebase stores data as key-value pairs
-                var data = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
-                if (data == null) return new List<SubjectAssignments>();
+                List<SubjectAssignments> result = new List<SubjectAssignments>();
 
-                // Extract values and filter by PostId
-                List<SubjectAssignments> result = data.Values
-                                                      .Where(s => s != null && (s.PostId == postId))
-                                                      .ToList();
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var data = JsonConvert.DeserializeObject<Dictionary<string, SubjectAssignments>>(response.Body.ToString());
+                    if (data != null)
+                    {
+                        result = data.Values.Where(s => s != null && s.PostId == postId).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var dataList = JsonConvert.DeserializeObject<List<SubjectAssignments>>(response.Body.ToString());
+                    if (dataList != null)
+                    {
+                        result = dataList.Where(s => s != null && s.PostId == postId).ToList();
+                    }
+                }
 
                 return result;
             }
@@ -606,11 +843,27 @@ namespace TP.Methods.actions
                     return new List<SubjectBooks>();
                 }
 
-                List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectBooks>();
+                List<SubjectBooks> result = new List<SubjectBooks>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var data = JsonConvert.DeserializeObject<Dictionary<string, SubjectBooks>>(response.Body.ToString());
+                    if (data != null)
+                    {
+                        result = data.Values.Where(s => s != null && s.SubId == subId).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var dataList = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
+                    if (dataList != null)
+                    {
+                        result = dataList.Where(s => s != null && s.SubId == subId).ToList();
+                    }
+                }
 
-                List<SubjectBooks> result = LUS.Where(s => s.SubId == subId).ToList();
                 return result;
             }
             catch
@@ -618,6 +871,7 @@ namespace TP.Methods.actions
                 return new List<SubjectBooks>();
             }
         }
+
         public override async Task<SubjectPosts> getSubjectPost(int postId)
         {
             try
@@ -628,8 +882,11 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                SubjectPosts LUS = JsonConvert.DeserializeObject<SubjectPosts>(response.Body.ToString());
-                SubjectPosts result = LUS;
+                SubjectPosts result = null;
+
+                // Deserialize as single object (not list or dict)
+                result = JsonConvert.DeserializeObject<SubjectPosts>(response.Body.ToString());
+
                 return result;
             }
             catch
@@ -637,6 +894,7 @@ namespace TP.Methods.actions
                 return null;
             }
         }
+
         public override async Task<List<SubjectPosts>> getSubjectPosts()
         {
             try
@@ -647,18 +905,31 @@ namespace TP.Methods.actions
                     return new List<SubjectPosts>();
                 }
 
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectPosts>();
+                List<SubjectPosts> postsList;
 
+                // Auto-detect if data is Array or Object
+                if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List if data is in array format
+                    postsList = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                }
+                else
+                {
+                    // Deserialize as Dictionary if data is in object format
+                    var postsDict = JsonConvert.DeserializeObject<Dictionary<string, SubjectPosts>>(response.Body.ToString());
+                    postsList = postsDict.Values.ToList();
+                }
 
-                List<SubjectPosts> result = LUS.ToList();
-                return result;
+                return postsList.Where(x => x != null).ToList();
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return new List<SubjectPosts>();
             }
         }
+
+
         public override async Task<List<SubjectPosts>> getSubjectPostsBySubId(int subId)
         {
             try
@@ -669,18 +940,32 @@ namespace TP.Methods.actions
                     return new List<SubjectPosts>();
                 }
 
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectPosts>();
+                List<SubjectPosts> postsList;
 
+                // Try deserializing as a list
+                if (response.Body.Trim().StartsWith("["))
+                {
+                    postsList = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                }
+                else
+                {
+                    var postsDict = JsonConvert.DeserializeObject<Dictionary<string, SubjectPosts>>(response.Body.ToString());
+                    postsList = postsDict.Values.ToList();
+                }
 
-                List<SubjectPosts> result = LUS.Where(e => e!= null &&( e.SubId ==  subId)).ToList();
-                return result;
+                if (postsList == null) return new List<SubjectPosts>();
+
+                // Filter posts by SubId
+                return postsList.Where(e => e != null && e.SubId == subId).ToList();
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return new List<SubjectPosts>();
             }
         }
+
+
         public override async Task<List<SubjectPosts>> getGeneralPosts()
         {
             try
@@ -691,11 +976,27 @@ namespace TP.Methods.actions
                     return new List<SubjectPosts>();
                 }
 
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectPosts>();
+                List<SubjectPosts> result = new List<SubjectPosts>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (if response is in key-value format)
+                    var posts = JsonConvert.DeserializeObject<Dictionary<string, SubjectPosts>>(response.Body.ToString());
+                    if (posts != null)
+                    {
+                        result = posts.Values.Where(e => e != null && e.SubId == -1 && e.PostDate < DateTime.Now).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var postsList = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                    if (postsList != null)
+                    {
+                        result = postsList.Where(e => e != null && e.SubId == -1 && e.PostDate < DateTime.Now).ToList();
+                    }
+                }
 
-                List<SubjectPosts> result = LUS.Where(e => e != null && (e.SubId == -1 && e.PostDate < DateTime.Now)).ToList();
                 return result;
             }
             catch
@@ -703,6 +1004,7 @@ namespace TP.Methods.actions
                 return new List<SubjectPosts>();
             }
         }
+
         public override async Task<List<SubTable>> getSubTable()
         {
             try
@@ -713,11 +1015,27 @@ namespace TP.Methods.actions
                     return new List<SubTable>();
                 }
 
-                List<SubTable> LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
-                if (LUS == null) return new List<SubTable>();
+                List<SubTable> result = new List<SubTable>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary
+                    var subTables = JsonConvert.DeserializeObject<Dictionary<string, SubTable>>(response.Body.ToString());
+                    if (subTables != null)
+                    {
+                        result = subTables.Values.Where(l => l != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List
+                    var subTablesList = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                    if (subTablesList != null)
+                    {
+                        result = subTablesList.Where(l => l != null).ToList();
+                    }
+                }
 
-                List<SubTable> result = LUS.Where(l => l != null).ToList();
                 return result;
             }
             catch
@@ -725,6 +1043,7 @@ namespace TP.Methods.actions
                 return new List<SubTable>();
             }
         }
+
         public override async Task<UsersAccountTable> getUserAccountById(int userId)
         {
             try
@@ -735,8 +1054,10 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                UsersAccountTable LUS = JsonConvert.DeserializeObject<UsersAccountTable>(response.Body.ToString());
-                UsersAccountTable result = LUS;
+                UsersAccountTable result = null;
+
+                // Deserialize as single object
+                result = JsonConvert.DeserializeObject<UsersAccountTable>(response.Body.ToString());
                 return result;
             }
             catch
@@ -744,6 +1065,7 @@ namespace TP.Methods.actions
                 return null;
             }
         }
+
         public override async Task<int> insertDegree(DegreeTable degreeTable)
         {
             try
@@ -762,7 +1084,6 @@ namespace TP.Methods.actions
         }
         public override async Task<List<DegreeTable>> getDegree()
         {
-
             try
             {
                 FirebaseResponse response = await client.GetAsync("degree");
@@ -771,18 +1092,35 @@ namespace TP.Methods.actions
                     return new List<DegreeTable>();
                 }
 
-                List<DegreeTable> LUS = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                if (LUS == null) return new List<DegreeTable>();
+                List<DegreeTable> result = new List<DegreeTable>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var degreeData = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
+                    if (degreeData != null)
+                    {
+                        result = degreeData.Values.Where(d => d != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
+                    if (degreeList != null)
+                    {
+                        result = degreeList.Where(d => d != null).ToList();
+                    }
+                }
 
-                return LUS.ToList();
-
+                return result;
             }
             catch
             {
                 return new List<DegreeTable>();
             }
         }
+
 
         public override async Task<int> insertRequestJoin(RequestJoinSubject request)
         {
@@ -797,7 +1135,6 @@ namespace TP.Methods.actions
         }
         public override async Task<List<RequestJoinSubject>> GetRequests()
         {
-
             try
             {
                 FirebaseResponse response = await client.GetAsync("request");
@@ -806,18 +1143,35 @@ namespace TP.Methods.actions
                     return new List<RequestJoinSubject>();
                 }
 
-                List<RequestJoinSubject> LUS = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                if (LUS == null) return new List<RequestJoinSubject>();
+                List<RequestJoinSubject> result = new List<RequestJoinSubject>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var requestData = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(response.Body.ToString());
+                    if (requestData != null)
+                    {
+                        result = requestData.Values.Where(r => r != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
+                    if (requestList != null)
+                    {
+                        result = requestList.Where(r => r != null).ToList();
+                    }
+                }
 
-                return LUS.ToList();
-
+                return result;
             }
             catch
             {
                 return new List<RequestJoinSubject>();
             }
         }
+
         public override async Task<int> insertSub(SubTable subTable)
         {
             try
@@ -852,18 +1206,35 @@ namespace TP.Methods.actions
                     return new List<SubjectBooks>();
                 }
 
-                List<SubjectBooks> LUS = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectBooks>();
+                List<SubjectBooks> result = new List<SubjectBooks>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var bookData = JsonConvert.DeserializeObject<Dictionary<string, SubjectBooks>>(response.Body.ToString());
+                    if (bookData != null)
+                    {
+                        result = bookData.Values.Where(b => b != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var bookList = JsonConvert.DeserializeObject<List<SubjectBooks>>(response.Body.ToString());
+                    if (bookList != null)
+                    {
+                        result = bookList.Where(b => b != null).ToList();
+                    }
+                }
 
-                return LUS.ToList();
-
+                return result;
             }
             catch
             {
                 return new List<SubjectBooks>();
             }
         }
+
         public override async Task<int> insertSubjectBook(SubjectBooks book)
         {
             try
@@ -888,18 +1259,35 @@ namespace TP.Methods.actions
                     return new List<SubjectPosts>();
                 }
 
-                List<SubjectPosts> LUS = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
-                if (LUS == null) return new List<SubjectPosts>();
+                List<SubjectPosts> result = new List<SubjectPosts>();
 
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var postData = JsonConvert.DeserializeObject<Dictionary<string, SubjectPosts>>(response.Body.ToString());
+                    if (postData != null)
+                    {
+                        result = postData.Values.Where(p => p != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var postList = JsonConvert.DeserializeObject<List<SubjectPosts>>(response.Body.ToString());
+                    if (postList != null)
+                    {
+                        result = postList.Where(p => p != null).ToList();
+                    }
+                }
 
-                return LUS.ToList();
-
+                return result;
             }
             catch
             {
                 return new List<SubjectPosts>();
             }
         }
+
         public override async Task<int> insertSubjectPost(SubjectPosts subjectPosts)
         {
             try
@@ -934,7 +1322,7 @@ namespace TP.Methods.actions
                 }
 
                 UsersAccountTable LUS = JsonConvert.DeserializeObject<UsersAccountTable>(response.Body.ToString());
-                if ( LUS.Password != password)
+                if (LUS.Password != password)
                 {
                     return null;
                 }
@@ -946,55 +1334,51 @@ namespace TP.Methods.actions
                 return null;
             }
         }
+
+
         public override async Task<List<SubTable>> searchSubTable(string searchText)
         {
             try
             {
-                // Ensure searchText is non-null and non-empty
                 if (string.IsNullOrEmpty(searchText))
                 {
-                    Console.WriteLine("Search text is null or empty.");
                     return new List<SubTable>();
                 }
 
-                // Fetch data from Firebase
                 FirebaseResponse response = await client.GetAsync("sub");
                 if (response == null || response.Body == "null")
                 {
-                    Console.WriteLine("Firebase response is null or empty.");
                     return new List<SubTable>();
                 }
 
-                // Log raw response for debugging
-                Console.WriteLine($"Raw Firebase response: {response.Body}");
+                List<SubTable> result = new List<SubTable>();
 
-                // Deserialize the response into a list of SubTable objects
-                var LUS = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
-                if (LUS == null || !LUS.Any())
+                if (response.Body.Trim().StartsWith("{"))
                 {
-                    Console.WriteLine("Deserialized data is null or empty.");
-                    return new List<SubTable>();
+                    // Deserialize as Dictionary (key-value format)
+                    var subData = JsonConvert.DeserializeObject<Dictionary<string, SubTable>>(response.Body.ToString());
+                    if (subData != null)
+                    {
+                        result = subData.Values.Where(s => s != null &&
+                            (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                            (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                        ).ToList();
+                    }
                 }
-
-                // Log the number of entries fetched
-                Console.WriteLine($"Fetched {LUS.Count} subjects from Firebase.");
-
-                // Perform the search with case-insensitive comparison
-                var result = LUS
-                             .Where(s =>
-                                 s != null && // Ensure the subject object is not null
-                                 (
-                                     (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                                     (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                                 )
-                             )
-                             .ToList();
-
-                // Log the number of results found
-                Console.WriteLine($"Found {result.Count} matching subjects for search text: {searchText}");
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var subList = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                    if (subList != null)
+                    {
+                        result = subList.Where(s => s != null &&
+                            (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                            (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                        ).ToList();
+                    }
+                }
 
                 return result;
-
             }
             catch (Exception ex)
             {
@@ -1003,30 +1387,41 @@ namespace TP.Methods.actions
             }
         }
 
-
-
         public override async Task<UsersAccountTable> UserLoginChecker(string username, string password)
         {
-            
             try
             {
-                //New Code:
                 FirebaseResponse response = await client.GetAsync("User/Account");
                 if (response == null || response.Body == "null")
                 {
                     return null;
                 }
 
-                var usersDict = JsonConvert.DeserializeObject<Dictionary<string, UsersAccountTable>>(response.Body);
-                var user = usersDict?.Values.FirstOrDefault(u => u != null && (u.Username == username && u.Password == password));
-                return user;
+                UsersAccountTable result = null;
+
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var usersDict = JsonConvert.DeserializeObject<Dictionary<string, UsersAccountTable>>(response.Body);
+                    result = usersDict?.Values.FirstOrDefault(u => u != null && u.Username == username && u.Password == password);
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var usersList = JsonConvert.DeserializeObject<List<UsersAccountTable>>(response.Body);
+                    result = usersList?.FirstOrDefault(u => u != null && u.Username == username && u.Password == password);
+                }
+
+                return result;
             }
-            catch(Exception error)
+            catch (Exception ex)
             {
-                Console.WriteLine(error.Message);
+                Console.WriteLine($"Error in UserLoginChecker: {ex.Message}");
                 return null;
             }
         }
+
+
         public override async Task<int> updateDegree(DegreeTable degreeTable)
         {
             try
@@ -1077,17 +1472,36 @@ namespace TP.Methods.actions
                     return new List<SchedulerTask>();
                 }
 
-                List<SchedulerTask> LUS = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
-                if (LUS == null) return new List<SchedulerTask>();
+                List<SchedulerTask> result = new List<SchedulerTask>();
 
-                return LUS.ToList();
-                
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var taskData = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body.ToString());
+                    if (taskData != null)
+                    {
+                        result = taskData.Values.Where(t => t != null).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var taskList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
+                    if (taskList != null)
+                    {
+                        result = taskList.Where(t => t != null).ToList();
+                    }
+                }
+
+                return result;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error in getTaskTable: {ex.Message}");
                 return new List<SchedulerTask>();
             }
         }
+
         public override async Task<List<SchedulerTask>> getTaskTableByUserId()
         {
             try
@@ -1099,20 +1513,30 @@ namespace TP.Methods.actions
                     return new List<SchedulerTask>();
                 }
 
-                // Deserialize response to a list while ignoring null values
-                List<SchedulerTask> tasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body)?
-                    .Where(task => task != null) // Remove null entries
-                    .ToList();
+                List<SchedulerTask> result = new List<SchedulerTask>();
 
-                if (tasksList == null || tasksList.Count == 0)
+                if (response.Body.Trim().StartsWith("{"))
                 {
-                    return new List<SchedulerTask>();
+                    // Deserialize as Dictionary (key-value format)
+                    var tasksData = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body.ToString());
+                    if (tasksData != null)
+                    {
+                        result = tasksData.Values
+                            .Where(task => task != null && task.UserId == UserSession.UserId)
+                            .ToList();
+                    }
                 }
-
-                // Filter tasks by the current user
-                List<SchedulerTask> result = tasksList
-                    .Where(s => s.UserId == UserSession.UserId)
-                    .ToList();
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var tasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
+                    if (tasksList != null)
+                    {
+                        result = tasksList
+                            .Where(task => task != null && task.UserId == UserSession.UserId)
+                            .ToList();
+                    }
+                }
 
                 return result;
             }
@@ -1122,6 +1546,7 @@ namespace TP.Methods.actions
                 return new List<SchedulerTask>();
             }
         }
+
         public override async Task<SchedulerTask> getTaskByID(int taskId)
         {
             try
@@ -1132,15 +1557,36 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                SchedulerTask LUS = JsonConvert.DeserializeObject<SchedulerTask>(response.Body.ToString());
-                SchedulerTask result = LUS;
+                SchedulerTask result = null;
+
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var taskData = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body.ToString());
+                    if (taskData != null && taskData.ContainsKey(taskId.ToString()))
+                    {
+                        result = taskData[taskId.ToString()];
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var taskList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
+                    if (taskList != null)
+                    {
+                        result = taskList.FirstOrDefault(t => t.TaskId == taskId);
+                    }
+                }
+
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error in getTaskByID: {ex.Message}");
                 return null;
             }
         }
+
         public override async Task<int> insertTask(SchedulerTask Task)
         {
             try
@@ -1170,7 +1616,6 @@ namespace TP.Methods.actions
                 }
 
                 // Insert the new task
-                await client.SetAsync($"tasks/{Task.TaskId}", Task);
                 return 1;
             }
             catch (Exception e)
@@ -1204,6 +1649,7 @@ namespace TP.Methods.actions
                 return 0;
             }
         }
+
         public override async Task<bool> TaskTimeConflict(DateTime newStartTime, DateTime newEndTime, string id)
         {
             try
@@ -1215,30 +1661,51 @@ namespace TP.Methods.actions
                     return false;
                 }
 
-                // Deserialize tasks
-                List<SchedulerTask> tasks = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body);
-                List<SchedulerTask> userTasks = tasks.Where(t => t.UserId == UserSession.UserId).ToList();
+                // Initialize a list to hold the tasks
+                List<SchedulerTask> userTasks = new List<SchedulerTask>();
 
-                SchedulerTask conflict;
+                // Check if the response body starts with '{' (dictionary) or '[' (list)
+                if (response.Body.Trim().StartsWith("{"))
+                {
+                    // Deserialize as Dictionary (key-value format)
+                    var tasksDict = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body.ToString());
+                    if (tasksDict != null)
+                    {
+                        userTasks = tasksDict.Values.Where(t => t != null && t.UserId == UserSession.UserId).ToList();
+                    }
+                }
+                else if (response.Body.Trim().StartsWith("["))
+                {
+                    // Deserialize as List (array format)
+                    var tasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
+                    if (tasksList != null)
+                    {
+                        userTasks = tasksList.Where(t => t != null && t.UserId == UserSession.UserId).ToList();
+                    }
+                }
+
+                // Helper function to check time conflict
+                bool IsTimeConflict(SchedulerTask task)
+                {
+                    return (newStartTime >= task.TaskStartTime && newStartTime < task.TaskEndTime) ||
+                           (newEndTime > task.TaskStartTime && newEndTime <= task.TaskEndTime) ||
+                           (newStartTime <= task.TaskStartTime && newEndTime >= task.TaskEndTime);
+                }
+
+                // Check for time conflict in the filtered user tasks
+                SchedulerTask conflict = null;
                 if (string.IsNullOrEmpty(id))
                 {
-                    conflict = userTasks.FirstOrDefault(t =>
-                        (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
-                        (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
-                        (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
-                    );
+                    conflict = userTasks.FirstOrDefault(t => IsTimeConflict(t));
                 }
                 else
                 {
                     int tid = int.Parse(id);
                     conflict = userTasks.FirstOrDefault(t =>
-                        t.TaskId != tid && (
-                            (newStartTime >= t.TaskStartTime && newStartTime < t.TaskEndTime) ||
-                            (newEndTime > t.TaskStartTime && newEndTime <= t.TaskEndTime) ||
-                            (newStartTime <= t.TaskStartTime && newEndTime >= t.TaskEndTime)
-                        ));
+                        t.TaskId != tid && IsTimeConflict(t));
                 }
 
+                // Return true if conflict exists, else false
                 return conflict != null;
             }
             catch (Exception ex)
@@ -1247,6 +1714,7 @@ namespace TP.Methods.actions
                 return false;
             }
         }
+
 
     }
 }
