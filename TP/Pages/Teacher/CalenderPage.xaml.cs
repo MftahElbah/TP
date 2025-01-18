@@ -62,7 +62,7 @@ public partial class CalenderPage : ContentPage
             Subject = t.TaskTitle,
             Notes = t.TaskDes,
             //Background = Color.FromRgba(t.TaskColor) // Use Background property for color
-            Background = new SolidColorBrush(Color.FromRgba(t.TaskColor)) // Use Background property for color
+            Background = new SolidColorBrush(Color.FromRgba($"#{t.TaskColor}")) // Use Background property for color
         }));
 
         Scheduler.AppointmentsSource = _appointments;
@@ -130,7 +130,7 @@ public partial class CalenderPage : ContentPage
         int red = (int)(color.Red * 255);
         int green = (int)(color.Green * 255);
         int blue = (int)(color.Blue * 255);
-        return $"#{red:X2}{green:X2}{blue:X2}";
+        return $"{red:X2}{green:X2}{blue:X2}";
     }
 
     private async void BackClicked(object sender, EventArgs e){
@@ -154,7 +154,7 @@ public partial class CalenderPage : ContentPage
         TaskDesEntry.Text = result.TaskDes;
         StartTime = result.TaskStartTime;
         EndTime = result.TaskEndTime;
-        TaskColorBtn.BackgroundColor = Color.FromArgb(result.TaskColor);
+        TaskColorBtn.BackgroundColor = Color.FromArgb($"#{result.TaskColor}");
         PopupTitle.Text = "تعديل تذكير";
         TaskPopupWindow.IsVisible= true;
         CreateTaskBtn.IsVisible = false;

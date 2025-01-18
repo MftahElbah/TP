@@ -198,7 +198,7 @@
                     </DataTemplate>
                 </listview:SfListView.ItemTemplate>
             </listview:SfListView>
-        <ContentView x:Name="EmptyMessage" IsVisible="False" Grid.Row="1">
+        <ContentView x:Name="EmptyMessage" IsVisible="False" Grid.Row="2">
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                 <Label Text="لا يوجد منشورات" 
                 FontSize="Title" 

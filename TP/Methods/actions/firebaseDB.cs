@@ -76,7 +76,7 @@ namespace TP.Methods.actions
         {
             try{
                 FirebaseResponse response;
-                string userid = await SecureStorage.GetAsync("userid");
+               string userid = await SecureStorage.GetAsync("userid");
                 if (userid == null)
                 { 
                     return null;
@@ -546,13 +546,13 @@ namespace TP.Methods.actions
                 {
                     // Deserialize as Dictionary
                     var degreeDict = JsonConvert.DeserializeObject<Dictionary<string, DegreeTable>>(response.Body.ToString());
-                    result = degreeDict.Values.Where(s => s.StdName == UserSession.Name && s.SubId == SubId).ToList();
+                    result = degreeDict.Values.Where(s => s !=null && ( s.StdName == UserSession.Name && s.SubId == SubId)).ToList();
                 }
                 else if (response.Body.Trim().StartsWith("["))
                 {
                     // Deserialize as List
                     var degreeList = JsonConvert.DeserializeObject<List<DegreeTable>>(response.Body.ToString());
-                    result = degreeList.Where(s => s.StdName == UserSession.Name && s.SubId == SubId).ToList();
+                    result = degreeList.Where(s => s != null && (s.StdName == UserSession.Name && s.SubId == SubId)).ToList();
                 }
 
                 return result;
@@ -684,7 +684,7 @@ namespace TP.Methods.actions
                 {
                     // Deserialize as List
                     var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                    result = requestList.Where(s => s.SubId == subId).ToList();
+                    result = requestList.Where(s => s!= null && s.SubId == subId).ToList();
                 }
 
                 return result;
@@ -1070,9 +1070,13 @@ namespace TP.Methods.actions
         {
             try
             {
+                int id = 0;
                 List<DegreeTable> dg = await getDegree();
-                
-                degreeTable.DegId = dg.Count;
+                if (dg.Count != 0)
+                {
+                    id = dg.Max(s => s?.DegId ?? 0) + 1;
+                }
+                degreeTable.DegId = id;
                 var SetData = await client.SetAsync("degree/" + degreeTable.DegId, degreeTable);
                 return 1;
             }
@@ -1126,8 +1130,16 @@ namespace TP.Methods.actions
         {
            try
             {
+
+                int id = 0;
                 List<RequestJoinSubject> rj = await GetRequests();
-                request.ReqId = rj.Count ;
+                if (rj.Count != 0)
+                {
+                    id = rj.Max(s => s?.ReqId ?? 0) + 1;
+                }
+
+                
+                request.ReqId = id ;
                 var setData = await client.SetAsync("request/" + request.ReqId, request);
                 return 1;
             }
@@ -1176,8 +1188,13 @@ namespace TP.Methods.actions
         {
             try
             {
+                int id = 0;
                 List<SubTable> sbt = await getSubTable();
-                subTable.SubId = sbt.Count ;
+                if (sbt.Count != 0)
+                {
+                    id = sbt.Max(s => s?.SubId ?? 0) + 1;
+                }
+                subTable.SubId = id ;
                 var setData = await client.SetAsync("sub/" + subTable.SubId, subTable);
                 return 1;
             }catch { return 0; }
@@ -1239,8 +1256,13 @@ namespace TP.Methods.actions
         {
             try
             {
+                int id = 0;
                 List<SubjectBooks> sb = await getsubjectBooks();
-                book.BookId = sb.Count ;
+                if (sb.Count != 0)
+                {
+                    id = sb.Max(s => s?.SubId ?? 0) + 1;
+                }
+                book.BookId = id;
                 var setData = await client.SetAsync("book/" + book.BookId, book);
                     return 1;
             }
@@ -1557,26 +1579,10 @@ namespace TP.Methods.actions
                     return null;
                 }
 
-                SchedulerTask result = null;
-
-                if (response.Body.Trim().StartsWith("{"))
-                {
-                    // Deserialize as Dictionary (key-value format)
-                    var taskData = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body.ToString());
-                    if (taskData != null && taskData.ContainsKey(taskId.ToString()))
-                    {
-                        result = taskData[taskId.ToString()];
-                    }
-                }
-                else if (response.Body.Trim().StartsWith("["))
-                {
-                    // Deserialize as List (array format)
-                    var taskList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body.ToString());
-                    if (taskList != null)
-                    {
-                        result = taskList.FirstOrDefault(t => t.TaskId == taskId);
-                    }
-                }
+                SchedulerTask LUS = JsonConvert.DeserializeObject<SchedulerTask>(response.Body.ToString());
+                SchedulerTask result = LUS;
+            
+                
 
                 return result;
             }
@@ -1592,28 +1598,36 @@ namespace TP.Methods.actions
             try
             {
                 FirebaseResponse response = await client.GetAsync("tasks");
-                List<SchedulerTask> existingTasks = new List<SchedulerTask>();
+                List<SchedulerTask> existingTasksList = new List<SchedulerTask>();
+                Dictionary<string, SchedulerTask> existingTasksDic = null;
+                Task.TaskId = 0; // First TaskId
 
-                if (response != null && response.Body != "null")
+                // Deserialize as a List instead of Dictionary
+                if (response.Body.Trim().StartsWith("["))
                 {
-                    // Deserialize as a List instead of Dictionary
-                    existingTasks = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body);
 
-                    if (existingTasks != null && existingTasks.Any())
+                    existingTasksList = JsonConvert.DeserializeObject<List<SchedulerTask>>(response.Body);
+
+                    if (existingTasksList != null && existingTasksList.Any())
                     {
 
-                        int maxId = existingTasks.Where(t => t != null).Max(t => t.TaskId);
+                        int maxId = existingTasksList.Where(t => t != null).Max(t => t.TaskId);
                         Task.TaskId = maxId + 1;
                     }
-                    else
+                }
+                else if (response.Body.Trim().StartsWith("{"))
+                {
+                    existingTasksDic = JsonConvert.DeserializeObject<Dictionary<string, SchedulerTask>>(response.Body);
+
+                    if (existingTasksList != null && existingTasksList.Any())
                     {
-                        Task.TaskId = 1; // First TaskId
+
+                        int maxId = existingTasksDic.Where(t => t.Value != null).Max(t => t.Value.TaskId);
+                        Task.TaskId = maxId + 1;
                     }
                 }
-                else
-                {
-                    Task.TaskId = 1; // First TaskId if no tasks exist
-                }
+
+                await client.SetAsync($"tasks/{Task.TaskId}", Task);
 
                 // Insert the new task
                 return 1;

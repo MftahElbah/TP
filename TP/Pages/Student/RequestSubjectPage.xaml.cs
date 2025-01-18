@@ -126,9 +126,6 @@ public partial class RequestSubjectPage : ContentPage
             // Create a new request and insert it into the
             // 
 
-
-
-
             var request = new RequestJoinSubject
             {
                 UserId = UserSession.UserId, // Assuming UserSession.UserId is set
