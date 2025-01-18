@@ -85,7 +85,7 @@ public partial class RequestSubjectPage : ContentPage
             // Load all subjects with filtering logic
             await LoadAvailableSubjects();
             EmptyMessage.IsVisible = false;
-
+            return;
         }
 
         // Search for subjects with names matching the search text

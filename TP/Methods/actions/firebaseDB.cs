@@ -612,13 +612,13 @@ namespace TP.Methods.actions
                 {
                     // Deserialize as Dictionary
                     var requestDict = JsonConvert.DeserializeObject<Dictionary<string, RequestJoinSubject>>(response.Body.ToString());
-                    result = requestDict.Values.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                    result = requestDict.Values.Where(s => s!= null && ( s.SubId == SubId && s.UserId == UserSession.UserId)).ToList();
                 }
                 else if (response.Body.Trim().StartsWith("["))
                 {
                     // Deserialize as List
                     var requestList = JsonConvert.DeserializeObject<List<RequestJoinSubject>>(response.Body.ToString());
-                    result = requestList.Where(s => s.SubId == SubId && s.UserId == UserSession.UserId).ToList();
+                    result = requestList.Where(s => s != null && (s.SubId == SubId && s.UserId == UserSession.UserId)).ToList();
                 }
 
                 return result;
@@ -1362,41 +1362,48 @@ namespace TP.Methods.actions
         {
             try
             {
-                if (string.IsNullOrEmpty(searchText))
+                if (string.IsNullOrWhiteSpace(searchText))  // Safer check
                 {
                     return new List<SubTable>();
                 }
 
                 FirebaseResponse response = await client.GetAsync("sub");
-                if (response == null || response.Body == "null")
+                if (response == null || string.IsNullOrWhiteSpace(response.Body))
                 {
                     return new List<SubTable>();
                 }
 
                 List<SubTable> result = new List<SubTable>();
+                string responseBody = response.Body.Trim();
 
-                if (response.Body.Trim().StartsWith("{"))
+                if (responseBody.StartsWith("{"))
                 {
                     // Deserialize as Dictionary (key-value format)
-                    var subData = JsonConvert.DeserializeObject<Dictionary<string, SubTable>>(response.Body.ToString());
+                    var subData = JsonConvert.DeserializeObject<Dictionary<string, SubTable>>(responseBody);
                     if (subData != null)
                     {
-                        result = subData.Values.Where(s => s != null &&
-                            (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                            (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                        ).ToList();
+                        result = subData.Values
+                            .Where(s => s != null &&
+                                (
+                                    (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                    (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                )
+                            ).ToList();
                     }
                 }
-                else if (response.Body.Trim().StartsWith("["))
+                else if (responseBody.StartsWith("["))
                 {
                     // Deserialize as List (array format)
-                    var subList = JsonConvert.DeserializeObject<List<SubTable>>(response.Body.ToString());
+                    var subList = JsonConvert.DeserializeObject<List<SubTable>>(responseBody);
                     if (subList != null)
                     {
-                        result = subList.Where(s => s != null &&
-                            (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
-                            (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                        ).ToList();
+                        result = subList
+                            .Where(s => s != null &&
+                                (
+                                    (!string.IsNullOrEmpty(s.SubName) && s.SubName.Contains(searchText, StringComparison.OrdinalIgnoreCase)) ||
+                                    (!string.IsNullOrEmpty(s.SubTeacherName) && s.SubTeacherName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                                )
+                            ).ToList();
                     }
                 }
 
@@ -1408,6 +1415,7 @@ namespace TP.Methods.actions
                 return new List<SubTable>();
             }
         }
+
 
         public override async Task<UsersAccountTable> UserLoginChecker(string username, string password)
         {

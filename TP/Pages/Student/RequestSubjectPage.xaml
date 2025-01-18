@@ -59,6 +59,7 @@
                                    BackgroundColor="#dcdcdc"
                                    Keyboard="Text"
                                    IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
+                                   
                                    TextChanged="SearchEntryChanged"/>
                         </VerticalStackLayout>
                     </Border>
